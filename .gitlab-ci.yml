@@ -1,0 +1,6 @@
+image: miadmin_android29:latest
+
+build:
+    script:
+     - cd exercise_1/code
+     - ./gradlew build
