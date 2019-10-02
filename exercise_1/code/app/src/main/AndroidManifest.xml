@@ -18,4 +18,8 @@
         </activity>
     </application>
 
+
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM"></uses-permission>
+
+
 </manifest>

@@ -1,12 +1,15 @@
 package de.hhn.aib.swlab.wise1920.group01.exercise1;
 
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
+import android.provider.AlarmClock;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -46,6 +49,12 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
         Todo todo = new Todo("Hours = " + hour + " Minutes = " + minute);
         todoRepository.addTodo(todo);
         Log.d("onTimeSet", "time set");
+        Intent i = new Intent(AlarmClock.ACTION_SET_ALARM);
+        i.putExtra(AlarmClock.EXTRA_SKIP_UI, true);
+        i.putExtra(AlarmClock.EXTRA_HOUR, hour);
+        i.putExtra(AlarmClock.EXTRA_MINUTES, minute);
+        i.putExtra(AlarmClock.EXTRA_MESSAGE, "Good Morning");
+        startActivity(i);
     }
 }
 
