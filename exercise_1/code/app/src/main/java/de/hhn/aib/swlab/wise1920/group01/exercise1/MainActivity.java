@@ -6,21 +6,25 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
 public class MainActivity extends AppCompatActivity implements TimePickerFragment.TimePickerListener {
     private TodoRepository todoRepository;
+    private String editTextInput;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        editTextInput = "alarm active";
         todoRepository = new TodoRepositoryInMemoryImpl();
 
         Button button = findViewById(R.id.rvbtn);
@@ -38,6 +42,15 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
         rvTodos.setAdapter(new MyAdapter(todoRepository));
         rvTodos.setLayoutManager(new LinearLayoutManager(this));
 
+    }
+
+    public void startService(View v)
+    {
+        String input = editTextInput;
+        Intent serviceIntent = new Intent(this, ServiceClass.class);
+        serviceIntent.putExtra("inputExtra", input);
+
+        startService(serviceIntent);
     }
 
     @SuppressLint("SetTextI18n")
