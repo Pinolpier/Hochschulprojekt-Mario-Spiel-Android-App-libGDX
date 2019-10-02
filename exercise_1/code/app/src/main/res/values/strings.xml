@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">Wecker</string>
-    <string name="on_off">An/Aus</string>
+    <string name="on_off">Aus/An</string>
     <string name="textview">TextView</string>
 </resources>
