@@ -7,6 +7,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.AlarmClock;
@@ -15,6 +18,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.TimePicker;
+
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements TimePickerFragment.TimePickerListener {
     private TodoRepository todoRepository;
@@ -49,12 +54,28 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
         Todo todo = new Todo("Hours = " + hour + " Minutes = " + minute);
         todoRepository.addTodo(todo);
         Log.d("onTimeSet", "time set");
-        Intent i = new Intent(AlarmClock.ACTION_SET_ALARM);
-        i.putExtra(AlarmClock.EXTRA_SKIP_UI, true);
-        i.putExtra(AlarmClock.EXTRA_HOUR, hour);
-        i.putExtra(AlarmClock.EXTRA_MINUTES, minute);
-        i.putExtra(AlarmClock.EXTRA_MESSAGE, "Good Morning");
-        startActivity(i);
+        Calendar timeCalender = Calendar.getInstance();
+        timeCalender.set(Calendar.HOUR_OF_DAY,hour);
+        timeCalender.set(Calendar.MINUTE,minute);
+        timeCalender.set(Calendar.SECOND,0);
+        startAlarm(timeCalender);
+    }
+
+    private void startAlarm(Calendar calendar){
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this,AlertReciever.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,1,intent,0);
+        if(calendar.before(Calendar.getInstance())){
+            calendar.add(Calendar.DATE,1);
+        }
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),pendingIntent);
+    }
+    
+    private void cancelAlarm(){
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this,AlertReciever.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,1,intent,0);
+        alarmManager.cancel(pendingIntent);
     }
 }
 

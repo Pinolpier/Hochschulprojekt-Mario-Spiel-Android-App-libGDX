@@ -16,10 +16,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <receiver android:name=".AlertReciever"/>
     </application>
-
-
-    <uses-permission android:name="com.android.alarm.permission.SET_ALARM"></uses-permission>
 
 
 </manifest>
