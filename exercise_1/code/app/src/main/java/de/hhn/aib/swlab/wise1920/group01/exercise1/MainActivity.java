@@ -7,14 +7,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
 public class MainActivity extends AppCompatActivity implements TimePickerFragment.TimePickerListener {
-    private Button button;
-    private TextView tv_description;
     private TodoRepository todoRepository;
 
     @Override
@@ -24,8 +23,8 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
 
         todoRepository = new TodoRepositoryInMemoryImpl();
 
-        button = findViewById(R.id.button);
-        tv_description = findViewById(R.id.tv_description);
+        Button button = findViewById(R.id.rvbtn);
+        //TextView tv_description = findViewById(R.id.tv_description);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -44,10 +43,9 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
     @SuppressLint("SetTextI18n")
     @Override
     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-        //tv_description.setText("Hours = " + hour + " Minutes = " + minute);
-
         Todo todo = new Todo("Hours = " + hour + " Minutes = " + minute);
         todoRepository.addTodo(todo);
+        Log.d("onTimeSet", "time set");
     }
 }
 
