@@ -23,7 +23,8 @@ import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements TimePickerFragment.TimePickerListener {
     private TodoRepository todoRepository;
-    private AlarmHelper alarmHelper;
+ //   private AlarmHelper alarmHelper;
+    private AlarmManager alarmManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,10 +32,10 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
         setContentView(R.layout.activity_main);
 
         todoRepository = new TodoRepositoryInMemoryImpl();
-        alarmHelper = new AlarmHelper();
+        alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+ //       alarmHelper = new AlarmHelper(alarmManager);
 
         Button button = findViewById(R.id.rvbtn);
-        //TextView tv_description = findViewById(R.id.tv_description);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,25 +61,26 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
         timeCalender.set(Calendar.HOUR_OF_DAY,hour);
         timeCalender.set(Calendar.MINUTE,minute);
         timeCalender.set(Calendar.SECOND,0);
-        alarmHelper.setAlarm(timeCalender);
-        //startAlarm();
+        //alarmHelper.setAlarm(timeCalender,alarmManager);
+
+        startAlarm(timeCalender);
     }
 
-    /*private void startAlarm(Calendar calendar){
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+    private void startAlarm(Calendar calendar){
+       //  alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this,AlertReciever.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this,1,intent,0);
         if(calendar.before(Calendar.getInstance())){
             calendar.add(Calendar.DATE,1);
         }
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),pendingIntent);
-    }*/
+        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),pendingIntent);
+    }
     
-   /* private void cancelAlarm(){
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+    private void cancelAlarm(){
+       // alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this,AlertReciever.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this,1,intent,0);
         alarmManager.cancel(pendingIntent);
-    }*/
+    }
 }
 

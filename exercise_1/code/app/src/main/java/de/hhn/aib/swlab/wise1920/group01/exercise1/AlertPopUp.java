@@ -8,7 +8,7 @@ import androidx.fragment.app.DialogFragment;
 public class AlertPopUp extends DialogFragment {
 
     public AlertDialog onCreateDialog() {
-
+/*
         // Use the Builder class for convenient dialog construction
         Builder builder = new Builder(getActivity());
         builder.setMessage("Hallo")
@@ -23,6 +23,7 @@ public class AlertPopUp extends DialogFragment {
                     }
                 });
         return builder.create();
-    }
+*/  return null;  }
+
 
 }

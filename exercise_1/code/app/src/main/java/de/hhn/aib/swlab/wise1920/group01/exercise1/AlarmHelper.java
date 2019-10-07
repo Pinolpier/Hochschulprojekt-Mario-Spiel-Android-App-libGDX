@@ -11,10 +11,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class AlarmHelper extends AppCompatActivity {
 
-    AlarmManager alarmManager;
+    //AlarmManager alarmManager;
 
-    public AlarmHelper(){
-        alarmManager =(AlarmManager) getSystemService(Context.ALARM_SERVICE);
+    public AlarmHelper(AlarmManager alarmManager){
+   // this.alarmManager = alarmManager;
     }
 
     public void showDialog(){
@@ -22,7 +22,8 @@ public class AlarmHelper extends AppCompatActivity {
         popUp.show(getSupportFragmentManager(),"ersterTest");
     }
 
-    public void setAlarm(Calendar calendar){
+    public void setAlarm(Calendar calendar, AlarmManager alarmManager){
+       // alarmManager =(AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this,AlertReciever.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this,1,intent,0);
         if(calendar.before(Calendar.getInstance())){
@@ -31,8 +32,9 @@ public class AlarmHelper extends AppCompatActivity {
         alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),pendingIntent);
     }
 
-    public void cancelAlarm(){
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+    public void cancelAlarm(AlarmManager alarmManager){
+      //  alarmManager =(AlarmManager) getSystemService(Context.ALARM_SERVICE);
+       // AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this,AlertReciever.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this,1,intent,0);
         alarmManager.cancel(pendingIntent);
