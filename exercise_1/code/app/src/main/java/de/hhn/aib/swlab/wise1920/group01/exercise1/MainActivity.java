@@ -14,9 +14,11 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import java.io.IOException;
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements TimePickerFragment.TimePickerListener {
     private TodoRepository todoRepository;
+    private int id = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,13 +49,21 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
         Todo todo = new Todo("Hours = " + hour + " Minutes = " + minute);
         todoRepository.addTodo(todo);
-        Datenhaltung datenhaltung = new Datenhaltung(this);
+        Datenhaltung d = new Datenhaltung(this);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.SECOND, 0);
         try {
-            datenhaltung.saveTimer(datenhaltung.test);
-            datenhaltung.getTimer();
+            d.saveTimer(new Timer(calendar, id, 1));
+            Timer t = d.getTimer();
+            System.out.println("Zeit:" + t.getTime());
+            System.out.println("ID:" + t.getId());
         } catch (IOException e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
+        id++;
+
     }
 }
 

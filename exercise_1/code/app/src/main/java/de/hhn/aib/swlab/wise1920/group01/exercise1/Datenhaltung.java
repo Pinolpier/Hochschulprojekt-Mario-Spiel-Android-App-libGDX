@@ -2,6 +2,8 @@ package de.hhn.aib.swlab.wise1920.group01.exercise1;
 
 import android.util.Log;
 
+import com.google.gson.Gson;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -9,35 +11,32 @@ import java.io.PrintWriter;
 import java.util.Calendar;
 import java.util.Scanner;
 
-public class Datenhaltung {
-    File file;
-    Calendar test;
+class Datenhaltung {
+    private Gson gson = new Gson();
+    private File file;
+    private Calendar test;
+    private String json;
 
-    public Datenhaltung(MainActivity mainActivity) {
+    Datenhaltung(MainActivity mainActivity) {
+        file = new File(mainActivity.getFilesDir(), "Timer.txt");
         test = Calendar.getInstance();
         test.set(Calendar.HOUR_OF_DAY, 12);
         test.set(Calendar.MINUTE, 20);
         test.set(Calendar.SECOND, 0);
-        file = new File(mainActivity.getFilesDir(), "Timers.txt");
     }
 
 
-    public void saveTimer(Calendar timer) throws IOException {
+    void saveTimer(Timer timer) throws IOException {
         try (PrintWriter writer = new PrintWriter(new FileWriter(file))) {
-            writer.print(timer.getTimeInMillis()+"#");
-            Log.d("speichern", String.valueOf(timer.getTimeInMillis()));
+            json = gson.toJson(timer);
+            writer.print(json+"#");
         }
     }
 
-    public void getTimer() throws IOException {
-        Calendar timergeladen;
-        String timeInMillisString;
+    Timer getTimer() throws IOException {
         try (Scanner scanner = new Scanner(file)) {
             scanner.useDelimiter("#");
-            timeInMillisString = scanner.next();
-            timergeladen = Calendar.getInstance();
-            timergeladen.setTimeInMillis(Long.parseLong(timeInMillisString));
-            Log.d("laden", String.valueOf(timergeladen.getTime()));
+            return gson.fromJson(json, Timer.class);
         }
     }
 }
