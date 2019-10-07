@@ -13,6 +13,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import java.io.IOException;
+
 public class MainActivity extends AppCompatActivity implements TimePickerFragment.TimePickerListener {
     private TodoRepository todoRepository;
 
@@ -45,7 +47,13 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
         Todo todo = new Todo("Hours = " + hour + " Minutes = " + minute);
         todoRepository.addTodo(todo);
-        Log.d("onTimeSet", "time set");
+        Datenhaltung datenhaltung = new Datenhaltung(this);
+        try {
+            datenhaltung.saveTimer(datenhaltung.test);
+            datenhaltung.getTimer();
+        } catch (IOException e) {
+            System.out.println(e);
+        }
     }
 }
 
