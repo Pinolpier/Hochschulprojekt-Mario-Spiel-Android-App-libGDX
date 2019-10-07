@@ -11,7 +11,7 @@ public class AlertPopUp extends DialogFragment {
 
         // Use the Builder class for convenient dialog construction
         Builder builder = new Builder(getActivity());
-        builder.setMessage("")
+        builder.setMessage("Hallo")
                 .setPositiveButton(R.string.app_name, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // FIRE ZE MISSILES!

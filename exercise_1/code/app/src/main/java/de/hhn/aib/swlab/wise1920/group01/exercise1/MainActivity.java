@@ -23,6 +23,7 @@ import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements TimePickerFragment.TimePickerListener {
     private TodoRepository todoRepository;
+    private AlarmHelper alarmHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
         setContentView(R.layout.activity_main);
 
         todoRepository = new TodoRepositoryInMemoryImpl();
+        alarmHelper = new AlarmHelper();
 
         Button button = findViewById(R.id.rvbtn);
         //TextView tv_description = findViewById(R.id.tv_description);
@@ -58,10 +60,11 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
         timeCalender.set(Calendar.HOUR_OF_DAY,hour);
         timeCalender.set(Calendar.MINUTE,minute);
         timeCalender.set(Calendar.SECOND,0);
-        startAlarm(timeCalender);
+        alarmHelper.setAlarm(timeCalender);
+        //startAlarm();
     }
 
-    private void startAlarm(Calendar calendar){
+    /*private void startAlarm(Calendar calendar){
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this,AlertReciever.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this,1,intent,0);
@@ -69,13 +72,13 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
             calendar.add(Calendar.DATE,1);
         }
         alarmManager.setExact(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),pendingIntent);
-    }
+    }*/
     
-    private void cancelAlarm(){
+   /* private void cancelAlarm(){
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this,AlertReciever.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this,1,intent,0);
         alarmManager.cancel(pendingIntent);
-    }
+    }*/
 }
 
