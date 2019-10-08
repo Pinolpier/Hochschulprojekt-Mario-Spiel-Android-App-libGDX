@@ -8,28 +8,26 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
-    private TodoRepository todoRepository;
-    private List<Todo> list = new ArrayList<>();
+public class MyAdapter extends RecyclerView.Adapter {
+    private LiveData<List<Timer>> timerLiveData;
+    private List<Timer> mTimer;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
-        public ViewGroup viewGroup;
-        private final TextView tvDescription;
-        private final Switch switch1;
+        public View viewGroup;
+        public final TextView tvDescription;
 
-        public MyViewHolder(ViewGroup v) {
+        public MyViewHolder(View v) {
             super(v);
             viewGroup = v;
             tvDescription = viewGroup.findViewById(R.id.tv_description);
@@ -38,13 +36,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MyAdapter(TodoRepository todoRepository) {
-        this.todoRepository = todoRepository;
-        todoRepository.getTodos().observeForever(new Observer<List<Todo>>() {
+    public MyAdapter(LiveData<List<Timer>> timerLiveData) {
+        this.timerLiveData = timerLiveData;
+        timerLiveData.observeForever(new Observer<List<Timer>>() {
             @Override
-            public void onChanged(List<Todo> todos) {
-                list = todos;
+            public void onChanged(List<Timer> timers) {
+                mTimer = timers;
                 notifyDataSetChanged();
+                Log.e("AdapterOberverCalled", "" + timers.size());
             }
         });
     }
@@ -54,7 +53,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     @Override
     public MyAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // create a new view
-        ConstraintLayout v = (ConstraintLayout) LayoutInflater.from(parent.getContext())
+        View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.layout_timelist, parent, false);
 
         return new MyViewHolder(v);
@@ -62,15 +61,31 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
-        holder.tvDescription.setText(list.get(position).getDescription());
-        System.out.println(holder.tvDescription.getText());
-        System.out.println(holder.switch1.isChecked());
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        // - get element from your dataset at this position
+        // - replace the contents of the view with that element
+        // holder.textView.setText(mDataset[position]);
+        //TODO schalter aktiv setzten
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(mTimer.get(position).getTime());
+        int hour = cal.get(Calendar.HOUR_OF_DAY);
+        int minute = cal.get(Calendar.MINUTE);
+        ((MyViewHolder) holder).tvDescription.setText(hour + " " + minute);
+
+        //TODO hier longpress für delete einfügen
     }
 
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return list.size();
+        if (mTimer != null) {
+            return mTimer.size();
+        }
+        return 0;
+    }
+
+    void setWords(List<Timer> timer) {
+        mTimer = timer;
+        notifyDataSetChanged();
     }
 }

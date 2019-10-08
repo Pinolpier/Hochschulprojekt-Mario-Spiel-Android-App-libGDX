@@ -19,9 +19,18 @@ import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements TimePickerFragment.TimePickerListener {
+    private TimerRepository mTimerRepository;
+    private TimerViewModel mTimerViewModel;
+    int id = 0;
     private static MainActivity instance;
     private TodoRepository todoRepository;
     private String editTextInput;
@@ -34,6 +43,8 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mTimerViewModel = ViewModelProviders.of(this).get(TimerViewModel.class);
 
         editTextInput = "alarm active";
         instance = this;
@@ -50,6 +61,9 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
                 timePickerFragment.show(getSupportFragmentManager(), "timePicker");
             }
         });
+        mTimerRepository = new TimerRepository(getApplication());
+        RecyclerView rvTodos = findViewById(R.id.rvTodos);
+        rvTodos.setAdapter(new MyAdapter(mTimerRepository.getAllTimer()));
 
         rvTodos = findViewById(R.id.rvTodos);
         rvTodos.setAdapter(new MyAdapter(todoRepository));
@@ -104,14 +118,15 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
     @SuppressLint("SetTextI18n")
     @Override
     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-        Todo todo = new Todo("Hours = " + hour + " Minutes = " + minute);
-        todoRepository.addTodo(todo);
-        Calendar timeCalender = Calendar.getInstance();
-        timeCalender.set(Calendar.HOUR_OF_DAY,hour);
-        timeCalender.set(Calendar.MINUTE,minute);
-        timeCalender.set(Calendar.SECOND,0);
-
-        alarmHelper.setAlarm(timeCalender);
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, hour);
+        cal.set(Calendar.MINUTE, minute);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        Timer t = new Timer(cal.getTimeInMillis(), true);
+        Log.e("MainActivity","onTimeSetCalled");
+        mTimerRepository.insert(t);
+        alarmHelper.setAlarm(cal);
     }
 
     public static MainActivity getInstance(){
