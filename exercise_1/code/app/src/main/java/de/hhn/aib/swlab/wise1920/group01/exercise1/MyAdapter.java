@@ -7,12 +7,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MyAdapter extends RecyclerView.Adapter {
@@ -65,8 +63,10 @@ public class MyAdapter extends RecyclerView.Adapter {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         // holder.textView.setText(mDataset[position]);
+        //TODO hier die Alarme zurück umwandeln
         ((MyViewHolder) holder).tvDescription.setText(""+ mTimer.get(position).getTime());
 
+        //TODO hier longpress für delete einfügen
     }
 
     // Return the size of your dataset (invoked by the layout manager)
