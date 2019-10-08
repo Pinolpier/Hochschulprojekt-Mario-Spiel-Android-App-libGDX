@@ -2,7 +2,6 @@ package de.hhn.aib.swlab.wise1920.group01.exercise1;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 
 import java.util.Calendar;
@@ -15,11 +14,6 @@ public class AlarmHelper extends AppCompatActivity {
 
     public AlarmHelper(AlarmManager alarmManager){
    // this.alarmManager = alarmManager;
-    }
-
-    public void showDialog(){
-        AlertPopUp popUp = new AlertPopUp();
-        popUp.show(getSupportFragmentManager(),"ersterTest");
     }
 
     public void setAlarm(Calendar calendar, AlarmManager alarmManager){
