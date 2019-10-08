@@ -4,7 +4,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -31,7 +30,7 @@ public class MyAdapter extends RecyclerView.Adapter {
             super(v);
             viewGroup = v;
             tvDescription = viewGroup.findViewById(R.id.tv_description);
-            switch1 = viewGroup.findViewById(R.id.switch1);
+//            switch1 = viewGroup.findViewById(R.id.switch1);
         }
     }
 
