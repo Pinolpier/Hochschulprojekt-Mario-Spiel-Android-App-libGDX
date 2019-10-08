@@ -1,35 +1,25 @@
 package de.hhn.aib.swlab.wise1920.group01.exercise1;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.DialogFragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.provider.AlarmClock;
-import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import java.util.Calendar;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
-import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements TimePickerFragment.TimePickerListener {
     private static MainActivity instance;
@@ -64,6 +54,20 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
         rvTodos = findViewById(R.id.rvTodos);
         rvTodos.setAdapter(new MyAdapter(todoRepository));
         rvTodos.setLayoutManager(new LinearLayoutManager(this));
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.settings) {
+            startActivity(new Intent(this, SettingsActivity.class));
+        }
+        return true;
     }
 
     public void updateItems(View v)
@@ -113,11 +117,6 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
     public static MainActivity getInstance(){
         return instance;
     }
-
-    public String getRingtonePath(Context context) {
-        return new PreferenceManager(context).getDefaultSharedPreferences(context).getString("ringtone", "bowserlaugh");
-    }
-
     public void startOverlay(){
         startActivity(new Intent(this,OverlayActivity.class));
     }
