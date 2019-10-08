@@ -5,8 +5,6 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import java.util.Calendar;
-
 @Entity
 public class Timer {
 
@@ -25,27 +23,27 @@ public class Timer {
     @ColumnInfo(name = "active")
     private boolean active;
 
-    public int getId() {
+    int getId() {
         return id;
     }
 
-    public void setId(int id) {
+    void setId(int id) {
         this.id = id;
     }
 
-    public long getTime() {
+    long getTime() {
         return time;
     }
 
-    public void setTime(long time) {
+    void setTime(long time) {
         this.time = time;
     }
 
-    public boolean isActive() {
+    boolean isActive() {
         return active;
     }
 
-    public void setActive(boolean active) {
+    void setActive(boolean active) {
         this.active = active;
     }
 }

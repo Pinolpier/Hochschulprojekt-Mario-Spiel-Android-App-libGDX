@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements TimePickerFragment.TimePickerListener {
-    private TimerRepository mtimerRepository;
+    private TimerRepository mTimerRepository;
     private TimerViewModel mTimerViewModel;
     int id = 0;
 
@@ -37,9 +37,9 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
                 timePickerFragment.show(getSupportFragmentManager(), "timePicker");
             }
         });
-        mtimerRepository = new TimerRepository(getApplication());
+        mTimerRepository = new TimerRepository(getApplication());
         RecyclerView rvTodos = findViewById(R.id.rvTodos);
-        rvTodos.setAdapter(new MyAdapter(mtimerRepository.getAllTimer()));
+        rvTodos.setAdapter(new MyAdapter(mTimerRepository.getAllTimer()));
         rvTodos.setLayoutManager(new LinearLayoutManager(this));
 
     }
@@ -53,9 +53,8 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
         Timer t = new Timer(cal.getTimeInMillis(), true);
-        Log.e("MainACtivity","onTimeSetCalled");
-        mtimerRepository.insert(t);
-
+        Log.e("MainActivity","onTimeSetCalled");
+        mTimerRepository.insert(t);
     }
 }
 
