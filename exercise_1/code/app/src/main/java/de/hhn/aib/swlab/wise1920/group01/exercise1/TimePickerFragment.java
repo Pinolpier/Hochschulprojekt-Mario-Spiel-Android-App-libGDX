@@ -37,7 +37,7 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         Calendar cal = Calendar.getInstance();
-        int hour = cal.get(Calendar.HOUR);
+        int hour = cal.get(Calendar.HOUR_OF_DAY);
         int minute = cal.get(Calendar.MINUTE);
         return new TimePickerDialog(getActivity(),this,hour,minute, true);
     }
