@@ -15,7 +15,8 @@ public class ServiceClass extends Service
 {
 
     @Override
-    public void onCreate() {
+    public void onCreate()
+    {
         super.onCreate();
     }
 
@@ -41,7 +42,8 @@ public class ServiceClass extends Service
 
     @Nullable
     @Override
-    public IBinder onBind(Intent intent) {
+    public IBinder onBind(Intent intent)
+    {
         return null;
     }
 }

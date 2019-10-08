@@ -12,12 +12,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
 public class MainActivity extends AppCompatActivity implements TimePickerFragment.TimePickerListener {
     private TodoRepository todoRepository;
     private String editTextInput;
+    private RecyclerView rvTodos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +30,6 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
         todoRepository = new TodoRepositoryInMemoryImpl();
 
         Button button = findViewById(R.id.rvbtn);
-        //TextView tv_description = findViewById(R.id.tv_description);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -38,19 +39,40 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
             }
         });
 
-        RecyclerView rvTodos = findViewById(R.id.rvTodos);
+        rvTodos = findViewById(R.id.rvTodos);
         rvTodos.setAdapter(new MyAdapter(todoRepository));
         rvTodos.setLayoutManager(new LinearLayoutManager(this));
-
     }
 
-    public void startService(View v)
+    public void updateItems(View v)
     {
-        String input = editTextInput;
-        Intent serviceIntent = new Intent(this, ServiceClass.class);
-        serviceIntent.putExtra("inputExtra", input);
+        int j = 0;
+        for (int childCount = rvTodos.getChildCount(), i = 0; i < childCount; ++i)
+        {
+            final RecyclerView.ViewHolder holder = rvTodos.getChildViewHolder(rvTodos.getChildAt(i));
+            Switch switchtest = holder.itemView.findViewById(R.id.switch1);
+            if(switchtest.isChecked())
+            {
+                TextView txt = holder.itemView.findViewById(R.id.tv_description);
+                System.out.println(txt.getText());
 
-        startService(serviceIntent);
+                String input = editTextInput;
+                Intent serviceIntent = new Intent(this, ServiceClass.class);
+                serviceIntent.putExtra("inputExtra", input);
+                startService(serviceIntent);
+            }
+            if(!switchtest.isChecked())
+            {
+                j++;
+                if(j == childCount)
+                {
+                    String input = editTextInput;
+                    Intent serviceIntent = new Intent(this, ServiceClass.class);
+                    serviceIntent.putExtra("inputExtra", input);
+                    stopService(serviceIntent);
+                }
+            }
+        }
     }
 
     @SuppressLint("SetTextI18n")
