@@ -18,7 +18,7 @@ public class AlertReciever extends BroadcastReceiver {
         notificationHelper.getManager().notify(1, nb.build());
        // AlarmHelper helper = new AlarmHelper();
        //  helper.showDialog();
-        MediaPlayer mediaPlayer = MediaPlayer.create(context, R.raw.coin);
+        MediaPlayer mediaPlayer = MediaPlayer.create(context, R.raw.marioyawn);
         mediaPlayer.setLooping(true);
         mediaPlayer.start();
     }
