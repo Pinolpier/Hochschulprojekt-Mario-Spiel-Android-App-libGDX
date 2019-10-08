@@ -1,30 +1,51 @@
 package de.hhn.aib.swlab.wise1920.group01.exercise1;
 
+
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import java.util.Calendar;
-import java.util.Date;
 
+@Entity
 public class Timer {
-    private long time;
-    private int id;
-    private int active;
 
-    Timer(Calendar cal, int id, int active) {
-        this.time = cal.getTimeInMillis();
-        this.id = id;
-        this.active = active;
+    Timer(int id, Long time, boolean active) {
+        setId(id);
+        setTime(time);
+        setActive(active);
     }
 
-    Date getTime() {
-        Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(time);
-        return cal.getTime();
-    }
+    @PrimaryKey
+    int id;
 
-    int getId() {
+    @ColumnInfo(name = "time")
+    long time;
+
+    @ColumnInfo(name = "active")
+    public boolean active;
+
+    public int getId() {
         return id;
     }
 
-    public int getActive() {
+    private void setId(int id) {
+        this.id = id;
+    }
+
+    public long getTime() {
+        return time;
+    }
+
+    private void setTime(long time) {
+        this.time = time;
+    }
+
+    public boolean isActive() {
         return active;
+    }
+
+    private void setActive(boolean active) {
+        this.active = active;
     }
 }

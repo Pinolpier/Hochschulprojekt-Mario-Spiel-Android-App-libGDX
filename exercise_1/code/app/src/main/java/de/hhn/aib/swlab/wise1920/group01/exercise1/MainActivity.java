@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -18,7 +19,7 @@ import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements TimePickerFragment.TimePickerListener {
     private TodoRepository todoRepository;
-    private int id = 0;
+    Test t;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +27,7 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
         setContentView(R.layout.activity_main);
 
         todoRepository = new TodoRepositoryInMemoryImpl();
+        t = new Test(this);
 
         Button button = findViewById(R.id.rvbtn);
         //TextView tv_description = findViewById(R.id.tv_description);
@@ -49,21 +51,7 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
         Todo todo = new Todo("Hours = " + hour + " Minutes = " + minute);
         todoRepository.addTodo(todo);
-        Datenhaltung d = new Datenhaltung(this);
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, hour);
-        calendar.set(Calendar.MINUTE, minute);
-        calendar.set(Calendar.SECOND, 0);
-        try {
-            d.saveTimer(new Timer(calendar, id, 1));
-            Timer t = d.getTimer();
-            System.out.println("Zeit:" + t.getTime());
-            System.out.println("ID:" + t.getId());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        id++;
-
+        t.speichern(hour, minute);
     }
 }
 
