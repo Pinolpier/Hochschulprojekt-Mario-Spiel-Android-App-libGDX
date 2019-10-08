@@ -1,33 +1,31 @@
 package de.hhn.aib.swlab.wise1920.group01.exercise1;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.DialogFragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.Room;
-
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.TimePicker;
 
-import java.io.IOException;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements TimePickerFragment.TimePickerListener {
-    private TodoRepository todoRepository;
-    Test t;
+    private TimerRepository mtimerRepository;
+    private TimerViewModel mTimerViewModel;
+    int id = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        todoRepository = new TodoRepositoryInMemoryImpl();
-        t = new Test(this);
+        mTimerViewModel = ViewModelProviders.of(this).get(TimerViewModel.class);
 
         Button button = findViewById(R.id.rvbtn);
         //TextView tv_description = findViewById(R.id.tv_description);
@@ -39,9 +37,9 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
                 timePickerFragment.show(getSupportFragmentManager(), "timePicker");
             }
         });
-
+        mtimerRepository = new TimerRepository(getApplication());
         RecyclerView rvTodos = findViewById(R.id.rvTodos);
-        rvTodos.setAdapter(new MyAdapter(todoRepository));
+        rvTodos.setAdapter(new MyAdapter(mtimerRepository.getAllTimer()));
         rvTodos.setLayoutManager(new LinearLayoutManager(this));
 
     }
@@ -49,9 +47,15 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
     @SuppressLint("SetTextI18n")
     @Override
     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-        Todo todo = new Todo("Hours = " + hour + " Minutes = " + minute);
-        todoRepository.addTodo(todo);
-        t.speichern(hour, minute);
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, hour);
+        cal.set(Calendar.MINUTE, minute);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        Timer t = new Timer(cal.getTimeInMillis(), true);
+        Log.e("MainACtivity","onTimeSetCalled");
+        mtimerRepository.insert(t);
+
     }
 }
 
