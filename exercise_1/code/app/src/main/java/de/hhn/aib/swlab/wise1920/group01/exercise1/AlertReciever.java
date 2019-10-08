@@ -4,9 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
-
+import android.view.WindowManager;
 import androidx.core.app.NotificationCompat;
-
 
 public class AlertReciever extends BroadcastReceiver {
 
@@ -16,10 +15,25 @@ public class AlertReciever extends BroadcastReceiver {
         NotificationHelper notificationHelper = new NotificationHelper(context);
         NotificationCompat.Builder nb = notificationHelper.getChannelNotification();
         notificationHelper.getManager().notify(1, nb.build());
-       // AlarmHelper helper = new AlarmHelper();
-       //  helper.showDialog();
-        MediaPlayer mediaPlayer = MediaPlayer.create(context, R.raw.marioyawn);
-        mediaPlayer.setLooping(true);
-        mediaPlayer.start();
+        // AlarmHelper helper = new AlarmHelper();
+        // helper.showDialog();
+         MediaPlayer mediaPlayer = MediaPlayer.create(context, R.raw.coin);
+
+          mediaPlayer.setLooping(true);
+          mediaPlayer.start();
+/*
+            MediaPlayer mp = new MediaPlayer();
+            mp.setAudioStreamType(AudioManager.STREAM_ALARM);
+        try {
+            mp.setDataSource(context, Uri.parse("android.resource://PACKAGE_NAME/" + R.raw.coin));
+            mp.setLooping(true);
+            mp.prepare();
+            mp.start();
+
+        } catch (IOException e) {
+            System.out.println(e);
+        }*/
+
+
     }
 }
