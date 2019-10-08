@@ -1,7 +1,10 @@
 package de.hhn.aib.swlab.wise1920.group01.exercise1;
 
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -24,12 +27,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         // each data item is just a string in this case
         public ViewGroup viewGroup;
         private final TextView tvDescription;
+        private final Switch switch1;
 
         public MyViewHolder(ViewGroup v) {
             super(v);
             viewGroup = v;
-
             tvDescription = viewGroup.findViewById(R.id.tv_description);
+            switch1 = viewGroup.findViewById(R.id.switch1);
         }
     }
 
@@ -41,7 +45,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             public void onChanged(List<Todo> todos) {
                 list = todos;
                 notifyDataSetChanged();
-
             }
         });
     }
@@ -60,11 +63,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        // - get element from your dataset at this position
-        // - replace the contents of the view with that element
-        // holder.textView.setText(mDataset[position]);
         holder.tvDescription.setText(list.get(position).getDescription());
-
+        System.out.println(holder.tvDescription.getText());
+        System.out.println(holder.switch1.isChecked());
     }
 
     // Return the size of your dataset (invoked by the layout manager)
