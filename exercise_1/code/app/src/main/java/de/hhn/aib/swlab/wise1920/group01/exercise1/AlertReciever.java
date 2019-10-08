@@ -3,9 +3,6 @@ package de.hhn.aib.swlab.wise1920.group01.exercise1;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.media.MediaPlayer;
-import android.provider.MediaStore;
-import android.view.WindowManager;
 import androidx.core.app.NotificationCompat;
 
 public class AlertReciever extends BroadcastReceiver {
@@ -16,12 +13,6 @@ public class AlertReciever extends BroadcastReceiver {
         NotificationHelper notificationHelper = new NotificationHelper(context);
         NotificationCompat.Builder nb = notificationHelper.getChannelNotification();
         notificationHelper.getManager().notify(1, nb.build());
-        MediaPlayer media;
-        MediaPlayer mediaPlayer = MediaPlayer.create(context, R.raw.coin);
-
-          mediaPlayer.setLooping(true);
-          mediaPlayer.start();
-
         MainActivity.getInstance().startOverlay();
 
     }

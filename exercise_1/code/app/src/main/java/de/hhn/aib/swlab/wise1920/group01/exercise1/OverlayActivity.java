@@ -4,11 +4,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
 import android.content.Context;
+import android.media.AudioAttributes;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+
+import java.io.IOException;
 
 public class OverlayActivity extends AppCompatActivity {
 
@@ -20,7 +24,17 @@ public class OverlayActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_overlay);
         Context context;
-        mediaPlayer = MainActivity.getInstance().getMediaPlayer();
+        mediaPlayer = new MediaPlayer();
+        mediaPlayer.setAudioAttributes(new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ALARM).build());
+        try {
+        mediaPlayer.setDataSource(getApplicationContext(), Uri.parse("android.resource://de.hhn.aib.swlab.wise1920.group01.exercise1/raw/coin"));
+            mediaPlayer.prepare();
+            mediaPlayer.start();
+            mediaPlayer.setLooping(true);
+        }
+        catch(IOException e){
+            System.out.println(e);
+        }
         beendenButton = (Button)findViewById(R.id.button_beenden);
         beendenButton.setOnClickListener(new View.OnClickListener() {
             @Override
