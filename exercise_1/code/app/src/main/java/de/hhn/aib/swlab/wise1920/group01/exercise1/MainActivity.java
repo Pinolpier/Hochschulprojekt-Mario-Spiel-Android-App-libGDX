@@ -121,6 +121,7 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
         Timer t = new Timer(cal.getTimeInMillis(), true);
 //        Log.e("MainActivity","onTimeSetCalled");
         mTimerRepository.insert(t);
+        //Log.e("id", String.valueOf(t.getId()));
         alarmHelper.setAlarm(cal);
     }
 

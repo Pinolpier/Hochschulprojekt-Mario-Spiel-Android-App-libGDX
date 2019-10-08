@@ -1,6 +1,8 @@
 package de.hhn.aib.swlab.wise1920.group01.exercise1;
 
 
+import android.util.Log;
+
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -24,6 +26,8 @@ public class Timer {
     private boolean active;
 
     int getId() {
+
+        Log.e("getIdInTimer", String.valueOf(id));
         return id;
     }
 
