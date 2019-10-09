@@ -7,10 +7,11 @@
     <!-- Preference Titles -->
     <string name="preferences_header">Alarm Settings</string>
     <string name="sync_header">Sync</string>
+    <string name="ringtone_setting_summary">Set up the ringtone that will be played during your alarm</string>
 
     <!-- Messages Preferences -->
     <string name="signature_title">Your signature</string>
-    <string name="ringtone_title">Choose alarm ringtone</string>
+    <string name="ringtone_title">alarm ringtone</string>
 
     <!-- Sync Preferences -->
     <string name="sync_title">Sync email periodically</string>

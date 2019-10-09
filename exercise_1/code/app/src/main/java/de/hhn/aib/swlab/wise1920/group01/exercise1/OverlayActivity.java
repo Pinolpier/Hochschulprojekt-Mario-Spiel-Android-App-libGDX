@@ -5,6 +5,7 @@ import android.media.AudioAttributes;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -25,6 +26,7 @@ public class OverlayActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         path = "android.resource://de.hhn.aib.swlab.wise1920.group01.exercise1/raw/";
         path += getRingtonePath(this);
+        Log.e("Error", path);
         setContentView(R.layout.activity_overlay);
         Context context;
         mediaPlayer = new MediaPlayer();
