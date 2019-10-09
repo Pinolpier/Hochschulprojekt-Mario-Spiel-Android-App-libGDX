@@ -20,15 +20,18 @@ public class OverlayActivity extends AppCompatActivity {
     private Button beendenButton;
     private MediaPlayer mediaPlayer;
     private String path;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         path = "android.resource://de.hhn.aib.swlab.wise1920.group01.exercise1/raw/";
         path += getRingtonePath(this);
-        Log.e("Error", path);
         setContentView(R.layout.activity_overlay);
-        Context context;
+
+        //Stack Overflow
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
+                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
+                WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+        //
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setAudioAttributes(new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ALARM).build());
         try {
@@ -40,17 +43,15 @@ public class OverlayActivity extends AppCompatActivity {
         catch(IOException e){
             e.printStackTrace();
         }
+
         beendenButton = findViewById(R.id.button_beenden);
         beendenButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
                 mediaPlayer.stop();
+                finish();
             }});
-        //Stack Overflow
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
-                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
-                WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+
     }
 
     public String getRingtonePath(Context context) {

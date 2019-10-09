@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
@@ -24,28 +25,21 @@ import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements TimePickerFragment.TimePickerListener {
     private TimerRepository mTimerRepository;
-    private TimerViewModel mTimerViewModel;
-    int id = 0;
-    private static MainActivity instance;
-    //    private TodoRepository todoRepository;
+ //   private TimerViewModel mTimerViewModel;
+ //   int id = 0;
     private String editTextInput;
     private RecyclerView rvTodos;
     private AlarmHelper alarmHelper;
     private AlarmManager alarmManager;
-    private MediaPlayer mediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mTimerViewModel = ViewModelProviders.of(this).get(TimerViewModel.class);
-
-        editTextInput = "alarm active";
-        instance = this;
-//        todoRepository = new TodoRepositoryInMemoryImpl();
+ //       mTimerViewModel = ViewModelProviders.of(this).get(TimerViewModel.class);
+   //     editTextInput = "alarm active";
         alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        mediaPlayer = new MediaPlayer();
         alarmHelper = new AlarmHelper(this,alarmManager);
         Button button = findViewById(R.id.rvbtn);
         button.setOnClickListener(new View.OnClickListener() {
@@ -61,7 +55,6 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
         rvTodos.setAdapter(new MyAdapter(mTimerRepository.getAllTimer()));
 
         rvTodos = findViewById(R.id.rvTodos);
-//        rvTodos.setAdapter(new MyAdapter(todoRepository));
         rvTodos.setLayoutManager(new LinearLayoutManager(this));
     }
 
@@ -122,18 +115,8 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
 //        Log.e("MainActivity","onTimeSetCalled");
         mTimerRepository.insert(t);
         //Log.e("id", String.valueOf(t.getId()));
-        alarmHelper.setAlarm(cal);
-    }
 
-    public static MainActivity getInstance(){
-        return instance;
+        Toast.makeText(this,"Recieved "+ t.getId(),Toast.LENGTH_LONG).show(); //test zum anzeigen der ID
+        alarmHelper.setAlarm(cal,t.getId());
     }
-    public void startOverlay(){
-        startActivity(new Intent(this,OverlayActivity.class));
-    }
-
-    //  public MediaPlayer getMediaPlayer(){
-    //    return mediaPlayer;
-    //}
-
 }
