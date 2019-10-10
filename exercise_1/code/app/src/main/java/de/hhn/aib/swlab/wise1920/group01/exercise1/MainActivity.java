@@ -1,11 +1,15 @@
 package de.hhn.aib.swlab.wise1920.group01.exercise1;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.AlarmManager;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,11 +27,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.Calendar;
 
+import static de.hhn.aib.swlab.wise1920.group01.exercise1.OverlayActivity.ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE;
+
 public class MainActivity extends AppCompatActivity implements TimePickerFragment.TimePickerListener {
     private TimerRepository mTimerRepository;
  //   private TimerViewModel mTimerViewModel;
  //   int id = 0;
-    private String editTextInput;
+  //  private String editTextInput;
     private RecyclerView rvTodos;
     private AlarmHelper alarmHelper;
     private AlarmManager alarmManager;
@@ -36,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        checkPermission();
  //       mTimerViewModel = ViewModelProviders.of(this).get(TimerViewModel.class);
    //     editTextInput = "alarm active";
         alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
@@ -84,9 +90,9 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
                 TextView txt = holder.itemView.findViewById(R.id.tv_description);
                 System.out.println(txt.getText());
 
-                String input = editTextInput;
+              //  String input = editTextInput;
                 Intent serviceIntent = new Intent(this, ServiceClass.class);
-                serviceIntent.putExtra("inputExtra", input);
+             //   serviceIntent.putExtra("inputExtra", input);
                 startService(serviceIntent);
             }
             if(!switchtest.isChecked())
@@ -94,9 +100,9 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
                 j++;
                 if(j == childCount)
                 {
-                    String input = editTextInput;
+                 //   String input = editTextInput;
                     Intent serviceIntent = new Intent(this, ServiceClass.class);
-                    serviceIntent.putExtra("inputExtra", input);
+                //    serviceIntent.putExtra("inputExtra", input);
                     stopService(serviceIntent);
                 }
             }
@@ -118,5 +124,31 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
 
         Toast.makeText(this,"Recieved "+ t.getId(),Toast.LENGTH_LONG).show(); //test zum anzeigen der ID
         alarmHelper.setAlarm(cal,t.getId());
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE) {
+            if (!Settings.canDrawOverlays(this)) {
+                // You don't have permission
+                checkPermission();
+            } else {
+                // Do as per your logic
+            }
+
+        }
+
+    }
+    public void checkPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!Settings.canDrawOverlays(this)) {
+                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                        Uri.parse("package:" + getPackageName()));
+                startActivityForResult(intent, ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE);
+            }
+        }
     }
 }

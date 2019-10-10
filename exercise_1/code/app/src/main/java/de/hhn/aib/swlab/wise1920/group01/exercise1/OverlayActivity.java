@@ -1,10 +1,14 @@
 package de.hhn.aib.swlab.wise1920.group01.exercise1;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
 import android.media.AudioAttributes;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -16,7 +20,7 @@ import androidx.preference.PreferenceManager;
 import java.io.IOException;
 
 public class OverlayActivity extends AppCompatActivity {
-
+    public static int ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 5469;
     private Button beendenButton;
     private MediaPlayer mediaPlayer;
     private String path;
@@ -26,11 +30,16 @@ public class OverlayActivity extends AppCompatActivity {
         path = "android.resource://de.hhn.aib.swlab.wise1920.group01.exercise1/raw/";
         path += getRingtonePath(this);
         setContentView(R.layout.activity_overlay);
+        // Check if Android M or higher
 
+    //    checkPermission();
         //Stack Overflow
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
                 WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
+                WindowManager.LayoutParams.FIRST_APPLICATION_WINDOW|
                 WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+
+
         //
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setAudioAttributes(new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ALARM).build());
@@ -57,4 +66,30 @@ public class OverlayActivity extends AppCompatActivity {
     public String getRingtonePath(Context context) {
         return new PreferenceManager(context).getDefaultSharedPreferences(context).getString("ringtone", "bowserlaugh");
     }
+
+  /*  @TargetApi(Build.VERSION_CODES.M)
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE) {
+            if (!Settings.canDrawOverlays(this)) {
+                // You don't have permission
+                checkPermission();
+            } else {
+                // Do as per your logic
+            }
+
+        }
+
+    }
+    public void checkPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!Settings.canDrawOverlays(this)) {
+                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                        Uri.parse("package:" + getPackageName()));
+                startActivityForResult(intent, ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE);
+            }
+        }
+    }*/
 }
