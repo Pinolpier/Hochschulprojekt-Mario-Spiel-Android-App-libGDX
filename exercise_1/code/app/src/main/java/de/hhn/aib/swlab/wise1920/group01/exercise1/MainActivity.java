@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -57,12 +58,12 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
 
         mTimerRepository = new TimerRepository(getApplication());
         rvTodos = findViewById(R.id.rvTodos);
-        rvTodos.setAdapter(new MyAdapter(mTimerRepository.getAllTimer()));
+        MyAdapter adapter = new MyAdapter(mTimerRepository.getAllTimer());
+        rvTodos.setAdapter(adapter);
 
         rvTodos = findViewById(R.id.rvTodos);
         rvTodos.setLayoutManager(new LinearLayoutManager(this));
 
-        MyAdapter adapter = new MyAdapter(mTimerRepository.getAllTimer());
         adapter.setOnLongClickListener(new MyAdapter.OnLongClickListener() {
             @Override
             public void onLongClick(Timer timer) {
