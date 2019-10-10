@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
         rvTodos = findViewById(R.id.rvTodos);
         rvTodos.setLayoutManager(new LinearLayoutManager(this));
 
+        //Deleting the timer
         adapter.setOnLongClickListener(new MyAdapter.OnLongClickListener() {
             @Override
             public void onLongClick(Timer timer) {
