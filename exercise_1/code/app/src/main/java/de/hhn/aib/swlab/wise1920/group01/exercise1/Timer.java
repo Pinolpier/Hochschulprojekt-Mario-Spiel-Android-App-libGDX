@@ -26,8 +26,6 @@ public class Timer {
     private boolean active;
 
     int getId() {
-
-        Log.e("getIdInTimer", String.valueOf(id));
         return id;
     }
 
