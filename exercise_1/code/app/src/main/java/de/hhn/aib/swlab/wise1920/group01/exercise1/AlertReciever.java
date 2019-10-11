@@ -34,6 +34,8 @@ public class AlertReciever extends BroadcastReceiver {
             //timerList = liveDataTimerList.getValue();
             timerList = timerDao.getAllActiveTimers();
             if (timerList != null) {
+                Intent serviceIntent = new Intent(context, ServiceClass.class);
+                context.startService(serviceIntent);
                 Iterator<Timer> iter = timerList.iterator();
                 while (iter.hasNext()) {
                     Timer timer = iter.next();
@@ -42,13 +44,9 @@ public class AlertReciever extends BroadcastReceiver {
                         cal.setTimeInMillis(timer.getTime());
                         helper.setAlarm(cal, timer.getId());
                         Log.e("Alarm Receiver: ", "Timer at " + timer.getTime() + " has been set!");
-
-                        Intent serviceIntent = new Intent(context, ServiceClass.class);
-                        context.startService(serviceIntent);
-                    } else {
-                        Log.e("Alarm Receiver: ", "Didn't trigger timer at " + timer.getTime() + "because it's inactive!");
                     }
                 }
+
             } else {
                 Toast.makeText(context, "List is null", Toast.LENGTH_LONG).show();
             }
