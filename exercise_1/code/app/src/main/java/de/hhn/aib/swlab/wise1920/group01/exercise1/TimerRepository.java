@@ -21,8 +21,8 @@ public class TimerRepository {
         return mTimerDao.getAllTimer();
     }
 
-    public void insert(Timer timer) {
+    public long insert(Timer timer) {
         Log.e("Repository", "insertCalled");
-        mTimerDao.insert(timer);
+        return mTimerDao.insert(timer);
     }
 }

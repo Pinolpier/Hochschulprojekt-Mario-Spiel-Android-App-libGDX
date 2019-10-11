@@ -24,6 +24,7 @@
                 android:value="de.hhn.aib.swlab.wise1920.group01.exercise1.MainActivity" />
         </activity>
         <activity android:name=".OverlayActivity"
+            android:excludeFromRecents="true"
             android:label="Alarm!">
         </activity>
         <activity android:name=".MainActivity">

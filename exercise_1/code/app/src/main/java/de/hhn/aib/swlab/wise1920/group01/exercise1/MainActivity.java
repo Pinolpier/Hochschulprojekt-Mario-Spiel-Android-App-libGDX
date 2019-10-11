@@ -1,11 +1,9 @@
 package de.hhn.aib.swlab.wise1920.group01.exercise1;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.AlarmManager;
 import android.content.Context;
 import android.content.Intent;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -118,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
         cal.set(Calendar.MILLISECOND, 0);
         Timer t = new Timer(cal.getTimeInMillis(), true);
 //        Log.e("MainActivity","onTimeSetCalled");
-        mTimerRepository.insert(t);
+        t.setId((int) mTimerRepository.insert(t));
         //Log.e("id", String.valueOf(t.getId()));
 
         Toast.makeText(this,"Recieved "+ t.getId(),Toast.LENGTH_LONG).show(); //test zum anzeigen der ID

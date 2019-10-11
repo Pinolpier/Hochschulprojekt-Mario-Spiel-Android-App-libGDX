@@ -5,8 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.provider.Settings;
-import android.widget.Toast;
-
 import android.util.Log;
 import android.widget.Toast;
 
@@ -22,7 +20,6 @@ public class AlertReciever extends BroadcastReceiver {
     List<Timer> timerList;
     AlarmHelper helper;
     AlarmManager manager;
-    App app;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -30,24 +27,29 @@ public class AlertReciever extends BroadcastReceiver {
         //Aktion die beim Booten des Gerätes ausgeführt werdem sollen, wie etwa Alarme neu zu setzen
         if("android.intent.action.BOOT_COMPLETED".equals(intent.getAction())){
             Toast.makeText(context, "Prozess gestartet", Toast.LENGTH_LONG).show();
-            app = new App();
             manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
             helper = new AlarmHelper(context, manager);
-            liveDataTimerList = new TimerRepository(context).getAllTimer();
-            timerList = liveDataTimerList.getValue();
-            Iterator<Timer> iter = timerList.iterator();
-            while (iter.hasNext()) {
-                Timer timer = iter.next();
-                if (timer.isActive()) {
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTimeInMillis(timer.getTime());
-                    helper.setAlarm(cal);
-//                    helper.setAlarm(cal, timer.getId());
-                    Log.e("Alarm Receiver: ", "Timer at " + timer.getTime() + " has been set!");
-                } else {
-                    Log.e("Alarm Receiver: ", "Didn't trigger timer at " + timer.getTime() + "because it's inactive!");
+            TimerDao timerDao = AppDatabase.getDatabase(context).timerDao();
+            //liveDataTimerList = new TimerRepository(context.getApplicationContext()).getAllTimer();
+            //timerList = liveDataTimerList.getValue();
+            timerList = timerDao.getAllActiveTimers();
+            if (timerList != null) {
+                Iterator<Timer> iter = timerList.iterator();
+                while (iter.hasNext()) {
+                    Timer timer = iter.next();
+                    if (timer.isActive()) {
+                        Calendar cal = Calendar.getInstance();
+                        cal.setTimeInMillis(timer.getTime());
+                        helper.setAlarm(cal, timer.getId());
+                        Log.e("Alarm Receiver: ", "Timer at " + timer.getTime() + " has been set!");
+                    } else {
+                        Log.e("Alarm Receiver: ", "Didn't trigger timer at " + timer.getTime() + "because it's inactive!");
+                    }
                 }
+            } else {
+                Toast.makeText(context, "List is null", Toast.LENGTH_LONG).show();
             }
+
         }
 
         //Aktion die beim erreichen eines Alarmzeitpunktes ausgeführt werden sollen

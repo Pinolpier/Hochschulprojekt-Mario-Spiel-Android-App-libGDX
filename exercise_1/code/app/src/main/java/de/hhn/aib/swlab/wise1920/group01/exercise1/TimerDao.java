@@ -12,13 +12,16 @@ import java.util.List;
 @Dao
 public interface TimerDao {
     @Insert
-    void insert(Timer timer);
+    long insert(Timer timer);
 
     @Query("DELETE FROM timer")
     void deleteAll();
 
     @Query("SELECT * from timer ORDER BY time ASC")
     LiveData<List<Timer>> getAllTimer();
+
+    @Query("SELECT * FROM Timer where active=1")
+    List<Timer> getAllActiveTimers();
 
     @Update
     void update(Timer timer);
