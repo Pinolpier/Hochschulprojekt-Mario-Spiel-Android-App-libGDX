@@ -26,7 +26,7 @@ public class OverlayActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         path = "android.resource://de.hhn.aib.swlab.wise1920.group01.exercise1/raw/";
         path += getRingtonePath(this);
-        Log.e("Error", path);
+        Log.e("OverlayActivity:", "The path where a ringtone is searched is: " + path);
         setContentView(R.layout.activity_overlay);
         Context context;
         mediaPlayer = new MediaPlayer();
@@ -34,8 +34,9 @@ public class OverlayActivity extends AppCompatActivity {
         try {
             mediaPlayer.setDataSource(getApplicationContext(), Uri.parse(path));
             mediaPlayer.prepare();
-            mediaPlayer.start();
-            mediaPlayer.setLooping(true);
+            Log.e("Overlay Activity:", "Alarm would start now!");
+            //mediaPlayer.start();
+            //mediaPlayer.setLooping(true);
         }
         catch(IOException e){
             e.printStackTrace();

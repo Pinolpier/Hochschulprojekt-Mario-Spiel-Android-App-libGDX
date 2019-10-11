@@ -17,7 +17,7 @@ public class TimerRepository {
         mAllTimer = mTimerDao.getAllTimer();
     }
 
-    LiveData<List<Timer>> getAllTimer() {
+    public LiveData<List<Timer>> getAllTimer() {
         return mTimerDao.getAllTimer();
     }
 

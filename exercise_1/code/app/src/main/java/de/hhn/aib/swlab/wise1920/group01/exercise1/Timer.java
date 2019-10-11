@@ -11,7 +11,6 @@ import androidx.room.PrimaryKey;
 public class Timer {
 
     Timer(Long time, boolean active) {
-
         setTime(time);
         setActive(active);
     }

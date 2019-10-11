@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
                 timePickerFragment.show(getSupportFragmentManager(), "timePicker");
             }
         });
-        mTimerRepository = new TimerRepository(getApplication());
+        mTimerRepository = new TimerRepository(this);
         rvTodos = findViewById(R.id.rvTodos);
         rvTodos.setAdapter(new MyAdapter(mTimerRepository.getAllTimer()));
 
