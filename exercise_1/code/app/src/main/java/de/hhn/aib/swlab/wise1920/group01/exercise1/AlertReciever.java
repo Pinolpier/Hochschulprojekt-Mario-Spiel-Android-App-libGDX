@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.provider.Settings;
+import android.widget.Toast;
 
 
 public class AlertReciever extends BroadcastReceiver {
@@ -14,7 +15,7 @@ public class AlertReciever extends BroadcastReceiver {
 
         //Aktion die beim Booten des Gerätes ausgeführt werdem sollen, wie etwa Alarme neu zu setzen
         if("android.intent.action.BOOT_COMPLETED".equals(intent.getAction())){
-
+            Toast.makeText(context,"Boot success!!", Toast.LENGTH_LONG).show();
 
 
         }
