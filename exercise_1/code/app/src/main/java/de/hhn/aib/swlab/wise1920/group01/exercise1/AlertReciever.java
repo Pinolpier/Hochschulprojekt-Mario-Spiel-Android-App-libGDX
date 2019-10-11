@@ -29,6 +29,8 @@ public class AlertReciever extends BroadcastReceiver {
         if("android.intent.action.BOOT_COMPLETED".equals(intent.getAction())){
             Toast.makeText(context, "Prozess gestartet", Toast.LENGTH_LONG).show();
             manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+            helper = new AlarmHelper(context, manager);
+            timerList = timerDao.getAllActiveTimers();
 
             if (timerList != null) {
                 Iterator<Timer> iter = timerList.iterator();
@@ -39,6 +41,8 @@ public class AlertReciever extends BroadcastReceiver {
                         cal.setTimeInMillis(timer.getTime());
                         helper.setAlarm(cal, timer.getId());
                         Log.e("Alarm Receiver: ", "Timer at " + timer.getTime() + " has been set!");
+                    } else {
+                        Log.e("Alarm Receiver: ", "Didn't trigger timer at " + timer.getTime() + "because it's inactive!");
                     }
                 }
 
