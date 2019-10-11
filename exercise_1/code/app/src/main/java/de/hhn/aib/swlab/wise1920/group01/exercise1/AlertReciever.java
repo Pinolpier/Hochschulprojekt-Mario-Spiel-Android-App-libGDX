@@ -34,8 +34,6 @@ public class AlertReciever extends BroadcastReceiver {
             //timerList = liveDataTimerList.getValue();
             timerList = timerDao.getAllActiveTimers();
             if (timerList != null) {
-                Intent serviceIntent = new Intent(context, ServiceClass.class);
-                context.startService(serviceIntent);
                 Iterator<Timer> iter = timerList.iterator();
                 while (iter.hasNext()) {
                     Timer timer = iter.next();
