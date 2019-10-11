@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
                 updateItems(rvTodos);
             }
         });
+        updateItems(rvTodos);
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -146,6 +147,7 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
 
         Toast.makeText(this, "Recieved " + t.getId(), Toast.LENGTH_LONG).show(); //test zum anzeigen der ID
         alarmHelper.setAlarm(cal, t.getId());
+        updateItems(rvTodos);
     }
 
     public void checkPermission() {
