@@ -80,8 +80,11 @@ public class MyAdapter extends RecyclerView.Adapter {
         {
             ((MyViewHolder) holder).switch1.setChecked(true);
         }
-        Log.e("timerId", String.valueOf(timer.getId()));
 
+        else if(timer.isActive()==false){
+            ((MyViewHolder) holder).switch1.setChecked(false);
+        }
+        Log.e("timerId", String.valueOf(timer.getId()));
         ((MyViewHolder) holder).tvDescription.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
