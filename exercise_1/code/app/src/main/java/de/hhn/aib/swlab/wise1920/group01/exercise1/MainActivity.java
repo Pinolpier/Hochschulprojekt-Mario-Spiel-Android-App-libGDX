@@ -28,14 +28,11 @@ import static de.hhn.aib.swlab.wise1920.group01.exercise1.OverlayActivity.ACTION
 
 public class MainActivity extends AppCompatActivity implements TimePickerFragment.TimePickerListener {
     private TimerRepository mTimerRepository;
-    //private TimerViewModel mTimerViewModel;
-    int id = 0;
-    private static MainActivity instance;
-    //    private TodoRepository todoRepository;
     private String editTextInput;
     private RecyclerView rvTodos;
     private AlarmHelper alarmHelper;
     private AlarmManager alarmManager;
+    private TimerDao timerDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,10 +40,10 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         checkPermission();
-        //mTimerViewModel = ViewModelProviders.of(this).get(TimerViewModel.class);
         editTextInput = "alarm active";
         alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         alarmHelper = new AlarmHelper(this, alarmManager);
+        timerDao= AppDatabase.getDatabase(this).timerDao();
         Button button = findViewById(R.id.rvbtn);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,12 +90,10 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
         if (mTimerRepository.getAllActiveTimers().size() < 1) {
             //Deaktivieren
             Intent serviceIntent = new Intent(this, ServiceClass.class);
-            //    serviceIntent.putExtra("inputExtra", input);
             stopService(serviceIntent);
         } else {
             //Aktivieren
             Intent serviceIntent = new Intent(this, ServiceClass.class);
-            //   serviceIntent.putExtra("inputExtra", input);
             startService(serviceIntent);
         }
 
@@ -109,37 +104,28 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
             final RecyclerView.ViewHolder holder = rvTodos.getChildViewHolder(rvTodos.getChildAt(i));
             Switch switchtest = holder.itemView.findViewById(R.id.switch1);
             TextView txt = holder.itemView.findViewById(R.id.tv_description);
+
+            String string = (String) txt.getText();
+            String[] timedates = string.split(":");
+            int hour = Integer.parseInt(timedates[0]);
+            int minute = Integer.parseInt(timedates[1]);
+            Calendar c = Calendar.getInstance();
+
+            c.set(Calendar.HOUR_OF_DAY,hour);
+            c.set(Calendar.MINUTE,minute);
+            c.set(Calendar.SECOND,0);
+            c.set(Calendar.MILLISECOND,0);
+            Timer te = mTimerRepository.getTimerAt(c.getTimeInMillis());
+
             if (switchtest.isChecked()) {
-                String string = (String) txt.getText();
-                String[] timedates = string.split(":");
-                int hour = Integer.parseInt(timedates[0]);
-                int minute = Integer.parseInt(timedates[1]);
-                Calendar c = Calendar.getInstance();
-
-                c.set(Calendar.HOUR_OF_DAY,hour);
-                c.set(Calendar.MINUTE,minute);
-                c.set(Calendar.SECOND,0);
-                c.set(Calendar.MILLISECOND,0);
-                Timer te = mTimerRepository.getTimerAt(c.getTimeInMillis());
-
                 te.setActive(true);
+                timerDao.update(te);
                 alarmHelper.setAlarm(c,te.getId());
             }
             if (!switchtest.isChecked())
             {
-                String string = (String) txt.getText();
-                String[] timedates = string.split(":");
-                int hour = Integer.parseInt(timedates[0]);
-                int minute = Integer.parseInt(timedates[1]);
-                Calendar c = Calendar.getInstance();
-
-                c.set(Calendar.HOUR_OF_DAY,hour);
-                c.set(Calendar.MINUTE,minute);
-                c.set(Calendar.SECOND,0);
-                c.set(Calendar.MILLISECOND,0);
-                Timer te = mTimerRepository.getTimerAt(c.getTimeInMillis());
-
                 te.setActive(false);
+                timerDao.update(te);
                 alarmHelper.cancelAlarm(te.getId());
             }
         }
@@ -162,21 +148,6 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
         alarmHelper.setAlarm(cal, t.getId());
     }
 
-    /*  @TargetApi(Build.VERSION_CODES.Q)
-      @Override
-      protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-          super.onActivityResult(requestCode, resultCode, data);
-
-          if (requestCode == ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE) {
-              if (!Settings.canDrawOverlays(this)) {
-                  // You don't have permission
-                  checkPermission();
-              } else {
-                  // Do as per your logic
-              }
-
-          }
-      }*/
     public void checkPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             if (!Settings.canDrawOverlays(this)) {
