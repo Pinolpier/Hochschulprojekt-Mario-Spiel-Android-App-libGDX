@@ -9,9 +9,9 @@ import android.os.IBinder;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
-import static de.hhn.aib.swlab.wise1920.group01.exercise1.App.CHANNEL_ID;
+import static de.hhn.aib.swlab.wise1920.group01.exercise1.NotificationApp.CHANNEL_ID;
 
-public class ServiceClass extends Service
+public class NotificationServiceClass extends Service
 {
 
     @Override

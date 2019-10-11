@@ -49,9 +49,6 @@ public class AlertReciever extends BroadcastReceiver {
             } else {
                 Toast.makeText(context, "List is null", Toast.LENGTH_LONG).show();
             }
-
-
-
         }
 
         //Aktion die beim erreichen eines Alarmzeitpunktes ausgeführt werden sollen

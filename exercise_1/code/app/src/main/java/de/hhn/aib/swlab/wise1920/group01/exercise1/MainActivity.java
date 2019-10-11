@@ -8,14 +8,11 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
@@ -28,7 +25,6 @@ import static de.hhn.aib.swlab.wise1920.group01.exercise1.OverlayActivity.ACTION
 
 public class MainActivity extends AppCompatActivity implements TimePickerFragment.TimePickerListener {
     private TimerRepository mTimerRepository;
-    private String editTextInput;
     private RecyclerView rvTodos;
     private AlarmHelper alarmHelper;
     private AlarmManager alarmManager;
@@ -40,10 +36,16 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         checkPermission();
-        editTextInput = "alarm active";
         alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         alarmHelper = new AlarmHelper(this, alarmManager);
         timerDao= AppDatabase.getDatabase(this).timerDao();
+        mTimerRepository = new TimerRepository(this);
+        rvTodos = findViewById(R.id.rvTodos);
+        MyAdapter adapter = new MyAdapter(mTimerRepository.getAllTimer());
+        rvTodos.setAdapter(adapter);
+        rvTodos = findViewById(R.id.rvTodos);
+        rvTodos.setLayoutManager(new LinearLayoutManager(this));
+
         Button button = findViewById(R.id.rvbtn);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,17 +55,8 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
                 timePickerFragment.show(getSupportFragmentManager(), "timePicker");
             }
         });
-        mTimerRepository = new TimerRepository(this);
-        rvTodos = findViewById(R.id.rvTodos);
-        MyAdapter adapter = new MyAdapter(mTimerRepository.getAllTimer());
-        rvTodos.setAdapter(adapter);
 
-        rvTodos = findViewById(R.id.rvTodos);
-        rvTodos.setLayoutManager(new LinearLayoutManager(this));
-
-        updateItems(rvTodos);
-
-        //Deleting the timer
+        //Deleting the timer with a long click on the time
         adapter.setOnLongClickListener(new MyAdapter.OnLongClickListener() {
             @Override
             public void onLongClick(Timer timer) {
@@ -72,21 +65,6 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
                 updateItems(rvTodos);
             }
         });
-
-    }
-
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu, menu);
-        return true;
-    }
-
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.settings) {
-            startActivity(new Intent(this, SettingsActivity.class));
-        }
-        return true;
     }
 
     public void updateItems(View v) {
@@ -120,16 +98,16 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
             }
         }
         if (mTimerRepository.getAllActiveTimers()==null){
-            Intent serviceIntent = new Intent(this, ServiceClass.class);
+            Intent serviceIntent = new Intent(this, NotificationServiceClass.class);
             stopService(serviceIntent);
         }
         else if (mTimerRepository.getAllActiveTimers().size() < 1) {
             //Deaktivieren
-            Intent serviceIntent = new Intent(this, ServiceClass.class);
+            Intent serviceIntent = new Intent(this, NotificationServiceClass.class);
             stopService(serviceIntent);
         } else {
             //Aktivieren
-            Intent serviceIntent = new Intent(this, ServiceClass.class);
+            Intent serviceIntent = new Intent(this, NotificationServiceClass.class);
             startService(serviceIntent);
         }
     }
@@ -144,7 +122,6 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
         cal.set(Calendar.MILLISECOND, 0);
         Timer t = new Timer(cal.getTimeInMillis(), true);
         t.setId((int) mTimerRepository.insert(t));
-
         alarmHelper.setAlarm(cal, t.getId());
         updateItems(rvTodos);
     }

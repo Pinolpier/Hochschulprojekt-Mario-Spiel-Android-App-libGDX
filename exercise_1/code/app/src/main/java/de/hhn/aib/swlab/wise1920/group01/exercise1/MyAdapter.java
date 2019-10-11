@@ -66,10 +66,6 @@ public class MyAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(@NotNull final RecyclerView.ViewHolder holder, int position) {
         final Timer timer = mTimer.get(position);
-        // - get element from your dataset at this position
-        // - replace the contents of the view with that element
-        // holder.textView.setText(mDataset[position]);
-        //TODO schalter aktiv setzten
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(timer.getTime());
         int hour = cal.get(Calendar.HOUR_OF_DAY);

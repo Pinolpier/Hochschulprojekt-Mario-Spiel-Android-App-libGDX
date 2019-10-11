@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
@@ -26,28 +27,25 @@ public class OverlayActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         path = "android.resource://de.hhn.aib.swlab.wise1920.group01.exercise1/raw/";
         path += getRingtonePath(this);
-        Log.e("OverlayActivity:", "The path where a ringtone is searched is: " + path);
         setContentView(R.layout.activity_overlay);
 
-        //Stack Overflow
+        //Von Stack Overflow welche Flags gesetzt werden müssen
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
                 WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
                 WindowManager.LayoutParams.FIRST_APPLICATION_WINDOW|
                 WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 
-
-        //
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setAudioAttributes(new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ALARM).build());
         try {
             mediaPlayer.setDataSource(getApplicationContext(), Uri.parse(path));
             mediaPlayer.prepare();
-            Log.e("Overlay Activity:", "Alarm would start now!");
             mediaPlayer.start();
             mediaPlayer.setLooping(true);
         }
         catch(IOException e){
             e.printStackTrace();
+            Toast.makeText(this, "Audiodatei nicht gefunden!", Toast.LENGTH_LONG).show();
         }
 
         beendenButton = findViewById(R.id.button_beenden);

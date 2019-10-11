@@ -16,6 +16,11 @@ public class AlarmHelper{
         this.alarmManager = alarmManager;
     }
 
+    /**
+     * Die Methode setzt einen Alarm zu bestimmter Uhrzeit und mit individueller ID
+     * @param calendar calender objekt mit der Uhrzeit für den der Alarm gesetzt werden soll
+     * @param id , des Timers, für den der Alarm gesetzt werden soll
+     */
     public void setAlarm(Calendar calendar, int id){
         Intent intent = new Intent(context,AlertReciever.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context,id,intent,0);
