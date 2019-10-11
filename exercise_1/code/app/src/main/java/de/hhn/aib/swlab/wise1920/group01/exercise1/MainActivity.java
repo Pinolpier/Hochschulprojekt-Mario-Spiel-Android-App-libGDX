@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
         alarmHelper.setAlarm(cal,t.getId());
     }
 
-    @TargetApi(Build.VERSION_CODES.M)
+  /*  @TargetApi(Build.VERSION_CODES.Q)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -140,8 +140,7 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
             }
 
         }
-
-    }
+    }*/
     public void checkPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             if (!Settings.canDrawOverlays(this)) {

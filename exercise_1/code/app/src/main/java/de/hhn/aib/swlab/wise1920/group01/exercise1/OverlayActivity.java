@@ -24,15 +24,14 @@ public class OverlayActivity extends AppCompatActivity {
     private Button beendenButton;
     private MediaPlayer mediaPlayer;
     private String path;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         path = "android.resource://de.hhn.aib.swlab.wise1920.group01.exercise1/raw/";
         path += getRingtonePath(this);
         setContentView(R.layout.activity_overlay);
-        // Check if Android M or higher
 
-    //    checkPermission();
         //Stack Overflow
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
                 WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
@@ -66,30 +65,4 @@ public class OverlayActivity extends AppCompatActivity {
     public String getRingtonePath(Context context) {
         return new PreferenceManager(context).getDefaultSharedPreferences(context).getString("ringtone", "bowserlaugh");
     }
-
-  /*  @TargetApi(Build.VERSION_CODES.M)
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE) {
-            if (!Settings.canDrawOverlays(this)) {
-                // You don't have permission
-                checkPermission();
-            } else {
-                // Do as per your logic
-            }
-
-        }
-
-    }
-    public void checkPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (!Settings.canDrawOverlays(this)) {
-                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                        Uri.parse("package:" + getPackageName()));
-                startActivityForResult(intent, ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE);
-            }
-        }
-    }*/
 }
