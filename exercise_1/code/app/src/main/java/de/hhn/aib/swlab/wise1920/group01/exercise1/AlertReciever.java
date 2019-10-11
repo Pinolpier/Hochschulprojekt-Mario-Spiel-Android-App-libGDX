@@ -7,9 +7,7 @@ import android.content.Intent;
 import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
-
 import androidx.lifecycle.LiveData;
-
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
@@ -31,9 +29,6 @@ public class AlertReciever extends BroadcastReceiver {
         if("android.intent.action.BOOT_COMPLETED".equals(intent.getAction())){
             Toast.makeText(context, "Prozess gestartet", Toast.LENGTH_LONG).show();
             manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-
-            //liveDataTimerList = new TimerRepository(context.getApplicationContext()).getAllTimer();
-            //timerList = liveDataTimerList.getValue();
 
             if (timerList != null) {
                 Iterator<Timer> iter = timerList.iterator();

@@ -28,10 +28,7 @@ import static de.hhn.aib.swlab.wise1920.group01.exercise1.OverlayActivity.ACTION
 
 public class MainActivity extends AppCompatActivity implements TimePickerFragment.TimePickerListener {
     private TimerRepository mTimerRepository;
-    //private TimerViewModel mTimerViewModel;
-    int id = 0;
     private static MainActivity instance;
-    //    private TodoRepository todoRepository;
     private String editTextInput;
     private RecyclerView rvTodos;
     private AlarmHelper alarmHelper;
@@ -43,7 +40,6 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         checkPermission();
-        //mTimerViewModel = ViewModelProviders.of(this).get(TimerViewModel.class);
         editTextInput = "alarm active";
         alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         alarmHelper = new AlarmHelper(this, alarmManager);
@@ -93,12 +89,10 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
         if (mTimerRepository.getAllActiveTimers().size() < 1) {
             //Deaktivieren
             Intent serviceIntent = new Intent(this, ServiceClass.class);
-            //    serviceIntent.putExtra("inputExtra", input);
             stopService(serviceIntent);
         } else {
             //Aktivieren
             Intent serviceIntent = new Intent(this, ServiceClass.class);
-            //   serviceIntent.putExtra("inputExtra", input);
             startService(serviceIntent);
         }
 
@@ -128,29 +122,11 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
         Timer t = new Timer(cal.getTimeInMillis(), true);
-//        Log.e("MainActivity","onTimeSetCalled");
         t.setId((int) mTimerRepository.insert(t));
-        //Log.e("id", String.valueOf(t.getId()));
 
-        Toast.makeText(this, "Recieved " + t.getId(), Toast.LENGTH_LONG).show(); //test zum anzeigen der ID
         alarmHelper.setAlarm(cal, t.getId());
     }
 
-    /*  @TargetApi(Build.VERSION_CODES.Q)
-      @Override
-      protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-          super.onActivityResult(requestCode, resultCode, data);
-
-          if (requestCode == ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE) {
-              if (!Settings.canDrawOverlays(this)) {
-                  // You don't have permission
-                  checkPermission();
-              } else {
-                  // Do as per your logic
-              }
-
-          }
-      }*/
     public void checkPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             if (!Settings.canDrawOverlays(this)) {
