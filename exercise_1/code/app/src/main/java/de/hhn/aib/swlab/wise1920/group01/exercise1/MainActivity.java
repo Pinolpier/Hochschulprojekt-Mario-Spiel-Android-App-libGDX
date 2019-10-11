@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,20 +29,23 @@ import static de.hhn.aib.swlab.wise1920.group01.exercise1.OverlayActivity.ACTION
 
 public class MainActivity extends AppCompatActivity implements TimePickerFragment.TimePickerListener {
     private TimerRepository mTimerRepository;
- //   private TimerViewModel mTimerViewModel;
- //   int id = 0;
-  //  private String editTextInput;
+    private TimerViewModel mTimerViewModel;
+    int id = 0;
+    private static MainActivity instance;
+    //    private TodoRepository todoRepository;
+    private String editTextInput;
     private RecyclerView rvTodos;
     private AlarmHelper alarmHelper;
     private AlarmManager alarmManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         checkPermission();
- //       mTimerViewModel = ViewModelProviders.of(this).get(TimerViewModel.class);
-   //     editTextInput = "alarm active";
+        mTimerViewModel = ViewModelProviders.of(this).get(TimerViewModel.class);
+        editTextInput = "alarm active";
         alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         alarmHelper = new AlarmHelper(this,alarmManager);
         Button button = findViewById(R.id.rvbtn);
@@ -55,10 +59,20 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
         });
         mTimerRepository = new TimerRepository(this);
         rvTodos = findViewById(R.id.rvTodos);
-        rvTodos.setAdapter(new MyAdapter(mTimerRepository.getAllTimer()));
+        MyAdapter adapter = new MyAdapter(mTimerRepository.getAllTimer());
+        rvTodos.setAdapter(adapter);
 
         rvTodos = findViewById(R.id.rvTodos);
         rvTodos.setLayoutManager(new LinearLayoutManager(this));
+
+        //Deleting the timer
+        adapter.setOnLongClickListener(new MyAdapter.OnLongClickListener() {
+            @Override
+            public void onLongClick(Timer timer) {
+                mTimerRepository.delete(timer);
+                //TODO Alarm löschen
+            }
+        });
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {

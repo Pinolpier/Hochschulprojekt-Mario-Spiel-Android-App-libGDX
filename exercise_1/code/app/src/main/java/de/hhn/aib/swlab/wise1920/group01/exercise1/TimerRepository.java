@@ -8,7 +8,7 @@ import androidx.lifecycle.LiveData;
 import java.util.List;
 
 public class TimerRepository {
-    private TimerDao mTimerDao;
+    private static TimerDao mTimerDao;
     private LiveData<List<Timer>> mAllTimer;
 
     TimerRepository(Context context) {
@@ -24,5 +24,14 @@ public class TimerRepository {
     public long insert(Timer timer) {
         Log.e("Repository", "insertCalled");
         return mTimerDao.insert(timer);
+    }
+
+    public static void update(Timer timer) {
+        Log.e("Reopsitory", "updaeCalled");
+        mTimerDao.update(timer);
+    }
+
+    public static void delete(Timer timer) {
+        mTimerDao.delete(timer);
     }
 }

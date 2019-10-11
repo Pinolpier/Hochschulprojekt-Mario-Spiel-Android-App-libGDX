@@ -11,12 +11,15 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Calendar;
 import java.util.List;
 
 public class MyAdapter extends RecyclerView.Adapter {
     private LiveData<List<Timer>> timerLiveData;
     private List<Timer> mTimer;
+    private OnLongClickListener onLongClickListener;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -60,18 +63,29 @@ public class MyAdapter extends RecyclerView.Adapter {
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NotNull final RecyclerView.ViewHolder holder, int position) {
+        final Timer timer = mTimer.get(position);
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         // holder.textView.setText(mDataset[position]);
         //TODO schalter aktiv setzten
         Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(mTimer.get(position).getTime());
+        cal.setTimeInMillis(timer.getTime());
         int hour = cal.get(Calendar.HOUR_OF_DAY);
         int minute = cal.get(Calendar.MINUTE);
-        ((MyViewHolder) holder).tvDescription.setText(hour + " " + minute);
+        ((MyViewHolder) holder).tvDescription.setText(hour + ":" + minute);
+        Log.e("timerId", String.valueOf(timer.getId()));
 
-        //TODO hier longpress für delete einfügen
+        ((MyViewHolder) holder).tvDescription.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                if (onLongClickListener != null) {
+                    onLongClickListener.onLongClick(timer);
+                    Log.e("MyAdapter", "longPressCalled");
+                }
+                return true;
+            }
+        });
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -83,8 +97,14 @@ public class MyAdapter extends RecyclerView.Adapter {
         return 0;
     }
 
-    void setWords(List<Timer> timer) {
-        mTimer = timer;
-        notifyDataSetChanged();
+
+    public interface OnLongClickListener {
+        void onLongClick(Timer timer);
     }
+
+
+    public void setOnLongClickListener(OnLongClickListener onLongClickListener) {
+        this.onLongClickListener = onLongClickListener;
+    }
+
 }
