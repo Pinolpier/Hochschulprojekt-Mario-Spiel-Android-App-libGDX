@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
             @Override
             public void onLongClick(Timer timer) {
                 mTimerRepository.delete(timer);
+                //TODO Alarm löschen
             }
         });
     }
