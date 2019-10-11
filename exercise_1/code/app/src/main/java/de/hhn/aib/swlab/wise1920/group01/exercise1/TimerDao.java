@@ -23,6 +23,9 @@ public interface TimerDao {
     @Query("SELECT * FROM Timer where active=1")
     List<Timer> getAllActiveTimers();
 
+    @Query("SELECT * FROM Timer WHERE time=:timeInMillis")
+    Timer getTimerAt(long timeInMillis);
+
     @Update
     void update(Timer timer);
 

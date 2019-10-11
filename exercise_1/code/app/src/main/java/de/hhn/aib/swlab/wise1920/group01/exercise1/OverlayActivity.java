@@ -1,14 +1,10 @@
 package de.hhn.aib.swlab.wise1920.group01.exercise1;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.Intent;
 import android.media.AudioAttributes;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -47,8 +43,8 @@ public class OverlayActivity extends AppCompatActivity {
             mediaPlayer.setDataSource(getApplicationContext(), Uri.parse(path));
             mediaPlayer.prepare();
             Log.e("Overlay Activity:", "Alarm would start now!");
-            //mediaPlayer.start();
-            //mediaPlayer.setLooping(true);
+            mediaPlayer.start();
+            mediaPlayer.setLooping(true);
         }
         catch(IOException e){
             e.printStackTrace();

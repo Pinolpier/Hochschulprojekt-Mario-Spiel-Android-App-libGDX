@@ -4,6 +4,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -28,12 +29,13 @@ public class MyAdapter extends RecyclerView.Adapter {
         // each data item is just a string in this case
         public View viewGroup;
         public final TextView tvDescription;
+        public Switch switch1;
 
         public MyViewHolder(View v) {
             super(v);
             viewGroup = v;
             tvDescription = viewGroup.findViewById(R.id.tv_description);
-//            switch1 = viewGroup.findViewById(R.id.switch1);
+            switch1 = viewGroup.findViewById(R.id.switch1);
         }
     }
 
@@ -97,7 +99,6 @@ public class MyAdapter extends RecyclerView.Adapter {
         return 0;
     }
 
-
     public interface OnLongClickListener {
         void onLongClick(Timer timer);
     }
@@ -106,5 +107,4 @@ public class MyAdapter extends RecyclerView.Adapter {
     public void setOnLongClickListener(OnLongClickListener onLongClickListener) {
         this.onLongClickListener = onLongClickListener;
     }
-
 }

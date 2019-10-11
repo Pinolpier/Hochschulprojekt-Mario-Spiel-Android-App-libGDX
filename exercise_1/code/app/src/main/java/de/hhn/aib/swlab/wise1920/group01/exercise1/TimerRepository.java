@@ -26,6 +26,14 @@ public class TimerRepository {
         return mTimerDao.insert(timer);
     }
 
+    public List<Timer> getAllActiveTimers() {
+        return mTimerDao.getAllActiveTimers();
+    }
+
+    public Timer getTimerAt(long timeInMillis) {
+        return mTimerDao.getTimerAt(timeInMillis);
+    }
+
     public static void update(Timer timer) {
         Log.e("Reopsitory", "updaeCalled");
         mTimerDao.update(timer);
