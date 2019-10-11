@@ -36,4 +36,5 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
     implementation 'org.jetbrains:annotations-java5:15.0'
     implementation 'org.jetbrains:annotations-java5:15.0'
+    implementation 'org.jetbrains:annotations-java5:15.0'
 }

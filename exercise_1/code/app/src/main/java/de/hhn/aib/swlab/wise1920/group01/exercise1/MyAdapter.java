@@ -76,6 +76,10 @@ public class MyAdapter extends RecyclerView.Adapter {
         int hour = cal.get(Calendar.HOUR_OF_DAY);
         int minute = cal.get(Calendar.MINUTE);
         ((MyViewHolder) holder).tvDescription.setText(hour + ":" + minute);
+        if(timer.isActive())
+        {
+            ((MyViewHolder) holder).switch1.setChecked(true);
+        }
         Log.e("timerId", String.valueOf(timer.getId()));
 
         ((MyViewHolder) holder).tvDescription.setOnLongClickListener(new View.OnLongClickListener() {
