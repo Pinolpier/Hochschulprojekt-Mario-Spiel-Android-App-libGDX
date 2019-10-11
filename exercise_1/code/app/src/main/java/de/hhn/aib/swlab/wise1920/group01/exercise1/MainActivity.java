@@ -87,19 +87,6 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
     }
 
     public void updateItems(View v) {
-        if (mTimerRepository.getAllActiveTimers().size() < 1) {
-            //Deaktivieren
-            Intent serviceIntent = new Intent(this, ServiceClass.class);
-            stopService(serviceIntent);
-        } else {
-            //Aktivieren
-            Intent serviceIntent = new Intent(this, ServiceClass.class);
-            startService(serviceIntent);
-        }
-
-
-        int j = 0;
-
         for (int childCount = rvTodos.getChildCount(), i = 0; i < childCount; ++i) {
             final RecyclerView.ViewHolder holder = rvTodos.getChildViewHolder(rvTodos.getChildAt(i));
             Switch switchtest = holder.itemView.findViewById(R.id.switch1);
@@ -128,6 +115,19 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
                 timerDao.update(te);
                 alarmHelper.cancelAlarm(te.getId());
             }
+        }
+        if (mTimerRepository.getAllActiveTimers()==null){
+            Intent serviceIntent = new Intent(this, ServiceClass.class);
+            stopService(serviceIntent);
+        }
+        else if (mTimerRepository.getAllActiveTimers().size() > 1) {
+            //Deaktivieren
+            Intent serviceIntent = new Intent(this, ServiceClass.class);
+            stopService(serviceIntent);
+        } else {
+            //Aktivieren
+            Intent serviceIntent = new Intent(this, ServiceClass.class);
+            startService(serviceIntent);
         }
     }
 
