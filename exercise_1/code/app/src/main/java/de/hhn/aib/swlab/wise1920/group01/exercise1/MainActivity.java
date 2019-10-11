@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
             Intent serviceIntent = new Intent(this, ServiceClass.class);
             stopService(serviceIntent);
         }
-        else if (mTimerRepository.getAllActiveTimers().size() > 1) {
+        else if (mTimerRepository.getAllActiveTimers().size() < 1) {
             //Deaktivieren
             Intent serviceIntent = new Intent(this, ServiceClass.class);
             stopService(serviceIntent);
