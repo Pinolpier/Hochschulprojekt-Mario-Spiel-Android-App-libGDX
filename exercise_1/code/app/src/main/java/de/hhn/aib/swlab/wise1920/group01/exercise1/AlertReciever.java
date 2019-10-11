@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.lifecycle.LiveData;
 
@@ -23,6 +24,7 @@ public class AlertReciever extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
         if("android.intent.action.BOOT_COMPLETED".equals(intent.getAction())){
+            Toast.makeText(context, "Prozess gestartet", Toast.LENGTH_LONG).show();
             app = new App();
             manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
             helper = new AlarmHelper(context, manager);

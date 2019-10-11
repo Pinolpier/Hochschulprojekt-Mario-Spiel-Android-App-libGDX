@@ -16,7 +16,6 @@ import android.widget.TimePicker;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,7 +23,7 @@ import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements TimePickerFragment.TimePickerListener {
     private TimerRepository mTimerRepository;
-    private TimerViewModel mTimerViewModel;
+    //private TimerViewModel mTimerViewModel;
     int id = 0;
     private static MainActivity instance;
     //    private TodoRepository todoRepository;
@@ -39,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mTimerViewModel = ViewModelProviders.of(this).get(TimerViewModel.class);
+        //mTimerViewModel = ViewModelProviders.of(this).get(TimerViewModel.class);
 
         editTextInput = "alarm active";
         instance = this;

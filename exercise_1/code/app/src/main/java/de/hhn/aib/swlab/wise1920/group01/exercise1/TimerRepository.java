@@ -1,6 +1,6 @@
 package de.hhn.aib.swlab.wise1920.group01.exercise1;
 
-import android.app.Application;
+import android.content.Context;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -11,8 +11,8 @@ public class TimerRepository {
     private TimerDao mTimerDao;
     private LiveData<List<Timer>> mAllTimer;
 
-    TimerRepository(Application application) {
-        AppDatabase db = AppDatabase.getDatabase(application);
+    TimerRepository(Context context) {
+        AppDatabase db = AppDatabase.getDatabase(context);
         mTimerDao = db.timerDao();
         mAllTimer = mTimerDao.getAllTimer();
     }
