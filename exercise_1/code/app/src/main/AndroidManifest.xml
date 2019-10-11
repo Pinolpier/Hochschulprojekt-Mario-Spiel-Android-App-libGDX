@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="de.hhn.aib.swlab.wise1920.group01.exercise1">
-    <uses-permission android:name = "android.permission.FOREGROUND_SERVICE"></uses-permission>
+    <uses-permission android:name = "android.permission.FOREGROUND_SERVICE"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -11,7 +13,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
@@ -20,7 +23,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.hhn.aib.swlab.wise1920.group01.exercise1.MainActivity" />
         </activity>
-        <activity android:name=".OverlayActivity"></activity>
+        <activity android:name=".OverlayActivity"
+            android:label="Alarm!">
+        </activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,14 +35,12 @@
         </activity>
         <service android:name=".ServiceClass" />
 
-        <receiver android:name=".AlertReciever" android:exported="true">
+        <receiver android:name=".AlertReciever"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
-
     </application>
-
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
 </manifest>

@@ -1,10 +1,14 @@
 package de.hhn.aib.swlab.wise1920.group01.exercise1;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
 import android.media.AudioAttributes;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -16,7 +20,7 @@ import androidx.preference.PreferenceManager;
 import java.io.IOException;
 
 public class OverlayActivity extends AppCompatActivity {
-
+    public static int ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 5469;
     private Button beendenButton;
     private MediaPlayer mediaPlayer;
     private String path;
@@ -28,7 +32,15 @@ public class OverlayActivity extends AppCompatActivity {
         path += getRingtonePath(this);
         Log.e("OverlayActivity:", "The path where a ringtone is searched is: " + path);
         setContentView(R.layout.activity_overlay);
-        Context context;
+
+        //Stack Overflow
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
+                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
+                WindowManager.LayoutParams.FIRST_APPLICATION_WINDOW|
+                WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+
+
+        //
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setAudioAttributes(new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ALARM).build());
         try {
@@ -41,17 +53,15 @@ public class OverlayActivity extends AppCompatActivity {
         catch(IOException e){
             e.printStackTrace();
         }
+
         beendenButton = findViewById(R.id.button_beenden);
         beendenButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
                 mediaPlayer.stop();
+                finish();
             }});
-        //Stack Overflow
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
-                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
-                WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+
     }
 
     public String getRingtonePath(Context context) {
