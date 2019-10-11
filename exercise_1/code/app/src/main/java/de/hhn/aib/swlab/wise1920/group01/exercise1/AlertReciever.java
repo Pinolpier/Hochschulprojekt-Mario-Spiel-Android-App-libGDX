@@ -7,9 +7,7 @@ import android.content.Intent;
 import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
-
 import androidx.lifecycle.LiveData;
-
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
@@ -23,16 +21,15 @@ public class AlertReciever extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        helper = new AlarmHelper(context, manager);
+        TimerDao timerDao = AppDatabase.getDatabase(context).timerDao();
+        timerList = timerDao.getAllActiveTimers();
 
         //Aktion die beim Booten des Gerätes ausgeführt werdem sollen, wie etwa Alarme neu zu setzen
         if("android.intent.action.BOOT_COMPLETED".equals(intent.getAction())){
             Toast.makeText(context, "Prozess gestartet", Toast.LENGTH_LONG).show();
             manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-            helper = new AlarmHelper(context, manager);
-            TimerDao timerDao = AppDatabase.getDatabase(context).timerDao();
-            //liveDataTimerList = new TimerRepository(context.getApplicationContext()).getAllTimer();
-            //timerList = liveDataTimerList.getValue();
-            timerList = timerDao.getAllActiveTimers();
+
             if (timerList != null) {
                 Iterator<Timer> iter = timerList.iterator();
                 while (iter.hasNext()) {
@@ -57,6 +54,12 @@ public class AlertReciever extends BroadcastReceiver {
         else{
 
        //   Toast.makeText(context,"Recieved!!",Toast.LENGTH_LONG).show();
+            Calendar c = Calendar.getInstance();
+            c.set(Calendar.SECOND,0);
+            c.set(Calendar.MILLISECOND,0);
+            Timer time = timerDao.getTimerAt(c.getTimeInMillis());
+            time.setActive(false);
+            timerDao.update(time);
             intentAlarm = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
             intentAlarm.setClass(context,OverlayActivity.class);
             intentAlarm.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

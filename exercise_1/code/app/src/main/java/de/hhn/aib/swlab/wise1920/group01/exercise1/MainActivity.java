@@ -141,11 +141,8 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
         Timer t = new Timer(cal.getTimeInMillis(), true);
-//        Log.e("MainActivity","onTimeSetCalled");
         t.setId((int) mTimerRepository.insert(t));
-        //Log.e("id", String.valueOf(t.getId()));
 
-        Toast.makeText(this, "Recieved " + t.getId(), Toast.LENGTH_LONG).show(); //test zum anzeigen der ID
         alarmHelper.setAlarm(cal, t.getId());
         updateItems(rvTodos);
     }

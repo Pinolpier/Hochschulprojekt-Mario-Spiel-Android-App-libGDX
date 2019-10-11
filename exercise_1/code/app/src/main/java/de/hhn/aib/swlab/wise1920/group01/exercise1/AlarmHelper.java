@@ -11,11 +11,9 @@ public class AlarmHelper{
 
     AlarmManager alarmManager;
     Context context;
-    int id;
     public AlarmHelper(Context context,AlarmManager alarmManager){
         this.context = context;
         this.alarmManager = alarmManager;
-        id = 0;
     }
 
     public void setAlarm(Calendar calendar, int id){
@@ -29,7 +27,7 @@ public class AlarmHelper{
 
     /**
      * Methode um einen bereits gesetzten Alarm zu Löschen
-     * @param
+     * @param  id des Timers, für welchen der Alarm deaktiviert werden soll
      */
     public void cancelAlarm(int id){
         Intent intent = new Intent(context,AlertReciever.class);
