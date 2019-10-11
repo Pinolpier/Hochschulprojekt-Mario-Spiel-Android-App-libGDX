@@ -61,16 +61,18 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
         rvTodos = findViewById(R.id.rvTodos);
         rvTodos.setLayoutManager(new LinearLayoutManager(this));
 
+        updateItems(rvTodos);
+
         //Deleting the timer
         adapter.setOnLongClickListener(new MyAdapter.OnLongClickListener() {
             @Override
             public void onLongClick(Timer timer) {
                 alarmHelper.cancelAlarm(timer.getId());
-                TimerRepository.delete(timer);
+                mTimerRepository.delete(timer);
                 updateItems(rvTodos);
             }
         });
-        updateItems(rvTodos);
+
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -104,17 +106,17 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
             c.set(Calendar.SECOND,0);
             c.set(Calendar.MILLISECOND,0);
             Timer te = mTimerRepository.getTimerAt(c.getTimeInMillis());
-
-            if (switchtest.isChecked()) {
-                te.setActive(true);
-                timerDao.update(te);
-                alarmHelper.setAlarm(c,te.getId());
-            }
-            if (!switchtest.isChecked())
-            {
-                te.setActive(false);
-                timerDao.update(te);
-                alarmHelper.cancelAlarm(te.getId());
+            if(te != null) {
+                if (switchtest.isChecked()) {
+                    te.setActive(true);
+                    timerDao.update(te);
+                    alarmHelper.setAlarm(c, te.getId());
+                }
+                if (!switchtest.isChecked()) {
+                    te.setActive(false);
+                    timerDao.update(te);
+                    alarmHelper.cancelAlarm(te.getId());
+                }
             }
         }
         if (mTimerRepository.getAllActiveTimers()==null){
