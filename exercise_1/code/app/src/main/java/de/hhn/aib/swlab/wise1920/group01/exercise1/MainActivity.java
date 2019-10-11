@@ -8,6 +8,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Switch;
@@ -110,6 +112,19 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
             Intent serviceIntent = new Intent(this, NotificationServiceClass.class);
             startService(serviceIntent);
         }
+    }
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.settings) {
+            startActivity(new Intent(this, SettingsActivity.class));
+        }
+        return true;
     }
 
     @SuppressLint("SetTextI18n")
