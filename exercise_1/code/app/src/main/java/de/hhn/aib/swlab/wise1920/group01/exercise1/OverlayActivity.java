@@ -1,6 +1,7 @@
 package de.hhn.aib.swlab.wise1920.group01.exercise1;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.AudioAttributes;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -53,6 +54,12 @@ public class OverlayActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mediaPlayer.stop();
+                TimerRepository mTimerRepository = new TimerRepository(v.getContext());
+                if (mTimerRepository.getAllActiveTimers()==null || mTimerRepository.getAllActiveTimers().size() < 1)
+                {
+                    Intent serviceIntent = new Intent(v.getContext(), NotificationServiceClass.class);
+                    stopService(serviceIntent);
+                }
                 finish();
             }});
 

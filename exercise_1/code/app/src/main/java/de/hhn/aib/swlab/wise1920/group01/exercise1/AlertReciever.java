@@ -31,7 +31,6 @@ public class AlertReciever extends BroadcastReceiver {
             manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
             helper = new AlarmHelper(context, manager);
             timerList = timerDao.getAllActiveTimers();
-
             if (timerList != null) {
                 Iterator<Timer> iter = timerList.iterator();
                 while (iter.hasNext()) {
