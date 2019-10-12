@@ -21,16 +21,16 @@ public class AlertReciever extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        helper = new AlarmHelper(context, manager);
-        TimerDao timerDao = AppDatabase.getDatabase(context).timerDao();
-        timerList = timerDao.getAllActiveTimers();
 
         //Aktion die beim Booten des Gerätes ausgeführt werdem sollen, wie etwa Alarme neu zu setzen
         if("android.intent.action.BOOT_COMPLETED".equals(intent.getAction())){
             Toast.makeText(context, "Prozess gestartet", Toast.LENGTH_LONG).show();
             manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
             helper = new AlarmHelper(context, manager);
+            TimerDao timerDao = AppDatabase.getDatabase(context).timerDao();
             timerList = timerDao.getAllActiveTimers();
+
             if (timerList != null) {
                 Iterator<Timer> iter = timerList.iterator();
                 while (iter.hasNext()) {
@@ -54,6 +54,10 @@ public class AlertReciever extends BroadcastReceiver {
         else{
 
        //   Toast.makeText(context,"Recieved!!",Toast.LENGTH_LONG).show();
+            helper = new AlarmHelper(context, manager);
+            TimerDao timerDao = AppDatabase.getDatabase(context).timerDao();
+            timerList = timerDao.getAllActiveTimers();
+
             Calendar c = Calendar.getInstance();
             c.set(Calendar.SECOND,0);
             c.set(Calendar.MILLISECOND,0);

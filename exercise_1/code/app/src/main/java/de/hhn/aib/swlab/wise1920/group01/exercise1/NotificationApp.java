@@ -20,7 +20,9 @@ public class NotificationApp extends Application
     {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
         {
-            NotificationChannel alarmChannel = new NotificationChannel(CHANNEL_ID,"Alarm Notification Channel", NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationChannel alarmChannel = new NotificationChannel(CHANNEL_ID,"Alarm Notification Channel", NotificationManager.IMPORTANCE_LOW);
+            alarmChannel.setVibrationPattern(new long[]{ 0 });
+            alarmChannel.enableVibration(true);
             NotificationManager manager = getSystemService(NotificationManager.class);
             manager.createNotificationChannel(alarmChannel);
         }
