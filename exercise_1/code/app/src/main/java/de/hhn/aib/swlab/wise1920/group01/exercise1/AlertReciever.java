@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
@@ -26,7 +27,6 @@ public class AlertReciever extends BroadcastReceiver {
         if("android.intent.action.BOOT_COMPLETED".equals(intent.getAction())){
             Toast.makeText(context, "Prozess gestartet", Toast.LENGTH_LONG).show();
             manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-
             helper = new AlarmHelper(context, manager);
             TimerDao timerDao = AppDatabase.getDatabase(context).timerDao();
             timerList = timerDao.getAllActiveTimers();
@@ -39,6 +39,17 @@ public class AlertReciever extends BroadcastReceiver {
                         Calendar cal = Calendar.getInstance();
                         cal.setTimeInMillis(timer.getTime());
                         helper.setAlarm(cal, timer.getId());
+
+                        Intent serviceintent = new Intent(context,NotificationServiceClass.class);
+                        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                        {
+                            context.startForegroundService(serviceintent);
+                        }
+                        else
+                        {
+                            context.startService(serviceintent);
+                        }
+
                         Log.e("Alarm Receiver: ", "Timer at " + timer.getTime() + " has been set!");
                     } else {
                         Log.e("Alarm Receiver: ", "Didn't trigger timer at " + timer.getTime() + "because it's inactive!");

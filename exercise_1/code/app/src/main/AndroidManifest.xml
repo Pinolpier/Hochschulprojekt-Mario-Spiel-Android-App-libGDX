@@ -42,7 +42,7 @@
             </intent-filter>
         </receiver>
 
-        <service android:name=".NotificationServiceClass" />
+        <service android:enabled="true" android:name=".NotificationServiceClass" />
     </application>
 
 </manifest>

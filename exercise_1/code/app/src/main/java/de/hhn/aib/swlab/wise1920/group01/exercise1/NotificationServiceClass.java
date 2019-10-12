@@ -28,7 +28,7 @@ public class NotificationServiceClass extends Service
         PendingIntent pendingIntent = PendingIntent.getActivity(this,0,notificationIntent,0);
 
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle("Alarm Service").setContentText(input)
+                .setContentTitle("alarm active").setContentText(input)
                 .setSmallIcon(R.drawable.ic_access_alarms_black_24dp)
                 .setContentIntent(pendingIntent).build();
         startForeground(1,notification);
