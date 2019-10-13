@@ -11,6 +11,7 @@ import java.util.List;
 
 @Dao
 public interface TimerDao {
+
     @Insert
     long insert(Timer timer);
 
@@ -23,7 +24,11 @@ public interface TimerDao {
     @Query("SELECT * FROM Timer where active=1")
     List<Timer> getAllActiveTimers();
 
-    @Query("SELECT * FROM Timer WHERE time=:timeInMillis")
+    /*
+    The Modulo operations are a fix so that notnull return values exist. The problem before was that
+    times in the past have not been found, by calculating modulo the length of a day in ms the problem could be fixed.
+     */
+    @Query("SELECT * FROM Timer WHERE time%86400000=:timeInMillis%86400000")
     Timer getTimerAt(long timeInMillis);
 
     @Update

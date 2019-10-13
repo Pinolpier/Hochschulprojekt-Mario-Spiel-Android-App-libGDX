@@ -9,6 +9,12 @@ import androidx.preference.PreferenceManager;
 
 public class SettingsActivity extends AppCompatActivity {
 
+    /**
+     * This method is called from a call of the system method startActivity(Intent) only. It starts
+     * the activity and loads the preferences from the preferences file.
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

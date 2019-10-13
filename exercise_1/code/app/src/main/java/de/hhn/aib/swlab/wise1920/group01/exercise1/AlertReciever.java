@@ -8,7 +8,9 @@ import android.os.Build;
 import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
+
 import androidx.lifecycle.LiveData;
+
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
@@ -38,6 +40,9 @@ public class AlertReciever extends BroadcastReceiver {
                     if (timer.isActive()) {
                         Calendar cal = Calendar.getInstance();
                         cal.setTimeInMillis(timer.getTime());
+//                        while (cal.before(Calendar.getInstance())) {
+//                            cal.add(Calendar.DATE, 1);
+//                        }
                         helper.setAlarm(cal, timer.getId());
 
                         Intent serviceintent = new Intent(context,NotificationServiceClass.class);

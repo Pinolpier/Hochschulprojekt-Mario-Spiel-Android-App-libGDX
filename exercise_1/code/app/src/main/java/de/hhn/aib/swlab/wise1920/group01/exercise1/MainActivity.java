@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
             @Override
             public void onLongClick(Timer timer) {
                 alarmHelper.cancelAlarm(timer.getId());
-                mTimerRepository.delete(timer);
+                TimerRepository.delete(timer);
                 updateItems(rvTodos);
             }
         });
@@ -74,8 +74,8 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
             Switch switchtest = holder.itemView.findViewById(R.id.switch1);
             TextView txt = holder.itemView.findViewById(R.id.tv_description);
 
-            String string = (String) txt.getText();
-            String[] timedates = string.split(":");
+            String time = (String) txt.getText();
+            String[] timedates = time.split(":");
             int hour = Integer.parseInt(timedates[0]);
             int minute = Integer.parseInt(timedates[1]);
             Calendar c = Calendar.getInstance();
