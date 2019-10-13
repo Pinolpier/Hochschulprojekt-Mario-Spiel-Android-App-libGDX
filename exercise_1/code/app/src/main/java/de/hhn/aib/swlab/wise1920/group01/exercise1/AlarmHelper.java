@@ -7,11 +7,12 @@ import android.content.Intent;
 import java.util.Calendar;
 
 
-public class AlarmHelper{
+ class AlarmHelper{
 
-    AlarmManager alarmManager;
-    Context context;
-    public AlarmHelper(Context context,AlarmManager alarmManager){
+    private final AlarmManager alarmManager;
+    private final Context context;
+
+    AlarmHelper(Context context,AlarmManager alarmManager){
         this.context = context;
         this.alarmManager = alarmManager;
     }
@@ -21,7 +22,7 @@ public class AlarmHelper{
      * @param calendar calender objekt mit der Uhrzeit für den der Alarm gesetzt werden soll
      * @param id , des Timers, für den der Alarm gesetzt werden soll
      */
-    public void setAlarm(Calendar calendar, int id){
+     void setAlarm(Calendar calendar, int id){
         Intent intent = new Intent(context,AlertReciever.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context,id,intent,0);
         if(calendar.before(Calendar.getInstance())){
@@ -34,7 +35,7 @@ public class AlarmHelper{
      * Methode um einen bereits gesetzten Alarm zu Löschen
      * @param  id des Timers, für welchen der Alarm deaktiviert werden soll
      */
-    public void cancelAlarm(int id){
+      void cancelAlarm(int id){
         Intent intent = new Intent(context,AlertReciever.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context,id,intent,0);
         alarmManager.cancel(pendingIntent);

@@ -14,11 +14,11 @@ import java.util.Iterator;
 import java.util.List;
 
 public class AlertReciever extends BroadcastReceiver {
-    Intent intentAlarm;
-    LiveData<List<Timer>> liveDataTimerList;
-    List<Timer> timerList;
-    AlarmHelper helper;
-    AlarmManager manager;
+    private Intent intentAlarm;
+    private LiveData<List<Timer>> liveDataTimerList;
+    private List<Timer> timerList;
+    private AlarmHelper helper;
+    private AlarmManager manager;
 
     @Override
     public void onReceive(Context context, Intent intent) {

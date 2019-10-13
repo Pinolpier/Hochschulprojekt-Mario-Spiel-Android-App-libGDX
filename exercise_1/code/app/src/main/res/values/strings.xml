@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name" translatable="false">Wecker</string>
-    <string name="on_off">An/Aus</string>
+    <string name="on_off">Aus/An</string>
     <string name="textview">TextView</string>
     <string name="title_activity_settings">Settings</string>
 
@@ -16,7 +16,9 @@
     <!-- Sync Preferences -->
     <string name="sync_title">Sync email periodically</string>
     <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
-    </string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails</string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="end_alarm">Beenden</string>
+    <string name="overlay_alarm">Alarm!</string>
+    <string name="settings_menu">Settings</string>
 </resources>

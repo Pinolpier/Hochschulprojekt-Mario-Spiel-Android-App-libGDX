@@ -6,7 +6,6 @@ import android.media.AudioAttributes;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -18,15 +17,13 @@ import androidx.preference.PreferenceManager;
 import java.io.IOException;
 
 public class OverlayActivity extends AppCompatActivity {
-    public static int ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 5469;
-    private Button beendenButton;
+    public static final int ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 5469;
     private MediaPlayer mediaPlayer;
-    private String path;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        path = "android.resource://de.hhn.aib.swlab.wise1920.group01.exercise1/raw/";
+        String path = "android.resource://de.hhn.aib.swlab.wise1920.group01.exercise1/raw/";
         path += getRingtonePath(this);
         setContentView(R.layout.activity_overlay);
 
@@ -46,10 +43,10 @@ public class OverlayActivity extends AppCompatActivity {
         }
         catch(IOException e){
             e.printStackTrace();
-            Toast.makeText(this, "Audiodatei nicht gefunden!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "File not found!", Toast.LENGTH_LONG).show();
         }
 
-        beendenButton = findViewById(R.id.button_beenden);
+         Button beendenButton = findViewById(R.id.button_beenden);
         beendenButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,7 +62,7 @@ public class OverlayActivity extends AppCompatActivity {
 
     }
 
-    public String getRingtonePath(Context context) {
+    private String getRingtonePath(Context context) {
         return new PreferenceManager(context).getDefaultSharedPreferences(context).getString("ringtone", "bowserlaugh");
     }
 }

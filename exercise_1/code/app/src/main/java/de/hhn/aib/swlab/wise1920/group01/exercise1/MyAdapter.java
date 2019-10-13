@@ -76,7 +76,7 @@ public class MyAdapter extends RecyclerView.Adapter {
             ((MyViewHolder) holder).switch1.setChecked(true);
         }
 
-        else if(timer.isActive()==false){
+        else if(!timer.isActive()){
             ((MyViewHolder) holder).switch1.setChecked(false);
         }
         Log.e("timerId", String.valueOf(timer.getId()));
