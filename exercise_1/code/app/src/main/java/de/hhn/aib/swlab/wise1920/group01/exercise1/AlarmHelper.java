@@ -25,7 +25,7 @@ import java.util.Calendar;
      void setAlarm(Calendar calendar, int id){
         Intent intent = new Intent(context,AlertReciever.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context,id,intent,0);
-        if(calendar.before(Calendar.getInstance())){
+        while(calendar.before(Calendar.getInstance())){
             calendar.add(Calendar.DATE,1);
         }
         alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),pendingIntent);
