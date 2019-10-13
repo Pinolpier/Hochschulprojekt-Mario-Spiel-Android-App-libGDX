@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.Calendar;
+import java.util.List;
 
 import static de.hhn.aib.swlab.wise1920.group01.exercise1.OverlayActivity.ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE;
 
@@ -70,6 +71,9 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
     }
 
     public void updateItems(View v) {
+
+
+
         for (int childCount = rvTodos.getChildCount(), i = 0; i < childCount; ++i) {
             final RecyclerView.ViewHolder holder = rvTodos.getChildViewHolder(rvTodos.getChildAt(i));
             Switch switchtest = holder.itemView.findViewById(R.id.switch1);
@@ -150,5 +154,4 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
             }
         }
     }
-
 }
