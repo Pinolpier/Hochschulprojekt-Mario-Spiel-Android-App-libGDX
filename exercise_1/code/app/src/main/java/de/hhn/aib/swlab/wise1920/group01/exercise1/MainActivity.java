@@ -74,9 +74,9 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
             }
         });
     }
-
     /**
      * This method is called when an alarm switch is changed (meaning the user activated or deactivated an alarm.
+     * It also shows the "alarm active" Notification when at least one switch is active.
      * This method must not be called manually!
      *
      * @param v This method must not be called manually. Param is the view and is known to the android system.
@@ -95,6 +95,7 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
             int hour = Integer.parseInt(timeArray[0]);
             int minute = Integer.parseInt(timeArray[1]);
             Calendar c = Calendar.getInstance();
+
             c.set(Calendar.HOUR_OF_DAY,hour);
             c.set(Calendar.MINUTE,minute);
             c.set(Calendar.SECOND, 0);
