@@ -11,12 +11,14 @@ import androidx.core.app.NotificationCompat;
 
 import static de.hhn.aib.swlab.wise1920.group01.exercise1.NotificationApp.CHANNEL_ID;
 
+/**
+ * Lots of code is from an online tutorial. Changed to work for our needs.
+ */
 public class NotificationServiceClass extends Service
 {
 
     @Override
-    public void onCreate()
-    {
+    public void onCreate() {
         super.onCreate();
     }
 
@@ -42,8 +44,7 @@ public class NotificationServiceClass extends Service
 
     @Nullable
     @Override
-    public IBinder onBind(Intent intent)
-    {
+    public IBinder onBind(Intent intent) {
         return null;
     }
 }

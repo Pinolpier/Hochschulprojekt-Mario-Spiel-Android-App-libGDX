@@ -7,6 +7,9 @@ import androidx.lifecycle.LiveData;
 
 import java.util.List;
 
+/**
+ * This class is created using the help of the linked Rooms tutorial
+ */
 public class TimerRepository {
     private static TimerDao mTimerDao;
     private LiveData<List<Timer>> mAllTimer;

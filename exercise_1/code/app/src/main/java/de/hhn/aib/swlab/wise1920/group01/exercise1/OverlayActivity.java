@@ -16,6 +16,9 @@ import androidx.preference.PreferenceManager;
 
 import java.io.IOException;
 
+/**
+ * Represents the Activity shown during alarm time and plays the alarm sound.
+ */
 public class OverlayActivity extends AppCompatActivity {
     public static final int ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 5469;
     private MediaPlayer mediaPlayer;
@@ -40,20 +43,18 @@ public class OverlayActivity extends AppCompatActivity {
             mediaPlayer.prepare();
             mediaPlayer.start();
             mediaPlayer.setLooping(true);
-        }
-        catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
             Toast.makeText(this, "File not found!", Toast.LENGTH_LONG).show();
         }
 
-         Button beendenButton = findViewById(R.id.button_beenden);
+        Button beendenButton = findViewById(R.id.button_beenden);
         beendenButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mediaPlayer.stop();
                 TimerRepository mTimerRepository = new TimerRepository(v.getContext());
-                if (mTimerRepository.getAllActiveTimers()==null || mTimerRepository.getAllActiveTimers().size() < 1)
-                {
+                if (mTimerRepository.getAllActiveTimers() == null || mTimerRepository.getAllActiveTimers().size() < 1) {
                     Intent serviceIntent = new Intent(v.getContext(), NotificationServiceClass.class);
                     stopService(serviceIntent);
                 }
@@ -62,6 +63,12 @@ public class OverlayActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Returns the path to the ringtone to be played.
+     *
+     * @param context The apps context.
+     * @return The path to the ringtone that has been setup in the settings or otherwise a default value.
+     */
     private String getRingtonePath(Context context) {
         return new PreferenceManager(context).getDefaultSharedPreferences(context).getString("ringtone", "bowserlaugh");
     }

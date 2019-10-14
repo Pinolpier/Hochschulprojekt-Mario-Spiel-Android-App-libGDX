@@ -17,6 +17,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Calendar;
 import java.util.List;
 
+/**
+ * Lots of code is used from the tutorial during the first Software Lab lesson.
+ */
 public class MyAdapter extends RecyclerView.Adapter {
     private LiveData<List<Timer>> timerLiveData;
     private List<Timer> mTimer;
@@ -71,12 +74,9 @@ public class MyAdapter extends RecyclerView.Adapter {
         int hour = cal.get(Calendar.HOUR_OF_DAY);
         int minute = cal.get(Calendar.MINUTE);
         ((MyViewHolder) holder).tvDescription.setText(hour + ":" + minute);
-        if(timer.isActive())
-        {
+        if (timer.isActive()) {
             ((MyViewHolder) holder).switch1.setChecked(true);
-        }
-
-        else if(!timer.isActive()){
+        } else if (!timer.isActive()) {
             ((MyViewHolder) holder).switch1.setChecked(false);
         }
         Log.e("timerId", String.valueOf(timer.getId()));

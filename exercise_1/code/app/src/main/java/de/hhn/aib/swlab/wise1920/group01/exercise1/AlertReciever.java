@@ -6,10 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.provider.Settings;
-import android.util.Log;
-import android.widget.Toast;
-
-import androidx.lifecycle.LiveData;
 
 import java.util.Calendar;
 import java.util.Iterator;
@@ -17,7 +13,6 @@ import java.util.List;
 
 public class AlertReciever extends BroadcastReceiver {
     private Intent intentAlarm;
-    private LiveData<List<Timer>> liveDataTimerList;
     private List<Timer> timerList;
     private AlarmHelper helper;
     private AlarmManager manager;
@@ -31,55 +26,33 @@ public class AlertReciever extends BroadcastReceiver {
 
 
         //Aktion die beim Booten des Gerätes ausgeführt werdem sollen, wie etwa Alarme neu zu setzen
-        if("android.intent.action.BOOT_COMPLETED".equals(intent.getAction())){
-            Toast.makeText(context, "Prozess gestartet", Toast.LENGTH_LONG).show();
-            if (timerList != null) {
-                Iterator<Timer> iter = timerList.iterator();
-                while (iter.hasNext()) {
-                    Timer timer = iter.next();
-                    if (timer.isActive()) {
-                        Calendar cal = Calendar.getInstance();
-                        cal.setTimeInMillis(timer.getTime());
-//                        while (cal.before(Calendar.getInstance())) {
-//                            cal.add(Calendar.DATE, 1);
-//                        }
-                        helper.setAlarm(cal, timer.getId());
-
-                        Intent serviceintent = new Intent(context,NotificationServiceClass.class);
-                        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                        {
-                            context.startForegroundService(serviceintent);
-                        }
-                        else
-                        {
-                            context.startService(serviceintent);
-                        }
-
-                        Log.e("Alarm Receiver: ", "Timer at " + timer.getTime() + " has been set!");
+        if ("android.intent.action.BOOT_COMPLETED".equals(intent.getAction())) {
+            Iterator<Timer> iter = timerList.iterator();
+            while (iter.hasNext()) {
+                Timer timer = iter.next();
+                if (timer.isActive()) {
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTimeInMillis(timer.getTime());
+                    helper.setAlarm(cal, timer.getId());
+                    Intent serviceIntent = new Intent(context, NotificationServiceClass.class);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        context.startForegroundService(serviceIntent);
                     } else {
-                        Log.e("Alarm Receiver: ", "Didn't trigger timer at " + timer.getTime() + "because it's inactive!");
+                        context.startService(serviceIntent);
                     }
                 }
-
-            } else {
-                Toast.makeText(context, "List is null", Toast.LENGTH_LONG).show();
             }
         }
-
         //Aktion die beim erreichen eines Alarmzeitpunktes ausgeführt werden sollen
-        else{
-
-       //   Toast.makeText(context,"Recieved!!",Toast.LENGTH_LONG).show();
-
-
+        else {
             Calendar c = Calendar.getInstance();
-            c.set(Calendar.SECOND,0);
-            c.set(Calendar.MILLISECOND,0);
+            c.set(Calendar.SECOND, 0);
+            c.set(Calendar.MILLISECOND, 0);
             Timer time = timerDao.getTimerAt(c.getTimeInMillis());
             time.setActive(false);
             timerDao.update(time);
             intentAlarm = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
-            intentAlarm.setClass(context,OverlayActivity.class);
+            intentAlarm.setClass(context, OverlayActivity.class);
             intentAlarm.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intentAlarm);
         }
