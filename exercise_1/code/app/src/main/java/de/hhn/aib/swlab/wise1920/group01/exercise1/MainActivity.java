@@ -37,8 +37,10 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         checkPermission();
+
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         alarmHelper = new AlarmHelper(this, alarmManager);
+
         timerDao= AppDatabase.getDatabase(this).timerDao();
         mTimerRepository = new TimerRepository(this);
         rvTodos = findViewById(R.id.rvTodos);
@@ -68,6 +70,11 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
         });
     }
 
+    /**
+     * This method is called each time a switch from the recyclerview "rvTodos" is used and activates/deactivates the alarms, depending on if the switch got
+     * checked or unchecked. It also shows the "alarm active" Notification when at least one switch is active.
+     * @param v
+     */
     public void updateItems(View v) {
         for (int childCount = rvTodos.getChildCount(), i = 0; i < childCount; ++i) {
             final RecyclerView.ViewHolder holder = rvTodos.getChildViewHolder(rvTodos.getChildAt(i));
@@ -112,11 +119,22 @@ public class MainActivity extends AppCompatActivity implements TimePickerFragmen
             startService(serviceIntent);
         }
     }
+
+    /**
+     * This method creates an option menu at the top of the screen for the settings where you can change the ringtones.
+     * @param menu
+     * @return true
+     */
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
         return true;
     }
 
+    /**
+     * This method adds an item to the option menu named "settings" which (when clicked) leads you to the settings screen from class "SettingsActivity".
+     * @param item
+     * @return
+     */
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 

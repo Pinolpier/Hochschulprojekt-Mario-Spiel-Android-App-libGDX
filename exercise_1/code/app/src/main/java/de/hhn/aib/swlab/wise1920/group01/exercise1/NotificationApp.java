@@ -16,6 +16,10 @@ public class NotificationApp extends Application
         createNotificationChannel();
     }
 
+    /**
+     * This method is called by the onCreate method above and creates a Notification Channel for the NotificationServiceClass. It also turns off vibrations and
+     * sounds when the Notification pops up.
+     */
     public void createNotificationChannel()
     {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)

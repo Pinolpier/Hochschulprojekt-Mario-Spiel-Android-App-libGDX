@@ -20,6 +20,14 @@ public class NotificationServiceClass extends Service
         super.onCreate();
     }
 
+    /**
+     * This method is called by the system method startService(Intent,service). It sets up the persistent Notification and starts the Notificationservice.
+     *
+     * @param intent
+     * @param flags
+     * @param startId
+     * @return
+     */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         String input = intent.getStringExtra("inputExtra");
