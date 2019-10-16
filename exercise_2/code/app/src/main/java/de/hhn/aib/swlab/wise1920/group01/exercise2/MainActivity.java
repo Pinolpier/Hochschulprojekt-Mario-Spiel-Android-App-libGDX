@@ -12,13 +12,10 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button btn_start, btn_stop;
     private TextView coordinates;
     private BroadcastReceiver broadcastReceiver;
 
@@ -44,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
         {
             unregisterReceiver(broadcastReceiver);
         }
+        Intent intent = new Intent(getApplicationContext(),GPS_Service.class);
+        stopService(intent);
     }
 
     @Override
@@ -51,32 +50,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        btn_start = findViewById(R.id.btn_start);
-        btn_stop = findViewById(R.id.btn_stop);
         coordinates = findViewById(R.id.coordinates);
 
         if(!check_permissions())
-            enable_buttons();
-
+        {
+            enable_service();
+        }
     }
 
-    private void enable_buttons()
+    public void enable_service()
     {
-        btn_start.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(),GPS_Service.class);
-                startService(intent);
-            }
-        });
-
-        btn_stop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(),GPS_Service.class);
-                stopService(intent);
-            }
-        });
+        Intent intent = new Intent(getApplicationContext(), GPS_Service.class);
+        startService(intent);
     }
 
     private boolean check_permissions()
@@ -94,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 100) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                enable_buttons();
+                enable_service();
             } else {
                 check_permissions();
             }
