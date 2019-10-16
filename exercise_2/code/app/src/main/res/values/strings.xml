@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">group01exercise2</string>
+    <string name="app_name">Karte des Rumtreibers</string>
     <string name="title_activity_maps">Map</string>
     <string name="register_button">Register</string>
     <string name="login_button">Login</string>
