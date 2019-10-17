@@ -5,5 +5,11 @@
     <string name="login_button">Login</string>
     <string name="password_text">Password</string>
     <string name="user_text">User</string>
+    
+    <!-- Preferences -->
+    <string name="preferences_header">Einstellungen</string>
+    <string name="visibility">Sichtbarkeit</string>
+    <string name="radius">Radius</string>
+    <string name="interval">Intervall</string>
 
 </resources>
