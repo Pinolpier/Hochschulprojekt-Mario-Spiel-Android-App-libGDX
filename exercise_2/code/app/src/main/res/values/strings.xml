@@ -8,7 +8,6 @@
     
     <!-- Preferences -->
     <string name="preferences_header">Einstellungen</string>
-    <string name="visibility">Sichtbarkeit</string>
     <string name="radius">Radius</string>
     <string name="interval">Intervall</string>
 

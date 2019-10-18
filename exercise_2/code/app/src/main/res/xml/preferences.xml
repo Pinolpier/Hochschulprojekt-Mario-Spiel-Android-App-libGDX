@@ -2,11 +2,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <PreferenceCategory app:title="@string/preferences_header">
-        <SwitchPreference
-            android:defaultValue="true"
-            android:key="switch_preference_1"
-            android:persistent="true"
-            android:title="@string/visibility" />
         <ListPreference app:title="@string/radius" />
         <ListPreference
             app:title="@string/interval"
