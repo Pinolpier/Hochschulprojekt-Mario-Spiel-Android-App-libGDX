@@ -1,0 +1,46 @@
+<resources>
+    <string-array name="radius_entries">
+        <item>Nicht Sichtbar</item>
+        <item>10 Meter</item>
+        <item>50 Meter</item>
+        <item>250 Meter</item>
+        <item>1 Kilometer</item>
+        <item>10 Kilometer</item>
+        <item>100 Kilometer</item>
+        <item>1.000 Kilometer</item>
+        <item>10.000 Kilometer</item>
+    </string-array>
+
+    <integer-array name="radius_values">
+        <item>-1</item>
+        <item>10</item>
+        <item>50</item>
+        <item>250</item>
+        <item>1000</item>
+        <item>10000</item>
+        <item>100000</item>
+        <item>1000000</item>
+        <item>10000000</item>
+    </integer-array>
+
+    <string-array name="interval_entries">
+        <item>10 Sekunden</item>
+        <item>30 Sekunden</item>
+        <item>1 Minute</item>
+        <item>5 Minuten</item>
+        <item>10 Minuten</item>
+        <item>30 Minuten</item>
+        <item>1 Stunde</item>
+    </string-array>
+
+    <integer-array name="interval_values">
+        <item>10</item>
+        <item>30</item>
+        <item>60</item>
+        <item>300</item>
+        <item>600</item>
+        <item>1800</item>
+        <item>3600</item>
+    </integer-array>
+
+</resources>

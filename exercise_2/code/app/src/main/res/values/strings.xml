@@ -10,5 +10,7 @@
     <string name="preferences_header">Einstellungen</string>
     <string name="radius">Radius</string>
     <string name="interval">Intervall</string>
+    <string name="radius_desc_summary">Lege den Radius für die Sichtbarkeit auf der Karte fest</string>
+    <string name="interval_desc_summary">Lege das Aktualisierungsintervall fest</string>
 
 </resources>
