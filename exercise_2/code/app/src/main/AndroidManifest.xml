@@ -32,11 +32,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup">
-        <activity
-            android:name=".SettingsActivity">
+        <activity android:name=".view.SettingsActivity">
         </activity>
-        <activity
-            android:name=".MapsActivity">
+        <activity android:name=".view.MapsActivity">
             <intent-filter>
                 <action
                     android:name="android.intent.action.VIEW"
@@ -47,8 +45,7 @@
                     />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".MainActivity">
+        <activity android:name=".view.MainActivity">
             <intent-filter>
                 <action
                     android:name="android.intent.action.MAIN"
@@ -60,8 +57,7 @@
             </intent-filter>
         </activity>
 
-        <service
-            android:name=".GPS_Service" />
+        <service android:name=".controller.GPS_Service" />
     </application>
 
 </manifest>

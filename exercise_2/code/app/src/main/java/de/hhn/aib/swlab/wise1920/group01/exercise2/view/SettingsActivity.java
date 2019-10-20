@@ -1,4 +1,4 @@
-package de.hhn.aib.swlab.wise1920.group01.exercise2;
+package de.hhn.aib.swlab.wise1920.group01.exercise2.view;
 
 import android.os.Bundle;
 
@@ -6,6 +6,8 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
+
+import de.hhn.aib.swlab.wise1920.group01.exercise2.R;
 
 public class SettingsActivity extends AppCompatActivity {
 

@@ -1,6 +1,5 @@
-package de.hhn.aib.swlab.wise1920.group01.exercise2;
+package de.hhn.aib.swlab.wise1920.group01.exercise2.view;
 
-import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -9,6 +8,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import de.hhn.aib.swlab.wise1920.group01.exercise2.R;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String username = textInputUsername.getText().toString();
                 String password = textInputPassword.getText().toString();
-                Intent intent = new Intent(MainActivity.this,MapsActivity.class);
+                Intent intent = new Intent(MainActivity.this, MapsActivity.class);
                 startActivity(intent);
             }
         });

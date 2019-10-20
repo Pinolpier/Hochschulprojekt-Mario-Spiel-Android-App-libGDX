@@ -1,8 +1,7 @@
-package de.hhn.aib.swlab.wise1920.group01.exercise2;
+package de.hhn.aib.swlab.wise1920.group01.exercise2.view;
 
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -23,6 +22,10 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
+
+import de.hhn.aib.swlab.wise1920.group01.exercise2.R;
+import de.hhn.aib.swlab.wise1920.group01.exercise2.controller.GPS_Service;
+
 public class MapsActivity extends AppCompatActivity {
 
     MapView map;
@@ -87,7 +90,7 @@ public class MapsActivity extends AppCompatActivity {
         {
             unregisterReceiver(broadcastReceiver);
         }
-        Intent intent = new Intent(getApplicationContext(),GPS_Service.class);
+        Intent intent = new Intent(getApplicationContext(), GPS_Service.class);
         stopService(intent);
     }
 

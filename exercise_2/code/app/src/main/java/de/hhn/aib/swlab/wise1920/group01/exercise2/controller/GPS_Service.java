@@ -1,4 +1,4 @@
-package de.hhn.aib.swlab.wise1920.group01.exercise2;
+package de.hhn.aib.swlab.wise1920.group01.exercise2.controller;
 
 import android.annotation.SuppressLint;
 import android.app.Service;
@@ -50,7 +50,6 @@ public class GPS_Service extends Service
         //supressed MissingPermission
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,10000,0,locationListener);
     }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -59,13 +58,9 @@ public class GPS_Service extends Service
             locationManager.removeUpdates(locationListener);
         }
     }
-
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return null;
     }
-
-
 }
-
