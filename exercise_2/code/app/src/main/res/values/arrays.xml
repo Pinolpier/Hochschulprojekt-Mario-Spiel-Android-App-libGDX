@@ -10,7 +10,7 @@
         <item>1.000 Kilometer</item>
         <item>10.000 Kilometer</item>
     </string-array>
-    <integer-array name="radius_values">
+    <string-array name="radius_values">
         <item>-1</item>
         <item>10</item>
         <item>50</item>
@@ -20,7 +20,7 @@
         <item>100000</item>
         <item>1000000</item>
         <item>10000000</item>
-    </integer-array>
+    </string-array>
     <string-array name="interval_entries">
         <item>1 Sekunde</item>
         <item>10 Sekunden</item>
@@ -31,7 +31,7 @@
         <item>30 Minuten</item>
         <item>1 Stunde</item>
     </string-array>
-    <integer-array name="interval_values">
+    <string-array name="interval_values">
         <item>1</item>
         <item>10</item>
         <item>30</item>
@@ -40,5 +40,5 @@
         <item>600</item>
         <item>1800</item>
         <item>3600</item>
-    </integer-array>
+    </string-array>
 </resources>
