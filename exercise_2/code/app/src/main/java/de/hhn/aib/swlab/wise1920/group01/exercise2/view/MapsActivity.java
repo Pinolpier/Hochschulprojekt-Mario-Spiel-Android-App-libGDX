@@ -7,21 +7,33 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import org.osmdroid.bonuspack.location.NominatimPOIProvider;
+import org.osmdroid.bonuspack.location.POI;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.tileprovider.tilesource.TileSourcePolicy;
+import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.FolderOverlay;
+import org.osmdroid.views.overlay.Marker;
+
+import java.util.ArrayList;
 
 import de.hhn.aib.swlab.wise1920.group01.exercise2.R;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.controller.GPS_Service;
@@ -54,10 +66,22 @@ public class MapsActivity extends AppCompatActivity {
         //inflate and create the map
         setContentView(R.layout.activity_maps);
         map = findViewById(R.id.map);
-        map.setTileSource(TileSourceFactory.MAPNIK);
+        map.setTileSource(new XYTileSource("Mapnik",
+                0, 19, 256, ".png", new String[] {
+                "https://swlab-maps.hhn.sisrv.de/" },"© OpenStreetMap contributors",
+                new TileSourcePolicy(10,
+                        TileSourcePolicy.FLAG_NO_BULK
+                                | TileSourcePolicy.FLAG_NO_PREVENTIVE
+                                | TileSourcePolicy.FLAG_USER_AGENT_MEANINGFUL
+                                | TileSourcePolicy.FLAG_USER_AGENT_NORMALIZED
+                )));
         map.setMultiTouchControls(true);
         mapController = (MapController) map.getController();
-        mapController.setZoom(13);
+        mapController.setZoom(17);
+
+        GeoPoint startpoint = new GeoPoint(49.122831, 9.210871);
+        mapController.setCenter(startpoint);
+        map.invalidate();
     }
 
     public void onResume(){
@@ -72,11 +96,8 @@ public class MapsActivity extends AppCompatActivity {
             broadcastReceiver = new BroadcastReceiver() {
                 @Override
                 public void onReceive(Context context, Intent intent) {
-                    String[] string = intent.getExtras().get("coordinates").toString().split("/");
-                    longitude = Double.parseDouble(string[0]);
-                    latitude = Double.parseDouble(string [1]);
-                    GeoPoint gPt = new GeoPoint(latitude,longitude);
-                    mapController.setCenter(gPt);
+                    setCurrentPosition(intent);
+                    //getPOIs();
                 }
             };
         }
@@ -143,5 +164,53 @@ public class MapsActivity extends AppCompatActivity {
             startActivity(new Intent(this, SettingsActivity.class));
         }
         return true;
+    }
+
+    public void setCurrentPosition(Intent intent)
+    {
+        String[] string = intent.getExtras().get("coordinates").toString().split("/");
+        longitude = Double.parseDouble(string[0]);
+        latitude = Double.parseDouble(string [1]);
+        GeoPoint gPt = new GeoPoint(latitude,longitude);
+
+        Log.e("gps",longitude + " " + latitude);
+
+        Marker startmarker = new Marker(map);
+        startmarker.setPosition(gPt);
+        startmarker.setAnchor(Marker.ANCHOR_CENTER,Marker.ANCHOR_BOTTOM);
+        map.getOverlays().add(startmarker);
+        //mapController.setCenter(gPt);
+        map.invalidate();
+    }
+
+    public void getPOIs()
+    {
+        NominatimPOIProvider poiProvider = new NominatimPOIProvider("OSMBonusPackTutoUserAgent");
+        GeoPoint point = new GeoPoint(latitude,longitude);
+        ArrayList<POI> pois = poiProvider.getPOICloseTo(point, "cinema", 50, 0.1);
+
+        FolderOverlay poiMarkers = new FolderOverlay(this);
+        map.getOverlays().add(poiMarkers);
+
+        Drawable poiIcon = getResources().getDrawable(R.drawable.marker_default);
+        for (POI poi:pois){
+            Marker poiMarker = new Marker(map);
+            poiMarker.setTitle(poi.mType);
+            poiMarker.setSnippet(poi.mDescription);
+            poiMarker.setPosition(poi.mLocation);
+            poiMarker.setIcon(poiIcon);
+            if (poi.mThumbnail != null){
+                poiMarker.setImage(new BitmapDrawable(poi.mThumbnail));
+            }
+            poiMarkers.add(poiMarker);
+        }
+    }
+
+    public void setCenter(View v)
+    {
+
+        GeoPoint centerPoint = new GeoPoint(latitude,longitude);
+        mapController.setCenter(centerPoint);
+        map.invalidate();
     }
 }
