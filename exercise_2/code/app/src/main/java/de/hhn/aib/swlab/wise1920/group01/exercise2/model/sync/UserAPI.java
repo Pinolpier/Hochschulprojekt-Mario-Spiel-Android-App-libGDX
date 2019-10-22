@@ -31,6 +31,6 @@ public interface UserAPI {
     @GET("location/{radius}/{lat}/{long}")
     Call<List<MapObjectDummy>> getEverythingAround(@Header("Authorization") String jwt,
                                                    @Path("radius") Integer radius,
-                                                   @Path("lat") Integer latitude,
-                                                   @Path("long") Integer longitude);
+                                                   @Path("lat") Double latitude,
+                                                   @Path("long") Double longitude);
 }

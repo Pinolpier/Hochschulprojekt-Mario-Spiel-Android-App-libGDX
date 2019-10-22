@@ -21,4 +21,5 @@
     <string name="updateFailedInvalidJwtTokenToastMessage">Konnte die Benutzerinformation(en) nicht aktualisieren. Interner Fehler, bitte neu einloggen.</string>
     <string name="updateSuccessfulToastMessage">Benutzerinformationen erfolgreich geupdatet</string>
     <string name="sendLocationFailedInvalidJwtTokenToastMessage">Konnte die Position nicht senden. Interner Fehler, bitte neu einloggen.</string>
+    <string name="getUsersFailedInvalidJwtTokenToastMessage">Konnte keine Standorte abrufen. Interner Fehler, bitte neu einloggen.</string>
 </resources>

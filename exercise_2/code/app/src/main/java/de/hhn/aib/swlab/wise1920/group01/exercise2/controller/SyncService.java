@@ -4,8 +4,11 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import de.hhn.aib.swlab.wise1920.group01.exercise2.model.MapObject;
+import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.MapObjectDummy;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.Position;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.User;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.UserAPI;
@@ -194,6 +197,9 @@ public class SyncService {
         return true;
     }
 
+    /**
+     * used internally to send updates to the user to the webservice.
+     */
     private void update() {
         User toSend = new User(user.getUsername(), user.getPassword());
         toSend.setDescription(user.getDescription());
@@ -233,10 +239,22 @@ public class SyncService {
         });
     }
 
+    /**
+     * updates the users position and sends it to the webservice. Internally {code sendLocation(Position position)} is used..
+     *
+     * @param latitude  the new position's latitude
+     * @param longitude the new position's longitude
+     * @return if updating was successful {code true} will be returned. Otherwise {code false} will be returned.
+     */
     public boolean sendLocation(Double latitude, Double longitude) {
         return sendLocation(new Position(latitude, longitude));
     }
 
+    /**
+     * updates the users position and sends it to the webservice.
+     * @param position the new position
+     * @return if updating was successful {code true} will be returned. Otherwise {code false} will be returned.
+     */
     public boolean sendLocation(Position position) {
         if (user == null || user.getId() == null || user.getJwtAuthorization() == null) {
             return false;
@@ -271,5 +289,59 @@ public class SyncService {
             }
         });
         return true;
+    }
+
+    /**
+     * used to receive all users around the users location within a specified radius. Internally {code getUsersAround(Position position, int radius)} is used.
+     *
+     * @param radius the radius in which all users available will be returned.
+     * @return an array containing all information to display the users around on the map.
+     */
+    public MapObject[] getUsersAround(int radius) {
+        return getUsersAround(user.getPosition(), radius);
+    }
+
+    /**
+     * used to receive all users around the specified location within a specified radius.
+     *
+     * @param position the location around which all available users should be returned.
+     * @param radius   the radius in which all users available will be returned.
+     * @return an array containing all information to display the users around on the map.
+     */
+    public MapObject[] getUsersAround(Position position, int radius) {
+        final ArrayList<MapObject> usersAroundList = new ArrayList<>();
+        Call<List<MapObjectDummy>> call = api.getEverythingAround(user.getJwtAuthorization(), radius, position.getLatitude(), position.getLongitude());
+        call.enqueue(new Callback<List<MapObjectDummy>>() {
+            @Override
+            public void onResponse(Call<List<MapObjectDummy>> call, Response<List<MapObjectDummy>> response) {
+                if (!response.isSuccessful() && response.code() != 403) {
+                    Log.wtf("Sync Service: ", "An unexpected HTTP Response Code indicating an error has been returned by the webservice: Response Code is " + response.code());
+                    return;
+                }
+                if (response.isSuccessful() && response.code() != 200) {
+                    Log.wtf("Sync Service: ", "An unexpected HTTP Response Code indicating successfully sending location has been returned by the webservice: Response Code is " + response.code());
+                    return;
+                }
+                if (response.code() == 403) {
+                    Toast.makeText(context, "@string/getUsersFailedInvalidJwtTokenToastMessage", Toast.LENGTH_LONG);
+                    Log.wtf("Sync Service: ", "Invalid JWT token has been used while sending location!");
+                    //TODO Login Activity anzeigen, da ungueltiger JWT Token
+                    return;
+                }
+                if (response.code() == 200) {
+                    Log.d("Sync Service: ", "Received locations successfully!");
+                    List<MapObjectDummy> usersAround = response.body();
+                    for (MapObjectDummy i : usersAround) {
+                        usersAroundList.add(new MapObject(i.getPosition()[0], i.getPosition()[1], i.getName(), i.getDescription()));
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<MapObjectDummy>> call, Throwable t) {
+                Log.wtf("Sync Service: ", "A serious error with the webservice occurred, error:" + t.getMessage());
+            }
+        });
+        return usersAroundList.toArray(new MapObject[usersAroundList.size()]);
     }
 }
