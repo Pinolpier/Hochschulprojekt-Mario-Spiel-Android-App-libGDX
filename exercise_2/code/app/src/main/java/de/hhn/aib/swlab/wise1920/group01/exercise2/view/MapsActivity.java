@@ -42,6 +42,7 @@ public class MapsActivity extends AppCompatActivity {
     MapController mapController;
     private BroadcastReceiver broadcastReceiver;
     private double latitude, longitude;
+    private Marker marker;
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +72,8 @@ public class MapsActivity extends AppCompatActivity {
 
         GeoPoint startpoint = new GeoPoint(49.122831, 9.210871);
         mapController.setCenter(startpoint);
+        marker = new Marker(map);
+        marker.setIcon(getDrawable((R.drawable.ic_location_on_red_24dp)));
         map.invalidate();
     }
 
@@ -158,6 +161,7 @@ public class MapsActivity extends AppCompatActivity {
 
     public void setCurrentPosition(Intent intent)
     {
+
         String[] string = intent.getExtras().get("coordinates").toString().split("/");
         longitude = Double.parseDouble(string[0]);
         latitude = Double.parseDouble(string [1]);
@@ -165,10 +169,9 @@ public class MapsActivity extends AppCompatActivity {
 
         Log.e("gps",longitude + " " + latitude);
 
-        Marker startmarker = new Marker(map);
-        startmarker.setPosition(gPt);
-        startmarker.setAnchor(Marker.ANCHOR_CENTER,Marker.ANCHOR_BOTTOM);
-        map.getOverlays().add(startmarker);
+        marker.setPosition(gPt);
+        marker.setAnchor(Marker.ANCHOR_CENTER,Marker.ANCHOR_BOTTOM);
+        map.getOverlays().add(marker);
         //mapController.setCenter(gPt);
         map.invalidate();
     }

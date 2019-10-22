@@ -48,7 +48,7 @@ public class GPS_Service extends Service
         };
         locationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
         //supressed MissingPermission
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,10000,0,locationListener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,1000,0,locationListener);
     }
     @Override
     public void onDestroy() {
