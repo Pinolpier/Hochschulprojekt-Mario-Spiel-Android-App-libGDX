@@ -47,10 +47,9 @@ public class MapsActivity extends AppCompatActivity {
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(!check_permissions())
-        {
-            enable_service();
-        }
+        check_permissions();
+        enable_service();
+
         //handle permissions first, before map is created. not depicted here
 
         //load/initialize the osmdroid configuration, this can be done
@@ -120,17 +119,21 @@ public class MapsActivity extends AppCompatActivity {
     public void enable_service()
     {
         Intent intent = new Intent(getApplicationContext(), GPS_Service.class);
-        startService(intent);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            startService(intent);
+        }
+        else
+        {
+            startForegroundService(intent);
+        }
     }
 
-    private boolean check_permissions()
+    private void check_permissions()
     {
         if(Build.VERSION.SDK_INT >= 23 && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 100);
-            return true;
         }
-        return false;
     }
 
     @Override
@@ -172,11 +175,10 @@ public class MapsActivity extends AppCompatActivity {
         marker.setPosition(gPt);
         marker.setAnchor(Marker.ANCHOR_CENTER,Marker.ANCHOR_BOTTOM);
         map.getOverlays().add(marker);
-        //mapController.setCenter(gPt);
         map.invalidate();
     }
 
-    public void getPOIs()
+   /* public void getPOIs()
     {
         NominatimPOIProvider poiProvider = new NominatimPOIProvider("OSMBonusPackTutoUserAgent");
         GeoPoint point = new GeoPoint(latitude,longitude);
@@ -198,6 +200,7 @@ public class MapsActivity extends AppCompatActivity {
             poiMarkers.add(poiMarker);
         }
     }
+    */
 
     public void setCenter(View v)
     {
