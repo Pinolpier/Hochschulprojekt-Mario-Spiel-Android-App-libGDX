@@ -9,8 +9,17 @@
         android:id="@+id/map"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        tools:context=".view.MapsActivity" />
+        tools:context=".view.MapsActivity" >
 
+
+    </org.osmdroid.views.MapView>
+
+    <SearchView
+        android:id="@+id/search_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_centerHorizontal="true" />
     <Button
         android:id="@+id/btn_central"
         android:layout_width="66dp"
