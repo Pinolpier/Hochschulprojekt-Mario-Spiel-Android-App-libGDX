@@ -10,6 +10,11 @@
     <string name="preferences_header">Einstellungen</string>
     <string name="radius">Radius</string>
     <string name="interval">Intervall</string>
+    <string name="show_poi">POIs anzeigen</string>
+    <string name="show_weatherdata">Wetterdaten anzeigen</string>
+    <string name="show_locationhistory">Standortverlauf anzeigen</string>
+    <string name="change_password">Passwort ändern</string>
+    <string name="settings_account">Accouteinstellungen</string>
     <string name="radius_desc_summary">Lege den Radius für die Sichtbarkeit auf der Karte fest</string>
     <string name="interval_desc_summary">Lege das Aktualisierungsintervall fest</string>
 
