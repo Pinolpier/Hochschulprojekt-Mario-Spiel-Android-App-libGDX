@@ -15,6 +15,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -66,10 +67,11 @@ public class MapsActivity extends AppCompatActivity {
         map.setTileSource(TileSourceFactory.MAPNIK);
         map.setMultiTouchControls(true);
         mapController = (MapController) map.getController();
-        mapController.setZoom(13);
+        mapController.setZoom(17);
 
-        GeoPoint startpoint = new GeoPoint(49.7,9);
+        GeoPoint startpoint = new GeoPoint(49.122831, 9.210871);
         mapController.setCenter(startpoint);
+        map.invalidate();
     }
 
     public void onResume(){
@@ -85,7 +87,7 @@ public class MapsActivity extends AppCompatActivity {
                 @Override
                 public void onReceive(Context context, Intent intent) {
                     setCurrentPosition(intent);
-                    getPOIs();
+                    //getPOIs();
                 }
             };
         }
@@ -192,5 +194,12 @@ public class MapsActivity extends AppCompatActivity {
             }
             poiMarkers.add(poiMarker);
         }
+    }
+
+    public void setCenter(View v)
+    {
+        GeoPoint centerPoint = new GeoPoint(latitude,longitude);
+        mapController.setCenter(centerPoint);
+        map.invalidate();
     }
 }
