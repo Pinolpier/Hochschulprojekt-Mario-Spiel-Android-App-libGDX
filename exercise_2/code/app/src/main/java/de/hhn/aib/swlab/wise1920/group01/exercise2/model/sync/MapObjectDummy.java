@@ -9,12 +9,12 @@ public class MapObjectDummy {
     String description;
     @SerializedName("currentLocation")
     @Expose
-    Double[] position;
+    Position position;
     @SerializedName("name")
     @Expose
     private String name;
 
-    public MapObjectDummy(String name, String description, Double[] position) {
+    public MapObjectDummy(String name, String description, Position position) {
         this.name = name;
         this.description = description;
         this.position = position;
@@ -36,11 +36,11 @@ public class MapObjectDummy {
         this.description = description;
     }
 
-    public Double[] getPosition() {
+    public Position getPosition() {
         return position;
     }
 
-    public void setPosition(Double[] position) {
+    public void setPosition(Position position) {
         this.position = position;
     }
 }

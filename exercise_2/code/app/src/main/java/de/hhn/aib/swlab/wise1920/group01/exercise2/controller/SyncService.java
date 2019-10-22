@@ -5,11 +5,14 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.MapObject;
+import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.LoginProcessedInterface;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.MapObjectDummy;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.Position;
+import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.RegistrationProcessedInterface;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.User;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.UserAPI;
 import okhttp3.ResponseBody;
@@ -38,14 +41,14 @@ public class SyncService {
      * Used to register a new user at the webservice. If the username is blocked (meaning already used by another user) a toast message will be shown
      * to tell the user about the problem and to suggest to choose another username or trying login if the register button was choosen accidentally.
      * If the registration was successful the user will be logged in automatically afterwards.
-     *
-     * @param username    The username to register at the server, must not be {code null}
+     *  @param username    The username to register at the server, must not be {code null}
      * @param password    The password to register at the server, must not be {code null}
      * @param description The user's own description, may be {code null} - empty strings are treated as {code null}
+     * @param registrationProcessedInterface
      */
-    public void register(String username, String password, String description) {
+    public void register(final String username, final String password, String description, final RegistrationProcessedInterface registrationProcessedInterface) {
         user = new User(username, password);
-        if (description == "") {
+        if ("".equals(description)) {
             description = null;
         }
         if (description != null) {
@@ -57,26 +60,26 @@ public class SyncService {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.code() != 409 && !response.isSuccessful()) {
                     Log.wtf("Sync Service: ", "An unexpected HTTP Response Code indicating an error has been returned by the webservice: Response Code is " + response.code());
-                    return;
                 }
                 if (response.code() == 409) {
-                    Toast.makeText(context, "@string/usernameNotAvailableToastMessage", Toast.LENGTH_LONG);
+                    Toast.makeText(context, "@string/usernameNotAvailableToastMessage", Toast.LENGTH_LONG).show();
                     Log.d("Sync Service: ", "Username was not available. Couldn't complete registration.");
-                    return;
                 }
                 if (response.isSuccessful() && response.code() != 200) {
                     Log.wtf("Sync Service: ", "An unexpected HTTP Response Code indicating successful registration has been returned by the webservice: Response Code is " + response.code());
-                    return;
                 }
                 if (response.code() == 200) {
-                    Toast.makeText(context, "@string/registrationSuccessfulToastMessage", Toast.LENGTH_LONG);
-                    login(user.getUsername(), user.getPassword());
+                    Toast.makeText(context, "@string/registrationSuccessfulToastMessage", Toast.LENGTH_LONG).show();
+                    registrationProcessedInterface.onSuccess(username, password);
+                    return;
                 }
+                registrationProcessedInterface.onFailure();
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.wtf("Sync Service: ", "A serious error with the webservice occurred, error:" + t.getMessage());
+                Log.wtf("Sync Service: ", "A serious error with the webservice occurred during registration, error:" + t.getMessage());
+                registrationProcessedInterface.onFailure();
             }
         });
     }
@@ -84,11 +87,12 @@ public class SyncService {
     /**
      * Used to login a user at the webservice. If the login is not successful a Toast will be shown telling to double check password and username and that an initial registration is needed.
      * If the login is successful the userID and the returned JWT are stored for later use.
-     *
-     * @param username The username to use for login at the server.
+     *  @param username The username to use for login at the server.
      * @param password The password to use for login at the server.
+     * @param loginProcessedInterface
      */
-    public void login(final String username, String password) {
+    public void login(final String username, String password, final LoginProcessedInterface loginProcessedInterface) {
+        user = null;
         user = new User(username, password);
         Call<User> call = api.login(user);
         call.enqueue(new Callback<User>() {
@@ -96,19 +100,16 @@ public class SyncService {
             public void onResponse(Call<User> call, Response<User> response) {
                 if (!response.isSuccessful() && response.code() != 403) {
                     Log.wtf("Sync Service: ", "An unexpected HTTP Response Code indicating an error has been returned by the webservice: Response Code is " + response.code());
-                    return;
                 }
                 if (response.code() == 403) {
-                    Toast.makeText(context, "@string/loginFailedToastMessage", Toast.LENGTH_LONG);
+                    Toast.makeText(context, "@string/loginFailedToastMessage", Toast.LENGTH_LONG).show();
                     Log.d("Sync Service: ", "Login unsuccessful. Got HTTP return 403 forbidden.");
-                    return;
                 }
                 if (response.isSuccessful() && response.code() != 200) {
                     Log.wtf("Sync Service: ", "An unexpected HTTP Response Code indicating successful login has been returned by the webservice: Response Code is " + response.code());
-                    return;
                 }
                 if (response.code() == 200) {
-                    Toast.makeText(context, "@string/loginSuccessfulToastMessage", Toast.LENGTH_SHORT);
+                    Toast.makeText(context, "@string/loginSuccessfulToastMessage", Toast.LENGTH_SHORT).show();
                     User respondedUser = response.body();
                     user.setId(respondedUser.getId());
                     if (!respondedUser.getUsername().equals(username)) {
@@ -123,12 +124,16 @@ public class SyncService {
                     } else {
                         user.setJwtAuthorization(jwts.get(0));
                     }
+                    loginProcessedInterface.onSuccess();
+                    return;
                 }
+                loginProcessedInterface.onFailure();
             }
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-                Log.wtf("Sync Service: ", "A serious error with the webservice occurred, error:" + t.getMessage());
+                Log.wtf("Sync Service: ", "A serious error with the webservice occurred during login, error:" + t.getMessage());
+                loginProcessedInterface.onFailure();
             }
         });
     }
@@ -217,7 +222,7 @@ public class SyncService {
                     return;
                 }
                 if (response.code() == 403) {
-                    Toast.makeText(context, "@string/updateFailedInvalidJwtTokenToastMessage", Toast.LENGTH_LONG);
+                    Toast.makeText(context, "@string/updateFailedInvalidJwtTokenToastMessage", Toast.LENGTH_LONG).show();
                     Log.wtf("Sync Service: ", "Invalid JWT token has been used while updating user!");
                     //TODO Login Activity anzeigen, da ungueltiger JWT Token
                     return;
@@ -227,14 +232,14 @@ public class SyncService {
                     return;
                 }
                 if (response.code() == 200) {
-                    Toast.makeText(context, "@string/updateSuccessfulToastMessage", Toast.LENGTH_SHORT);
+                    Toast.makeText(context, "@string/updateSuccessfulToastMessage", Toast.LENGTH_SHORT).show();
                     Log.d("Symc Service: ", "Changes to users submitted to the webservice successfully.");
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.wtf("Sync Service: ", "A serious error with the webservice occurred, error:" + t.getMessage());
+                Log.wtf("Sync Service: ", "A serious error with the webservice occurred during update, error:" + t.getMessage());
             }
         });
     }
@@ -257,6 +262,7 @@ public class SyncService {
      */
     public boolean sendLocation(Position position) {
         if (user == null || user.getId() == null || user.getJwtAuthorization() == null) {
+            Log.wtf("Sync Service: ", "Something went wrong, either user or ID or JWT is null: " + user);
             return false;
         }
         user.setPosition(position);
@@ -273,7 +279,7 @@ public class SyncService {
                     return;
                 }
                 if (response.code() == 403) {
-                    Toast.makeText(context, "@string/sendLocationFailedInvalidJwtTokenToastMessage", Toast.LENGTH_LONG);
+                    Toast.makeText(context, "@string/sendLocationFailedInvalidJwtTokenToastMessage", Toast.LENGTH_LONG).show();
                     Log.wtf("Sync Service: ", "Invalid JWT token has been used while sending location!");
                     //TODO Login Activity anzeigen, da ungueltiger JWT Token
                     return;
@@ -285,7 +291,7 @@ public class SyncService {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.wtf("Sync Service: ", "A serious error with the webservice occurred, error:" + t.getMessage());
+                Log.wtf("Sync Service: ", "A serious error with the webservice occurred during sendLocation, error:" + t.getMessage());
             }
         });
         return true;
@@ -323,7 +329,7 @@ public class SyncService {
                     return;
                 }
                 if (response.code() == 403) {
-                    Toast.makeText(context, "@string/getUsersFailedInvalidJwtTokenToastMessage", Toast.LENGTH_LONG);
+                    Toast.makeText(context, "@string/getUsersFailedInvalidJwtTokenToastMessage", Toast.LENGTH_LONG).show();
                     Log.wtf("Sync Service: ", "Invalid JWT token has been used while sending location!");
                     //TODO Login Activity anzeigen, da ungueltiger JWT Token
                     return;
@@ -331,15 +337,18 @@ public class SyncService {
                 if (response.code() == 200) {
                     Log.d("Sync Service: ", "Received locations successfully!");
                     List<MapObjectDummy> usersAround = response.body();
+                    Log.wtf("Sync Service: ", "Size of the \"List<MapObjectDummy> usersAround = response.body();\": " + usersAround.size());
                     for (MapObjectDummy i : usersAround) {
-                        usersAroundList.add(new MapObject(i.getPosition()[0], i.getPosition()[1], i.getName(), i.getDescription()));
+                        usersAroundList.add(new MapObject(i.getPosition().getLatitude(), i.getPosition().getLongitude(), i.getName(), i.getDescription()));
                     }
+                    Log.wtf("Sync Service: ", "Size of the \"final ArrayList<MapObject> usersAroundList = new ArrayList<>();\": " + usersAroundList.size());
+                    Log.wtf("TestWebserviceImplementation: ", Arrays.toString(usersAroundList.toArray()));
                 }
             }
 
             @Override
             public void onFailure(Call<List<MapObjectDummy>> call, Throwable t) {
-                Log.wtf("Sync Service: ", "A serious error with the webservice occurred, error:" + t.getMessage());
+                Log.wtf("Sync Service: ", "A serious error with the webservice occurred during getUsersAround, error:" + t.getMessage());
             }
         });
         return usersAroundList.toArray(new MapObject[usersAroundList.size()]);

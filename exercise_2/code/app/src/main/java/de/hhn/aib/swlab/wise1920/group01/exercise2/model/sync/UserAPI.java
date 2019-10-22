@@ -20,12 +20,12 @@ public interface UserAPI {
 
     @PUT("user/{userID}")
     Call<ResponseBody> updateUser(@Header("Authorization") String jwt,
-                                  @Path("userID") Integer id,
+                                  @Path("userID") String id,
                                   @Body User user);
 
     @POST("user/{userID}/location")
     Call<ResponseBody> setLocation(@Header("Authorization") String jwt,
-                                   @Path("userID") Integer id,
+                                   @Path("userID") String id,
                                    @Body Position position);
 
     @GET("location/{radius}/{lat}/{long}")

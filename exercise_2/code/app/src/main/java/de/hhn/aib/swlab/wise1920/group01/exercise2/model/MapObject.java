@@ -66,4 +66,8 @@ public class MapObject extends LabelledGeoPoint {
             this.description = "";
         }
     }
+
+    public String toString() {
+        return "Latitude: " + getLatitude() + ", Longitude: " + getLongitude() + ", Username: " + getLabel() + ", Description: " + getDescription();
+    }
 }
