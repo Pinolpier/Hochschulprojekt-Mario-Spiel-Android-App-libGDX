@@ -1,4 +1,4 @@
-package de.hhn.aib.swlab.wise1920.group01.exercise2.controller;
+/*package de.hhn.aib.swlab.wise1920.group01.exercise2.controller;
 
 import android.annotation.SuppressLint;
 import android.app.Service;
@@ -64,3 +64,4 @@ public class GPS_Service extends Service
         return null;
     }
 }
+ */

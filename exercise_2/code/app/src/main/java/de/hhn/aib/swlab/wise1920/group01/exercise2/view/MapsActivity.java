@@ -5,10 +5,8 @@ import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -16,33 +14,32 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
-import org.osmdroid.bonuspack.location.NominatimPOIProvider;
-import org.osmdroid.bonuspack.location.POI;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
+
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.FolderOverlay;
 import org.osmdroid.views.overlay.Marker;
 
-import java.util.ArrayList;
-
 import de.hhn.aib.swlab.wise1920.group01.exercise2.R;
-import de.hhn.aib.swlab.wise1920.group01.exercise2.controller.GPS_Service;
 
 public class MapsActivity extends AppCompatActivity {
 
     MapView map;
     MapController mapController;
-    private BroadcastReceiver broadcastReceiver;
     private double latitude, longitude;
     private Marker marker;
+    private FusedLocationProviderClient fusedLocationClient;
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +60,16 @@ public class MapsActivity extends AppCompatActivity {
         //note, the load method also sets the HTTP User Agent to your application's package name, abusing osm's tile servers will get you banned based on this string
 
         //inflate and create the map
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        fusedLocationClient.getLastLocation()
+                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                       latitude = location.getLatitude();
+                       longitude = location.getLongitude();
+                       System.out.println(latitude + " " + longitude);
+                    }
+                });
         setContentView(R.layout.activity_maps);
         map = findViewById(R.id.map);
         map.setTileSource(TileSourceFactory.MAPNIK);
@@ -77,50 +84,10 @@ public class MapsActivity extends AppCompatActivity {
         map.invalidate();
     }
 
-    public void onResume(){
-        super.onResume();
-        //this will refresh the osmdroid configuration on resuming.
-        //if you make changes to the configuration, use
-        //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        //Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
-        map.onResume(); //needed for compass, my location overlays, v6.0.0 and up
-        if(broadcastReceiver == null)
-        {
-            broadcastReceiver = new BroadcastReceiver() {
-                @Override
-                public void onReceive(Context context, Intent intent) {
-                    setCurrentPosition(intent);
-                    //getPOIs();
-                }
-            };
-        }
-        registerReceiver(broadcastReceiver,new IntentFilter("location_update"));
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if(broadcastReceiver != null)
-        {
-            unregisterReceiver(broadcastReceiver);
-        }
-        Intent intent = new Intent(getApplicationContext(), GPS_Service.class);
-        stopService(intent);
-    }
-
-    public void onPause(){
-        super.onPause();
-        //this will refresh the osmdroid configuration on resuming.
-        //if you make changes to the configuration, use
-        //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        //Configuration.getInstance().save(this, prefs);
-        map.onPause();  //needed for compass, my location overlays, v6.0.0 and up
-    }
 
     public void enable_service()
     {
-        Intent intent = new Intent(getApplicationContext(), GPS_Service.class);
-        startService(intent);
+        Toast.makeText(this, "service started", Toast.LENGTH_SHORT).show();
     }
 
     private boolean check_permissions()
@@ -162,9 +129,6 @@ public class MapsActivity extends AppCompatActivity {
     public void setCurrentPosition(Intent intent)
     {
 
-        String[] string = intent.getExtras().get("coordinates").toString().split("/");
-        longitude = Double.parseDouble(string[0]);
-        latitude = Double.parseDouble(string [1]);
         GeoPoint gPt = new GeoPoint(latitude,longitude);
 
         Log.e("gps",longitude + " " + latitude);
@@ -174,29 +138,6 @@ public class MapsActivity extends AppCompatActivity {
         map.getOverlays().add(marker);
         //mapController.setCenter(gPt);
         map.invalidate();
-    }
-
-    public void getPOIs()
-    {
-        NominatimPOIProvider poiProvider = new NominatimPOIProvider("OSMBonusPackTutoUserAgent");
-        GeoPoint point = new GeoPoint(latitude,longitude);
-        ArrayList<POI> pois = poiProvider.getPOICloseTo(point, "cinema", 50, 0.1);
-
-        FolderOverlay poiMarkers = new FolderOverlay(this);
-        map.getOverlays().add(poiMarkers);
-
-        Drawable poiIcon = getResources().getDrawable(R.drawable.marker_default);
-        for (POI poi:pois){
-            Marker poiMarker = new Marker(map);
-            poiMarker.setTitle(poi.mType);
-            poiMarker.setSnippet(poi.mDescription);
-            poiMarker.setPosition(poi.mLocation);
-            poiMarker.setIcon(poiIcon);
-            if (poi.mThumbnail != null){
-                poiMarker.setImage(new BitmapDrawable(poi.mThumbnail));
-            }
-            poiMarkers.add(poiMarker);
-        }
     }
 
     public void setCenter(View v)
