@@ -5,7 +5,10 @@ import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
@@ -136,9 +139,32 @@ public class MapsActivity extends AppCompatActivity {
         marker.setPosition(gPt);
         marker.setAnchor(Marker.ANCHOR_CENTER,Marker.ANCHOR_BOTTOM);
         map.getOverlays().add(marker);
-        //mapController.setCenter(gPt);
         map.invalidate();
     }
+
+   /* public void getPOIs()
+    {
+        NominatimPOIProvider poiProvider = new NominatimPOIProvider("OSMBonusPackTutoUserAgent");
+        GeoPoint point = new GeoPoint(latitude,longitude);
+        ArrayList<POI> pois = poiProvider.getPOICloseTo(point, "cinema", 50, 0.1);
+
+        FolderOverlay poiMarkers = new FolderOverlay(this);
+        map.getOverlays().add(poiMarkers);
+
+        Drawable poiIcon = getResources().getDrawable(R.drawable.marker_default);
+        for (POI poi:pois){
+            Marker poiMarker = new Marker(map);
+            poiMarker.setTitle(poi.mType);
+            poiMarker.setSnippet(poi.mDescription);
+            poiMarker.setPosition(poi.mLocation);
+            poiMarker.setIcon(poiIcon);
+            if (poi.mThumbnail != null){
+                poiMarker.setImage(new BitmapDrawable(poi.mThumbnail));
+            }
+            poiMarkers.add(poiMarker);
+        }
+    }
+    */
 
     public void setCenter(View v)
     {
