@@ -89,6 +89,7 @@ public class GPS_Service extends Service
     @Override
     public IBinder onBind(Intent intent) {
         return null;
+        //s
     }
 }
  */
