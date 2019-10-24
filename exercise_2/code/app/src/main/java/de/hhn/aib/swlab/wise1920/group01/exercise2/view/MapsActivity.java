@@ -133,7 +133,7 @@ public class MapsActivity extends AppCompatActivity {
         Log.e("gps",longitude + " " + latitude);
 
         marker.setPosition(gPt);
-        marker.setAnchor(Marker.ANCHOR_CENTER,Marker.ANCHOR_BOTTOM);
+        marker.setAnchor(0.5f,0.5f);
         map.getOverlays().add(marker);
         map.invalidate();
     }
