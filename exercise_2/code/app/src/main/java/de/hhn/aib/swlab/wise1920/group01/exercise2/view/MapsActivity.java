@@ -2,44 +2,47 @@ package de.hhn.aib.swlab.wise1920.group01.exercise2.view;
 
 
 import android.Manifest;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-
-import androidx.annotation.NonNull;
+import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-
+import androidx.core.content.PermissionChecker;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.nabinbhandari.android.permissions.PermissionHandler;
+import com.nabinbhandari.android.permissions.Permissions;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.tileprovider.tilesource.TileSourcePolicy;
+import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.Marker;
+
+import java.util.ArrayList;
 
 import de.hhn.aib.swlab.wise1920.group01.exercise2.R;
-import de.hhn.aib.swlab.wise1920.group01.exercise2.controller.GPS_Service;
 
 public class MapsActivity extends AppCompatActivity {
 
     MapView map;
     MapController mapController;
-    private BroadcastReceiver broadcastReceiver;
     private double latitude, longitude;
+    private Marker marker;
+    private FusedLocationProviderClient fusedLocationClient;
+    private LocationRequest locationRequest;
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if(!check_permissions())
-        {
-            enable_service();
-        }
         //handle permissions first, before map is created. not depicted here
 
         //load/initialize the osmdroid configuration, this can be done
@@ -52,83 +55,72 @@ public class MapsActivity extends AppCompatActivity {
         //note, the load method also sets the HTTP User Agent to your application's package name, abusing osm's tile servers will get you banned based on this string
 
         //inflate and create the map
+        callPermissions();
         setContentView(R.layout.activity_maps);
         map = findViewById(R.id.map);
-        map.setTileSource(TileSourceFactory.MAPNIK);
+        map.setTileSource(new XYTileSource("Mapnik",
+                0, 19, 256, ".png", new String[] {
+                "https://swlab-maps.hhn.sisrv.de/" },"© OpenStreetMap contributors",
+                new TileSourcePolicy(10,
+                        TileSourcePolicy.FLAG_NO_BULK
+                                | TileSourcePolicy.FLAG_NO_PREVENTIVE
+                                | TileSourcePolicy.FLAG_USER_AGENT_MEANINGFUL
+                                | TileSourcePolicy.FLAG_USER_AGENT_NORMALIZED
+                )));
+
         map.setMultiTouchControls(true);
         mapController = (MapController) map.getController();
-        mapController.setZoom(13);
+        mapController.setZoom(17);
+
+        GeoPoint startpoint = new GeoPoint(49.122831, 9.210871);
+        mapController.setCenter(startpoint);
+        marker = new Marker(map);
+        marker.setSnippet("My current Location");
+        marker.setIcon(getDrawable((R.drawable.ic_location_on_red_24dp)));
+        map.invalidate();
     }
 
-    public void onResume(){
-        super.onResume();
-        //this will refresh the osmdroid configuration on resuming.
-        //if you make changes to the configuration, use
-        //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        //Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
-        map.onResume(); //needed for compass, my location overlays, v6.0.0 and up
-        if(broadcastReceiver == null)
-        {
-            broadcastReceiver = new BroadcastReceiver() {
+    public void requestLocationUpdates()
+    {
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PermissionChecker.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PermissionChecker.PERMISSION_GRANTED) {
+            fusedLocationClient = new FusedLocationProviderClient(this);
+            locationRequest = new LocationRequest();
+            locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+            locationRequest.setFastestInterval(2000);
+            locationRequest.setInterval(4000);
+            fusedLocationClient.requestLocationUpdates(locationRequest, new LocationCallback() {
                 @Override
-                public void onReceive(Context context, Intent intent) {
-                    String[] string = intent.getExtras().get("coordinates").toString().split("/");
-                    longitude = Double.parseDouble(string[0]);
-                    latitude = Double.parseDouble(string [1]);
-                    GeoPoint gPt = new GeoPoint(latitude,longitude);
-                    mapController.setCenter(gPt);
+                public void onLocationResult(LocationResult locationResult) {
+                    super.onLocationResult(locationResult);
+                    latitude = locationResult.getLastLocation().getLatitude();
+                    longitude = locationResult.getLastLocation().getLongitude();
+                    setCurrentPosition();
                 }
-            };
+            }, getMainLooper());
         }
-        registerReceiver(broadcastReceiver,new IntentFilter("location_update"));
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if(broadcastReceiver != null)
+        else
         {
-            unregisterReceiver(broadcastReceiver);
+            callPermissions();
         }
-        Intent intent = new Intent(getApplicationContext(), GPS_Service.class);
-        stopService(intent);
     }
 
-    public void onPause(){
-        super.onPause();
-        //this will refresh the osmdroid configuration on resuming.
-        //if you make changes to the configuration, use
-        //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        //Configuration.getInstance().save(this, prefs);
-        map.onPause();  //needed for compass, my location overlays, v6.0.0 and up
-    }
-
-    public void enable_service()
+    public void callPermissions()
     {
-        Intent intent = new Intent(getApplicationContext(), GPS_Service.class);
-        startService(intent);
-    }
-
-    private boolean check_permissions()
-    {
-        if(Build.VERSION.SDK_INT >= 23 && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 100);
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 100) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                enable_service();
-            } else {
-                check_permissions();
-            }
-        }
+        String[] permissions = {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
+        Permissions.check(this, permissions, "Location permissions are required to get User Location",
+                new Permissions.Options().setSettingsDialogTitle("Warning").setRationaleDialogTitle("Info"),
+                new PermissionHandler() {
+                    @Override
+                    public void onGranted() {
+                        requestLocationUpdates();
+                    }
+                    @Override
+                    public void onDenied(Context context, ArrayList<String> deniedPermissions) {
+                        super.onDenied(context, deniedPermissions);
+                        callPermissions();
+                    }
+                });
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -143,5 +135,24 @@ public class MapsActivity extends AppCompatActivity {
             startActivity(new Intent(this, SettingsActivity.class));
         }
         return true;
+    }
+
+    public void setCurrentPosition()
+    {
+        GeoPoint gPt = new GeoPoint(latitude,longitude);
+
+        Log.e("gps",longitude + " " + latitude);
+
+        marker.setPosition(gPt);
+        marker.setAnchor(0.5f,0.5f);
+        map.getOverlays().add(marker);
+        map.invalidate();
+    }
+
+    public void setCenter(View v)
+    {
+        GeoPoint centerPoint = new GeoPoint(latitude,longitude);
+        mapController.setCenter(centerPoint);
+        map.invalidate();
     }
 }
