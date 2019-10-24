@@ -11,7 +11,7 @@ public class User {
 
     @SerializedName("privacyRadius")
     @Expose
-    private Integer privacyRadius;
+    private Double privacyRadius;
 
     @SerializedName("username")
     @Expose
@@ -43,12 +43,12 @@ public class User {
         this.id = id;
     }
 
-    public Integer getPrivacyRadius() {
+    public Double getPrivacyRadius() {
         return privacyRadius;
     }
 
     //TODO Bei Veränderung des PrivacyRadius muss zwingend der Server geupdatet werden! Mind: Methods are used in SyncService and no update shall be performed.
-    public void setPrivacyRadius(Integer privacyRadius) {
+    public void setPrivacyRadius(Double privacyRadius) {
         this.privacyRadius = privacyRadius;
     }
 

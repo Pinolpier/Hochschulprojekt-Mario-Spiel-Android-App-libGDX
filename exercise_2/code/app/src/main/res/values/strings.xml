@@ -22,4 +22,5 @@
     <string name="updateSuccessfulToastMessage">Benutzerinformationen erfolgreich geupdatet</string>
     <string name="sendLocationFailedInvalidJwtTokenToastMessage">Konnte die Position nicht senden. Interner Fehler, bitte neu einloggen.</string>
     <string name="getUsersFailedInvalidJwtTokenToastMessage">Konnte keine Standorte abrufen. Interner Fehler, bitte neu einloggen.</string>
+    <string name="sendLocationFailed">ACHTUNG: Die Location konnte nicht an den Server gesendet werden!</string>
 </resources>

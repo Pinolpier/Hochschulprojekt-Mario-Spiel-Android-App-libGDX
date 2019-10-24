@@ -1,6 +1,7 @@
 package de.hhn.aib.swlab.wise1920.group01.exercise2.controller;
 
 import android.content.Context;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -13,6 +14,7 @@ import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.LoginProcessedInte
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.MapObjectDummy;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.Position;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.RegistrationProcessedInterface;
+import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.TimestampedPosition;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.User;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.UserAPI;
 import okhttp3.ResponseBody;
@@ -27,14 +29,84 @@ public class SyncService {
     private Retrofit retrofit;
     private Context context;
     private User user;
+    private CountDownTimer timer;
+    private long syncInterval, locationHistorySince;
+    private int usersAroundRadius;
+    private MapObject[] usersAround;
+    private TimestampedPosition[] locationHistory;
 
-    public SyncService(Context context) {
+    public SyncService(final Context context) {
         this.context = context;
         retrofit = new Retrofit.Builder()
                 .baseUrl("https://swlab.iap.hs-heilbronn.de/ex2/api/v0.3/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         api = retrofit.create(UserAPI.class);
+        //TODO syncInterval aus den Settings bekommen und dementsprechend setzten!
+        setSyncInterval(300000L); //Standardwert Sync alle 5 Minuten bis Verknüpfung mit Settings
+    }
+
+    public long getSyncInterval() {
+        return syncInterval;
+    }
+
+    public void setSyncInterval(long syncInterval) {
+        this.syncInterval = syncInterval;
+        if (timer != null) {
+            timer.cancel();
+        }
+        timer = new CountDownTimer(Long.MAX_VALUE, syncInterval) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                if (!sendLocation(user.getPosition())) {
+                    Toast.makeText(context, "@string/sendLocationFailed", Toast.LENGTH_LONG);
+                    Log.e("Sync Service: ", "Couldn't send location because user object didn't exist or was invalid");
+                }
+                usersAround = getUsersAround(usersAroundRadius);
+                locationHistory = getLocationHistory(locationHistorySince);
+            }
+
+            @Override
+            public void onFinish() {
+                Log.wtf("Sync Service: ", "Lol, the times has ended, the universe should have ended before this message can be shown...");
+            }
+        };
+    }
+
+    public String getDescription() {
+        return user.getDescription();
+    }
+
+    public Double getPrivacyRadius() {
+        return user.getPrivacyRadius();
+    }
+
+    public String getUsername() {
+        return user.getUsername();
+    }
+
+    public int getUserSearchRadius() {
+        return usersAroundRadius;
+    }
+
+    public void setUserSearchRadius(int radius) {
+        usersAroundRadius = radius;
+    }
+
+    public long getLocationHistorySince() {
+        return locationHistorySince;
+    }
+
+    public void setLocationHistorySince(long locationHistorySince) {
+        this.locationHistorySince = locationHistorySince;
+    }
+
+    public TimestampedPosition[] getLocationHistory() {
+        return locationHistory;
+    }
+
+    public MapObject[] getUsersAround() {
+        return usersAround;
     }
 
     /**
@@ -46,7 +118,7 @@ public class SyncService {
      * @param description The user's own description, may be {code null} - empty strings are treated as {code null}
      * @param registrationProcessedInterface
      */
-    public void register(final String username, final String password, String description, final RegistrationProcessedInterface registrationProcessedInterface) {
+    private void register(final String username, final String password, String description, final RegistrationProcessedInterface registrationProcessedInterface) {
         user = new User(username, password);
         if ("".equals(description)) {
             description = null;
@@ -91,7 +163,7 @@ public class SyncService {
      * @param password The password to use for login at the server.
      * @param loginProcessedInterface
      */
-    public void login(final String username, String password, final LoginProcessedInterface loginProcessedInterface) {
+    private void login(final String username, String password, final LoginProcessedInterface loginProcessedInterface) {
         user = null;
         user = new User(username, password);
         Call<User> call = api.login(user);
@@ -138,21 +210,24 @@ public class SyncService {
         });
     }
 
-    /**
-     * Used to change the logged in user's username
-     * If no user is logged in nothing will be done and {code false} will be returned.
-     *
-     * @param newUsername the new username to send to the server
-     * @return {code true}, if a user is logged in and the operation was successful; {code false} if no users is logged in
-     */
-    public boolean changeUsername(String newUsername) {
-        if (user == null || user.getId() == null || user.getJwtAuthorization() == null) {
-            return false;
-        }
-        user.setUsername(newUsername);
-        update();
-        return true;
-    }
+//  This method is not supported by the webservice and can't be used.
+//
+//    /**
+//     * Used to change the logged in user's username
+//     * If no user is logged in nothing will be done and {code false} will be returned.
+//     *
+//     * @param newUsername the new username to send to the server
+//     * @return {code true}, if a user is logged in and the operation was successful; {code false} if no users is logged in
+//     */
+//    @Deprecated
+//    public boolean changeUsername(String newUsername) {
+//        if (user == null || user.getId() == null || user.getJwtAuthorization() == null) {
+//            return false;
+//        }
+//        user.setUsername(newUsername);
+//        update();
+//        return true;
+//    }
 
     /**
      * Used to change the logged in user's password
@@ -161,7 +236,7 @@ public class SyncService {
      * @param newPassword the new password to send to the server
      * @return {code true}, if a user is logged in and the operation was successful; {code false} if no users is logged in
      */
-    public boolean changePassword(String newPassword) {
+    private boolean changePassword(String newPassword) {
         if (user == null || user.getId() == null || user.getJwtAuthorization() == null) {
             return false;
         }
@@ -177,7 +252,7 @@ public class SyncService {
      * @param newDescription the new description to send to the server
      * @return {code true}, if a user is logged in and the operation was successful; {code false} if no users is logged in
      */
-    public boolean changeDescription(String newDescription) {
+    private boolean changeDescription(String newDescription) {
         if (user == null || user.getId() == null || user.getJwtAuthorization() == null) {
             return false;
         }
@@ -193,7 +268,7 @@ public class SyncService {
      * @param newPrivacyRadius the new privacy radius to send to the server
      * @return {code true}, if a user is logged in and the operation was successful; {code false} if no users is logged in
      */
-    public boolean changePrivacyRadius(Integer newPrivacyRadius) {
+    private boolean changePrivacyRadius(Double newPrivacyRadius) {
         if (user == null || user.getId() == null || user.getJwtAuthorization() == null) {
             return false;
         }
@@ -251,7 +326,7 @@ public class SyncService {
      * @param longitude the new position's longitude
      * @return if updating was successful {code true} will be returned. Otherwise {code false} will be returned.
      */
-    public boolean sendLocation(Double latitude, Double longitude) {
+    private boolean sendLocation(Double latitude, Double longitude) {
         return sendLocation(new Position(latitude, longitude));
     }
 
@@ -260,7 +335,7 @@ public class SyncService {
      * @param position the new position
      * @return if updating was successful {code true} will be returned. Otherwise {code false} will be returned.
      */
-    public boolean sendLocation(Position position) {
+    private boolean sendLocation(Position position) {
         if (user == null || user.getId() == null || user.getJwtAuthorization() == null) {
             Log.wtf("Sync Service: ", "Something went wrong, either user or ID or JWT is null: " + user);
             return false;
@@ -303,7 +378,7 @@ public class SyncService {
      * @param radius the radius in which all users available will be returned.
      * @return an array containing all information to display the users around on the map.
      */
-    public MapObject[] getUsersAround(int radius) {
+    private MapObject[] getUsersAround(int radius) {
         return getUsersAround(user.getPosition(), radius);
     }
 
@@ -314,7 +389,7 @@ public class SyncService {
      * @param radius   the radius in which all users available will be returned.
      * @return an array containing all information to display the users around on the map.
      */
-    public MapObject[] getUsersAround(Position position, int radius) {
+    private MapObject[] getUsersAround(Position position, int radius) {
         final ArrayList<MapObject> usersAroundList = new ArrayList<>();
         Call<List<MapObjectDummy>> call = api.getEverythingAround(user.getJwtAuthorization(), radius, position.getLatitude(), position.getLongitude());
         call.enqueue(new Callback<List<MapObjectDummy>>() {
@@ -352,5 +427,51 @@ public class SyncService {
             }
         });
         return usersAroundList.toArray(new MapObject[usersAroundList.size()]);
+    }
+
+    /**
+     * Used to get all past locations of the logged in user since the param
+     *
+     * @param since The earliest time from when on the location history should be returned. May be {@code null} in that case the 1st January 2010 will 00:00:00.0000 GMT will be used
+     * @return All locations where the user has been since the param. Order from oldest (index 0) to the newest positions.
+     */
+    private TimestampedPosition[] getLocationHistory(Long since) {
+        final ArrayList<TimestampedPosition> locationHistoryList = new ArrayList<>();
+        if (since == null) {
+            since = 1262304000000l;
+        }
+        Call<List<TimestampedPosition>> call = api.getLocationHistory(user.getJwtAuthorization(), since, user.getId());
+        call.enqueue(new Callback<List<TimestampedPosition>>() {
+            @Override
+            public void onResponse(Call<List<TimestampedPosition>> call, Response<List<TimestampedPosition>> response) {
+                if (!response.isSuccessful() && response.code() != 403) {
+                    Log.wtf("Sync Service: ", "An unexpected HTTP Response Code indicating an error has been returned by the webservice: Response Code is " + response.code());
+                    return;
+                }
+                if (response.isSuccessful() && response.code() != 200) {
+                    Log.wtf("Sync Service: ", "An unexpected HTTP Response Code indicating successfully sending location has been returned by the webservice: Response Code is " + response.code());
+                    return;
+                }
+                if (response.code() == 403) {
+                    Toast.makeText(context, "@string/getUsersFailedInvalidJwtTokenToastMessage", Toast.LENGTH_LONG).show();
+                    Log.wtf("Sync Service: ", "Invalid JWT token has been used while sending location!");
+                    //TODO Login Activity anzeigen, da ungueltiger JWT Token
+                    return;
+                }
+                if (response.code() == 200) {
+                    Log.d("Sync Service: ", "Received location history successfully!");
+                    List<TimestampedPosition> usersAround = response.body();
+                    for (TimestampedPosition i : usersAround) {
+                        locationHistoryList.add(i);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<TimestampedPosition>> call, Throwable t) {
+                Log.wtf("Sync Service: ", "A serious error with the webservice occurred during getLocationHistory, error:" + t.getMessage());
+            }
+        });
+        return locationHistoryList.toArray(new TimestampedPosition[locationHistoryList.size()]);
     }
 }

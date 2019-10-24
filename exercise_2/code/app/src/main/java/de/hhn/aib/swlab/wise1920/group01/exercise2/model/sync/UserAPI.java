@@ -10,6 +10,7 @@ import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface UserAPI {
     @POST("user")
@@ -33,4 +34,9 @@ public interface UserAPI {
                                                    @Path("radius") Integer radius,
                                                    @Path("lat") Double latitude,
                                                    @Path("long") Double longitude);
+
+    @GET("user/{userID}/location)")
+    Call<List<TimestampedPosition>> getLocationHistory(@Header("Authorization") String jwt,
+                                                       @Query("minDate") Long timestamp,
+                                                       @Path("userID") String id);
 }
