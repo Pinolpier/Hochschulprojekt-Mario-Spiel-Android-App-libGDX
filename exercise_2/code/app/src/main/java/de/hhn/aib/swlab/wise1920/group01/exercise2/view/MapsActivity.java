@@ -21,6 +21,8 @@ import com.nabinbhandari.android.permissions.PermissionHandler;
 import com.nabinbhandari.android.permissions.Permissions;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.tileprovider.tilesource.TileSourcePolicy;
+import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
@@ -56,7 +58,16 @@ public class MapsActivity extends AppCompatActivity {
         callPermissions();
         setContentView(R.layout.activity_maps);
         map = findViewById(R.id.map);
-        map.setTileSource(TileSourceFactory.MAPNIK);
+        map.setTileSource(new XYTileSource("Mapnik",
+                0, 19, 256, ".png", new String[] {
+                "https://swlab-maps.hhn.sisrv.de/" },"© OpenStreetMap contributors",
+                new TileSourcePolicy(10,
+                        TileSourcePolicy.FLAG_NO_BULK
+                                | TileSourcePolicy.FLAG_NO_PREVENTIVE
+                                | TileSourcePolicy.FLAG_USER_AGENT_MEANINGFUL
+                                | TileSourcePolicy.FLAG_USER_AGENT_NORMALIZED
+                )));
+
         map.setMultiTouchControls(true);
         mapController = (MapController) map.getController();
         mapController.setZoom(17);
