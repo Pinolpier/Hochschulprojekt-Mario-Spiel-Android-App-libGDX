@@ -5,14 +5,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.Arrays;
-
 import de.hhn.aib.swlab.wise1920.group01.exercise2.R;
-import de.hhn.aib.swlab.wise1920.group01.exercise2.controller.SyncService;
+import de.hhn.aib.swlab.wise1920.group01.exercise2.controller.AuthService;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.LoginProcessedInterface;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.RegistrationProcessedInterface;
 
@@ -20,35 +20,70 @@ public class MainActivity extends AppCompatActivity {
 
     private EditText textInputUsername;
     private EditText textInputPassword;
+    private AuthService auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        testWebserviceImplementation();
+//        testWebserviceImplementation();
 
-//        textInputUsername = findViewById(R.id.editText_User);
-//        textInputPassword = findViewById(R.id.editText_password);
-//        Button buttonLogin = findViewById(R.id.button_login);
-//        buttonLogin.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                String username = textInputUsername.getText().toString();
-//                String password = textInputPassword.getText().toString();
-//                Intent intent = new Intent(MainActivity.this, MapsActivity.class);
-//                startActivity(intent);
-//            }
-//        });
-//        Button buttonRegister = findViewById(R.id.button_register);
-//        buttonRegister.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Toast.makeText(getApplicationContext(),"User: "+textInputUsername.getText().toString()+" Password: "+textInputPassword.getText().toString(),Toast.LENGTH_SHORT).show();
-//                String username = textInputUsername.getText().toString();
-//                String password = textInputPassword.getText().toString();
-//            }
-//        });
+        textInputUsername = findViewById(R.id.editText_User);
+        textInputPassword = findViewById(R.id.editText_password);
+        Button buttonLogin = findViewById(R.id.button_login);
+        auth = new AuthService(this);
+        buttonLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String username = textInputUsername.getText().toString();
+                String password = textInputPassword.getText().toString();
+                login(username, password);
+            }
+        });
+        Button buttonRegister = findViewById(R.id.button_register);
+        buttonRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String username = textInputUsername.getText().toString();
+                String password = textInputPassword.getText().toString();
+                auth.register(username, password, null, new RegistrationProcessedInterface() {
+
+                    @Override
+                    public void onSuccess(String username, String password) {
+                        login(username, password);
+                    }
+
+                    @Override
+                    public void onFailure() {
+                        Log.wtf("Main Activity: ", "Registration onFailure has benn called!");
+                    }
+                });
+            }
+        });
+    }
+
+    private void login(String username, String password) {
+        auth.login(username, password, new LoginProcessedInterface() {
+            @Override
+            public void onSuccess() {
+                Intent intent = new Intent(MainActivity.this, MapsActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("jwt", auth.getJWT());
+                bundle.putString("id", auth.getUserID());
+                bundle.putString("username", auth.getUsername());
+                bundle.putString("description", auth.getDescription());
+                bundle.putString("password", auth.getPassword());
+                bundle.putDouble("privacy", auth.getPrivacyRadius());
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onFailure() {
+                Log.wtf("Main Activity: ", "Login onFailure has been called");
+            }
+        });
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -65,32 +100,32 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    public void testWebserviceImplementation() {
-        final SyncService sync = new SyncService(this);
-        sync.register("group01_dummy9", "group01_dummy9_password", null, new RegistrationProcessedInterface() {
-
-            @Override
-            public void onSuccess(String username, String password) {
-                sync.login(username, password, new LoginProcessedInterface() {
-                    @Override
-                    public void onSuccess() {
-                        sync.sendLocation(0.0, 0.0);
-                        sync.changePrivacyRadius(9999990);
-                        sync.changeDescription("This is user9 description.");
-                        Log.wtf("TestWebserviceImplementation: ", Arrays.toString(sync.getUsersAround(999999999)));
-                    }
-
-                    @Override
-                    public void onFailure() {
-                        Log.wtf("Main Activity: ", "Login onFailure has been called");
-                    }
-                });
-            }
-
-            @Override
-            public void onFailure() {
-                Log.wtf("Main Activity: ", "Register onFailure has been called");
-            }
-        });
-    }
+//    public void testWebserviceImplementation() {
+//        final SyncService sync = new SyncService(this);
+//        sync.register("group01_dummy9", "group01_dummy9_password", null, new RegistrationProcessedInterface() {
+//
+//            @Override
+//            public void onSuccess(String username, String password) {
+//                sync.login(username, password, new LoginProcessedInterface() {
+//                    @Override
+//                    public void onSuccess() {
+//                        sync.sendLocation(0.0, 0.0);
+//                        sync.changePrivacyRadius(9999990);
+//                        sync.changeDescription("This is user9 description.");
+//                        Log.wtf("TestWebserviceImplementation: ", Arrays.toString(sync.getUsersAround(999999999)));
+//                    }
+//
+//                    @Override
+//                    public void onFailure() {
+//                        Log.wtf("Main Activity: ", "Login onFailure has been called");
+//                    }
+//                });
+//            }
+//
+//            @Override
+//            public void onFailure() {
+//                Log.wtf("Main Activity: ", "Register onFailure has been called");
+//            }
+//        });
+//    }
 }

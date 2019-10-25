@@ -10,17 +10,19 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.PermissionChecker;
+
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.nabinbhandari.android.permissions.PermissionHandler;
 import com.nabinbhandari.android.permissions.Permissions;
+
 import org.osmdroid.config.Configuration;
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.tileprovider.tilesource.TileSourcePolicy;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.GeoPoint;
@@ -31,6 +33,7 @@ import org.osmdroid.views.overlay.Marker;
 import java.util.ArrayList;
 
 import de.hhn.aib.swlab.wise1920.group01.exercise2.R;
+import de.hhn.aib.swlab.wise1920.group01.exercise2.controller.SyncService;
 
 public class MapsActivity extends AppCompatActivity {
 
@@ -40,11 +43,13 @@ public class MapsActivity extends AppCompatActivity {
     private Marker marker;
     private FusedLocationProviderClient fusedLocationClient;
     private LocationRequest locationRequest;
+    private SyncService sync;
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle bundle = getIntent().getExtras();
+        sync = new SyncService(this, bundle.getString("jwt"), bundle.getString("id"), bundle.getString("username"), bundle.getString("description"), bundle.getString("password"), bundle.getDouble("privacy"));
         //handle permissions first, before map is created. not depicted here
-
         //load/initialize the osmdroid configuration, this can be done
         Context ctx = getApplicationContext();
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));

@@ -10,10 +10,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.MapObject;
-import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.LoginProcessedInterface;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.MapObjectDummy;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.Position;
-import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.RegistrationProcessedInterface;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.TimestampedPosition;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.User;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.UserAPI;
@@ -31,12 +29,16 @@ public class SyncService {
     private User user;
     private CountDownTimer timer;
     private long syncInterval, locationHistorySince;
-    private int usersAroundRadius;
     private MapObject[] usersAround;
     private TimestampedPosition[] locationHistory;
 
-    public SyncService(final Context context) {
+    public SyncService(Context context, String jwt, String id, String username, String description, String password, Double privacy) {
         this.context = context;
+        user = new User(username, password);
+        user.setJwtAuthorization(jwt);
+        user.setId(id);
+        user.setDescription(description);
+        user.setPrivacyRadius(privacy);
         retrofit = new Retrofit.Builder()
                 .baseUrl("https://swlab.iap.hs-heilbronn.de/ex2/api/v0.3/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -62,7 +64,7 @@ public class SyncService {
                     Toast.makeText(context, "@string/sendLocationFailed", Toast.LENGTH_LONG);
                     Log.e("Sync Service: ", "Couldn't send location because user object didn't exist or was invalid");
                 }
-                usersAround = getUsersAround(usersAroundRadius);
+                usersAround = getUsersAround(Integer.MAX_VALUE);
                 locationHistory = getLocationHistory(locationHistorySince);
             }
 
@@ -85,14 +87,6 @@ public class SyncService {
         return user.getUsername();
     }
 
-    public int getUserSearchRadius() {
-        return usersAroundRadius;
-    }
-
-    public void setUserSearchRadius(int radius) {
-        usersAroundRadius = radius;
-    }
-
     public long getLocationHistorySince() {
         return locationHistorySince;
     }
@@ -107,107 +101,6 @@ public class SyncService {
 
     public MapObject[] getUsersAround() {
         return usersAround;
-    }
-
-    /**
-     * Used to register a new user at the webservice. If the username is blocked (meaning already used by another user) a toast message will be shown
-     * to tell the user about the problem and to suggest to choose another username or trying login if the register button was choosen accidentally.
-     * If the registration was successful the user will be logged in automatically afterwards.
-     *  @param username    The username to register at the server, must not be {code null}
-     * @param password    The password to register at the server, must not be {code null}
-     * @param description The user's own description, may be {code null} - empty strings are treated as {code null}
-     * @param registrationProcessedInterface
-     */
-    private void register(final String username, final String password, String description, final RegistrationProcessedInterface registrationProcessedInterface) {
-        user = new User(username, password);
-        if ("".equals(description)) {
-            description = null;
-        }
-        if (description != null) {
-            user.setDescription(description);
-        }
-        Call<ResponseBody> call = api.register(user);
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.code() != 409 && !response.isSuccessful()) {
-                    Log.wtf("Sync Service: ", "An unexpected HTTP Response Code indicating an error has been returned by the webservice: Response Code is " + response.code());
-                }
-                if (response.code() == 409) {
-                    Toast.makeText(context, "@string/usernameNotAvailableToastMessage", Toast.LENGTH_LONG).show();
-                    Log.d("Sync Service: ", "Username was not available. Couldn't complete registration.");
-                }
-                if (response.isSuccessful() && response.code() != 200) {
-                    Log.wtf("Sync Service: ", "An unexpected HTTP Response Code indicating successful registration has been returned by the webservice: Response Code is " + response.code());
-                }
-                if (response.code() == 200) {
-                    Toast.makeText(context, "@string/registrationSuccessfulToastMessage", Toast.LENGTH_LONG).show();
-                    registrationProcessedInterface.onSuccess(username, password);
-                    return;
-                }
-                registrationProcessedInterface.onFailure();
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.wtf("Sync Service: ", "A serious error with the webservice occurred during registration, error:" + t.getMessage());
-                registrationProcessedInterface.onFailure();
-            }
-        });
-    }
-
-    /**
-     * Used to login a user at the webservice. If the login is not successful a Toast will be shown telling to double check password and username and that an initial registration is needed.
-     * If the login is successful the userID and the returned JWT are stored for later use.
-     *  @param username The username to use for login at the server.
-     * @param password The password to use for login at the server.
-     * @param loginProcessedInterface
-     */
-    private void login(final String username, String password, final LoginProcessedInterface loginProcessedInterface) {
-        user = null;
-        user = new User(username, password);
-        Call<User> call = api.login(user);
-        call.enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                if (!response.isSuccessful() && response.code() != 403) {
-                    Log.wtf("Sync Service: ", "An unexpected HTTP Response Code indicating an error has been returned by the webservice: Response Code is " + response.code());
-                }
-                if (response.code() == 403) {
-                    Toast.makeText(context, "@string/loginFailedToastMessage", Toast.LENGTH_LONG).show();
-                    Log.d("Sync Service: ", "Login unsuccessful. Got HTTP return 403 forbidden.");
-                }
-                if (response.isSuccessful() && response.code() != 200) {
-                    Log.wtf("Sync Service: ", "An unexpected HTTP Response Code indicating successful login has been returned by the webservice: Response Code is " + response.code());
-                }
-                if (response.code() == 200) {
-                    Toast.makeText(context, "@string/loginSuccessfulToastMessage", Toast.LENGTH_SHORT).show();
-                    User respondedUser = response.body();
-                    user.setId(respondedUser.getId());
-                    if (!respondedUser.getUsername().equals(username)) {
-                        Log.wtf("Sync Service: ", "The username of the responded user after login is not the username that has been used for login!");
-                    }
-                    user.setUsername(respondedUser.getUsername());
-                    user.setDescription(respondedUser.getDescription());
-                    user.setPrivacyRadius(respondedUser.getPrivacyRadius());
-                    List<String> jwts = response.headers().values("Authorization");
-                    if (jwts.size() != 1) {
-                        Log.wtf("Sync Service: ", "Multiple values have been returned in the header with key 'Authorization' - can't identify the jwt token!");
-                    } else {
-                        user.setJwtAuthorization(jwts.get(0));
-                    }
-                    loginProcessedInterface.onSuccess();
-                    return;
-                }
-                loginProcessedInterface.onFailure();
-            }
-
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                Log.wtf("Sync Service: ", "A serious error with the webservice occurred during login, error:" + t.getMessage());
-                loginProcessedInterface.onFailure();
-            }
-        });
     }
 
 //  This method is not supported by the webservice and can't be used.
