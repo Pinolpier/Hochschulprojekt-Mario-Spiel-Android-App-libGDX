@@ -100,6 +100,7 @@ public class MapsActivity extends AppCompatActivity {
                     super.onLocationResult(locationResult);
                     latitude = locationResult.getLastLocation().getLatitude();
                     longitude = locationResult.getLastLocation().getLongitude();
+                    sync.sendLocation(latitude,longitude);
                     setCurrentPosition();
                 }
             }, getMainLooper());
@@ -146,7 +147,7 @@ public class MapsActivity extends AppCompatActivity {
     {
         GeoPoint gPt = new GeoPoint(latitude,longitude);
 
-        Log.e("gps",longitude + " " + latitude);
+        //Log.e("gps",longitude + " " + latitude);
 
         marker.setPosition(gPt);
         marker.setAnchor(0.5f,0.5f);

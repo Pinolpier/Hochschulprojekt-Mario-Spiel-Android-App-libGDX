@@ -37,6 +37,6 @@ public interface UserAPI {
 
     @GET("user/{userID}/location)")
     Call<List<TimestampedPosition>> getLocationHistory(@Header("Authorization") String jwt,
-                                                       @Query("minDate") Long timestamp,
-                                                       @Path("userID") String id);
+                                                       @Path("userID") String id,
+                                                       @Query("minDate") Long timestamp);
 }

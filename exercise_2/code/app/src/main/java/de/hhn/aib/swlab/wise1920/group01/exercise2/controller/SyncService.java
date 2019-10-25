@@ -39,13 +39,14 @@ public class SyncService {
         user.setId(id);
         user.setDescription(description);
         user.setPrivacyRadius(privacy);
+        user.setPosition(new Position(49.122831, 9.210871));
         retrofit = new Retrofit.Builder()
                 .baseUrl("https://swlab.iap.hs-heilbronn.de/ex2/api/v0.3/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         api = retrofit.create(UserAPI.class);
         //TODO syncInterval aus den Settings bekommen und dementsprechend setzten!
-        setSyncInterval(300000L); //Standardwert Sync alle 5 Minuten bis Verknüpfung mit Settings
+        setSyncInterval(60000L); //Standardwert Sync alle 5 Minuten bis Verknüpfung mit Settings
     }
 
     public long getSyncInterval() {
@@ -65,7 +66,9 @@ public class SyncService {
                     Log.e("Sync Service: ", "Couldn't send location because user object didn't exist or was invalid");
                 }
                 usersAround = getUsersAround(Integer.MAX_VALUE);
-                locationHistory = getLocationHistory(locationHistorySince);
+                //locationHistory = getLocationHistory(locationHistorySince);
+                changePrivacyRadius(100000.0);
+                Log.d("SyncService"," Sync successful");
             }
 
             @Override
@@ -73,6 +76,7 @@ public class SyncService {
                 Log.wtf("Sync Service: ", "Lol, the times has ended, the universe should have ended before this message can be shown...");
             }
         };
+        timer.start();
     }
 
     public String getDescription() {
@@ -129,7 +133,7 @@ public class SyncService {
      * @param newPassword the new password to send to the server
      * @return {code true}, if a user is logged in and the operation was successful; {code false} if no users is logged in
      */
-    private boolean changePassword(String newPassword) {
+    public boolean changePassword(String newPassword) {
         if (user == null || user.getId() == null || user.getJwtAuthorization() == null) {
             return false;
         }
@@ -145,7 +149,7 @@ public class SyncService {
      * @param newDescription the new description to send to the server
      * @return {code true}, if a user is logged in and the operation was successful; {code false} if no users is logged in
      */
-    private boolean changeDescription(String newDescription) {
+    public boolean changeDescription(String newDescription) {
         if (user == null || user.getId() == null || user.getJwtAuthorization() == null) {
             return false;
         }
@@ -161,7 +165,7 @@ public class SyncService {
      * @param newPrivacyRadius the new privacy radius to send to the server
      * @return {code true}, if a user is logged in and the operation was successful; {code false} if no users is logged in
      */
-    private boolean changePrivacyRadius(Double newPrivacyRadius) {
+    public boolean changePrivacyRadius(Double newPrivacyRadius) {
         if (user == null || user.getId() == null || user.getJwtAuthorization() == null) {
             return false;
         }
@@ -182,7 +186,7 @@ public class SyncService {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (!response.isSuccessful() && response.code() != 304 && response.code() != 403) {
-                    Log.wtf("Sync Service: ", "An unexpected HTTP Response Code indicating an error has been returned by the webservice: Response Code is " + response.code());
+                    Log.wtf("Sync Service: ", "An unexpected HTTP Response Code indicating an error has been returned by the webservice while update: Response Code is " + response.code());
                     return;
                 }
                 if (response.isSuccessful() && response.code() != 304 && response.code() != 200) {
@@ -219,7 +223,7 @@ public class SyncService {
      * @param longitude the new position's longitude
      * @return if updating was successful {code true} will be returned. Otherwise {code false} will be returned.
      */
-    private boolean sendLocation(Double latitude, Double longitude) {
+    public boolean sendLocation(Double latitude, Double longitude) {
         return sendLocation(new Position(latitude, longitude));
     }
 
@@ -228,7 +232,7 @@ public class SyncService {
      * @param position the new position
      * @return if updating was successful {code true} will be returned. Otherwise {code false} will be returned.
      */
-    private boolean sendLocation(Position position) {
+    public boolean sendLocation(Position position) {
         if (user == null || user.getId() == null || user.getJwtAuthorization() == null) {
             Log.wtf("Sync Service: ", "Something went wrong, either user or ID or JWT is null: " + user);
             return false;
@@ -239,7 +243,7 @@ public class SyncService {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (!response.isSuccessful() && response.code() != 403) {
-                    Log.wtf("Sync Service: ", "An unexpected HTTP Response Code indicating an error has been returned by the webservice: Response Code is " + response.code());
+                    Log.wtf("Sync Service: ", "An unexpected HTTP Response Code indicating an error has been returned by the webservice while sendLocation: Response Code is " + response.code());
                     return;
                 }
                 if (response.isSuccessful() && response.code() != 200) {
@@ -289,7 +293,7 @@ public class SyncService {
             @Override
             public void onResponse(Call<List<MapObjectDummy>> call, Response<List<MapObjectDummy>> response) {
                 if (!response.isSuccessful() && response.code() != 403) {
-                    Log.wtf("Sync Service: ", "An unexpected HTTP Response Code indicating an error has been returned by the webservice: Response Code is " + response.code());
+                    Log.wtf("Sync Service: ", "An unexpected HTTP Response Code indicating an error has been returned by the webservice while getUsersAround: Response Code is " + response.code());
                     return;
                 }
                 if (response.isSuccessful() && response.code() != 200) {
@@ -305,12 +309,12 @@ public class SyncService {
                 if (response.code() == 200) {
                     Log.d("Sync Service: ", "Received locations successfully!");
                     List<MapObjectDummy> usersAround = response.body();
-                    Log.wtf("Sync Service: ", "Size of the \"List<MapObjectDummy> usersAround = response.body();\": " + usersAround.size());
+                    Log.d("Sync Service: ", "Size of the \"List<MapObjectDummy> usersAround = response.body();\": " + usersAround.size());
                     for (MapObjectDummy i : usersAround) {
                         usersAroundList.add(new MapObject(i.getPosition().getLatitude(), i.getPosition().getLongitude(), i.getName(), i.getDescription()));
                     }
-                    Log.wtf("Sync Service: ", "Size of the \"final ArrayList<MapObject> usersAroundList = new ArrayList<>();\": " + usersAroundList.size());
-                    Log.wtf("TestWebserviceImplementation: ", Arrays.toString(usersAroundList.toArray()));
+                    Log.d("Sync Service: ", "Size of the \"final ArrayList<MapObject> usersAroundList = new ArrayList<>();\": " + usersAroundList.size());
+                    Log.d("Sync Service: ", "getUsersAround: " + Arrays.toString(usersAroundList.toArray()));
                 }
             }
 
@@ -333,12 +337,12 @@ public class SyncService {
         if (since == null) {
             since = 1262304000000l;
         }
-        Call<List<TimestampedPosition>> call = api.getLocationHistory(user.getJwtAuthorization(), since, user.getId());
+        Call<List<TimestampedPosition>> call = api.getLocationHistory(user.getJwtAuthorization(), user.getId(), since);
         call.enqueue(new Callback<List<TimestampedPosition>>() {
             @Override
             public void onResponse(Call<List<TimestampedPosition>> call, Response<List<TimestampedPosition>> response) {
                 if (!response.isSuccessful() && response.code() != 403) {
-                    Log.wtf("Sync Service: ", "An unexpected HTTP Response Code indicating an error has been returned by the webservice: Response Code is " + response.code());
+                    Log.wtf("Sync Service: ", "An unexpected HTTP Response Code indicating an error has been returned by the webservice while getLocationHistory: Response Code is " + response.code());
                     return;
                 }
                 if (response.isSuccessful() && response.code() != 200) {
