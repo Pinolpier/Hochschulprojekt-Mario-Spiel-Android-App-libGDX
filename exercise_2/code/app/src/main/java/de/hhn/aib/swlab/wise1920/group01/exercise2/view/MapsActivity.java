@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,6 +33,7 @@ import java.util.ArrayList;
 
 import de.hhn.aib.swlab.wise1920.group01.exercise2.R;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.controller.SyncService;
+import de.hhn.aib.swlab.wise1920.group01.exercise2.model.MapObject;
 
 public class MapsActivity extends AppCompatActivity {
 
@@ -160,5 +160,8 @@ public class MapsActivity extends AppCompatActivity {
         GeoPoint centerPoint = new GeoPoint(latitude,longitude);
         mapController.setCenter(centerPoint);
         map.invalidate();
+    }
+
+    public void setSearchResults(MapObject[] searchResults) {
     }
 }
