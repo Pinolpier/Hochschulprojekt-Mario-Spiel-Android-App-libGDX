@@ -9,6 +9,7 @@ import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.SearchView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -44,6 +45,7 @@ public class MapsActivity extends AppCompatActivity {
     private FusedLocationProviderClient fusedLocationClient;
     private LocationRequest locationRequest;
     private SyncService sync;
+    private SearchView searchView;
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,6 +85,16 @@ public class MapsActivity extends AppCompatActivity {
         marker.setSnippet("My current Location");
         marker.setIcon(getDrawable((R.drawable.ic_location_on_red_24dp)));
         map.invalidate();
+
+        searchView = findViewById(R.id.search_bar);
+        searchView.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+
     }
 
     public void requestLocationUpdates()

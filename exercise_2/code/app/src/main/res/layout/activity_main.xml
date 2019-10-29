@@ -10,13 +10,11 @@
         android:id="@+id/button_register"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
         android:text="@string/register_button"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/text_password"
-        app:layout_constraintHorizontal_bias="0.613"
-        app:layout_constraintStart_toEndOf="@+id/text_password"
-        app:layout_constraintTop_toBottomOf="@+id/text_password" />
+        app:layout_constraintEnd_toStartOf="@+id/editText_password"
+        app:layout_constraintStart_toStartOf="@+id/text_password"
+        app:layout_constraintTop_toBottomOf="@+id/editText_password" />
 
     <TextView
         android:id="@+id/textView"
@@ -48,7 +46,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.514"
         app:layout_constraintStart_toEndOf="@+id/button_register"
-        app:layout_constraintTop_toBottomOf="@+id/text_password"
+        app:layout_constraintTop_toBottomOf="@+id/editText_password"
         app:layout_constraintVertical_bias="0.493" />
 
     <EditText
@@ -61,20 +59,19 @@
         android:inputType="textPassword"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/text_password"
+        app:layout_constraintStart_toEndOf="@+id/textView"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/editText_User"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:autofillHints="@string/user_text"
         android:ems="10"
         android:inputType="textPersonName"
         android:text="@string/user_text"
-        android:autofillHints="@string/user_text"
         app:layout_constraintBottom_toTopOf="@+id/editText_password"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.66"
         app:layout_constraintStart_toEndOf="@+id/textView"
         app:layout_constraintTop_toTopOf="parent" />
 
