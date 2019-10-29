@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -34,6 +35,7 @@ import java.util.ArrayList;
 
 import de.hhn.aib.swlab.wise1920.group01.exercise2.R;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.controller.SyncService;
+import de.hhn.aib.swlab.wise1920.group01.exercise2.controller.extensions.SearchService;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.MapObject;
 
 public class MapsActivity extends AppCompatActivity {
@@ -87,12 +89,29 @@ public class MapsActivity extends AppCompatActivity {
         map.invalidate();
 
         searchView = findViewById(R.id.search_bar);
-        searchView.setOnSearchClickListener(new View.OnClickListener() {
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public void onClick(View v) {
+            public boolean onQueryTextSubmit(String query) {
+                SearchService searchService = new SearchService();
+                Toast.makeText(MapsActivity.this, searchView.getQuery().toString(), Toast.LENGTH_SHORT).show();
+                searchService.search(searchView.getQuery().toString(),MapsActivity.this);
+                return false;
+            }
 
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
             }
         });
+//        searchView.setOnSearchClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                SearchService searchService = new SearchService();
+//                Toast.makeText(MapsActivity.this, searchView.toString(), Toast.LENGTH_SHORT).show();
+//                searchService.search(searchView.toString(),MapsActivity.this);
+//            }
+//       }
+//        );
 
 
     }
@@ -175,5 +194,17 @@ public class MapsActivity extends AppCompatActivity {
     }
 
     public void setSearchResults(MapObject[] searchResults) {
+        for(int counter=0;counter<searchResults.length;counter++){
+            GeoPoint searchPoint = new GeoPoint(searchResults[counter].getLatitude(),searchResults[counter].getLongitude());
+            Marker searchMarker = new Marker(map);
+            searchMarker.setIcon(getDrawable(R.drawable.ic_pin_drop_blue_24dp));
+            searchMarker.setPosition(searchPoint);
+            searchMarker.setAnchor(0.5f,0.5f);
+            searchMarker.setSnippet(searchResults[counter].getLabel());
+            map.getOverlays().add(searchMarker);
+        }
+        GeoPoint centerPoint = new GeoPoint(searchResults[0].getLatitude(),searchResults[0].getLongitude());
+        mapController.setCenter(centerPoint);
+        map.invalidate();
     }
 }
