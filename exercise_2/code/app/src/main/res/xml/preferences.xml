@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <PreferenceCategory app:title="@string/preferences_header">
         <ListPreference
-            app:defaultValue="10000"
+            app:defaultValue="-1"
             app:title="@string/radius"
             app:entries="@array/radius_entries"
             app:entryValues="@array/radius_values"
             app:summary="@string/radius_desc_summary"
-            app:key="radius"
+            app:key="list_radius"
             app:useSimpleSummaryProvider="true"
             />
         <ListPreference
@@ -16,8 +17,41 @@
             app:entries="@array/interval_entries"
             app:entryValues="@array/interval_values"
             app:summary="@string/interval_desc_summary"
-            app:key="interval"
+            app:key="list_interval"
             app:useSimpleSummaryProvider="true"
             />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="switch_poi"
+            android:title="@string/show_poi" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="switch_weatherdata"
+            android:title="@string/show_weatherdata" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/locationhistory">
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="switch_locationhistory"
+            android:title="@string/show_locationhistory" />
+        <ListPreference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:defaultValue="604.800‬"
+            app:entries="@array/locationhistory_entries"
+            app:entryValues="@array/locationhistory_values"
+            app:key="list_locationhistory"
+            app:summary="@string/locationhistory_desc_summary"
+            app:title="@string/locationhistory_duration"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/settings_account">
+
+        <EditTextPreference
+            android:key="text_newpassword"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/change_password" />
     </PreferenceCategory>
 </PreferenceScreen>

@@ -31,6 +31,7 @@
         <item>30 Minuten</item>
         <item>1 Stunde</item>
     </string-array>
+    //Zeit in Sekunden
     <string-array name="interval_values">
         <item>1</item>
         <item>10</item>
@@ -40,5 +41,18 @@
         <item>600</item>
         <item>1800</item>
         <item>3600</item>
+    </string-array>
+
+    //1 Monat = 30 Tage
+    <string-array name="locationhistory_entries">
+        <item>1 Tag</item>
+        <item>1 Woche</item>
+        <item>1 Monat</item>
+    </string-array>
+    //Zeit in Sekunden
+    <string-array name="locationhistory_values">
+        <item>86.400</item>
+        <item>604.800‬</item>
+        <item>2.592.000</item>
     </string-array>
 </resources>

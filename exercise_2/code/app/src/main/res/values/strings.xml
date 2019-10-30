@@ -10,8 +10,16 @@
     <string name="preferences_header">Einstellungen</string>
     <string name="radius">Radius</string>
     <string name="interval">Intervall</string>
+    <string name="show_poi">POIs anzeigen</string>
+    <string name="show_weatherdata">Wetterdaten anzeigen</string>
+    <string name="show_locationhistory">Standortverlauf anzeigen</string>
+    <string name="change_password">Passwort ändern</string>
+    <string name="settings_account">Accouteinstellungen</string>
     <string name="radius_desc_summary">Lege den Radius für die Sichtbarkeit auf der Karte fest</string>
     <string name="interval_desc_summary">Lege das Aktualisierungsintervall fest</string>
+    <string name="locationhistory_desc_summary">Lege das Zeitfenster für den Standortverlauf fest</string>
+    <string name="locationhistory_duration">Zeitfenster</string>
+    <string name="locationhistory">Standortverlauf</string>
 
     <!-- Sync Service -->
     <string name="usernameNotAvailableToastMessage">Der Username ist schon vergeben, die Registrierung konnte nicht abgeschlossen werden, bitte einen anderen Namen wählen und erneut versuchen oder aber Einloggen!</string>
