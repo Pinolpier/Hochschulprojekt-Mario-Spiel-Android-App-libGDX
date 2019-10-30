@@ -178,7 +178,6 @@ public class MapsActivity extends AppCompatActivity {
         map.getOverlays().add(marker);
         map.invalidate();
     }
-
     public void setCenter(View v)
     {
         GeoPoint centerPoint = new GeoPoint(latitude,longitude);
