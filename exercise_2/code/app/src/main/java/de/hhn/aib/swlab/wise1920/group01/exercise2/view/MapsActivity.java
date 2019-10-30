@@ -186,7 +186,7 @@ public class MapsActivity extends AppCompatActivity {
     }
 
     public void setSearchResults(MapObject[] searchResults) {
-
+        deleteSearchMarkers();
         for(int counter=0;counter<searchResults.length;counter++){
             GeoPoint searchPoint = new GeoPoint(searchResults[counter].getLatitude(),searchResults[counter].getLongitude());
             Marker searchMarker = new Marker(map);

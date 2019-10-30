@@ -192,7 +192,7 @@ public class AuthService {
 
     public String getPassword() {
         if (user != null) {
-            if (user.getUsername() != null) {
+            if (user.getPassword() != null) {
                 return user.getPassword();
             } else {
                 Log.wtf("Auth Service: ", "Auth service has an user object that is not null, but the username in it is null. Returning null as username!");
