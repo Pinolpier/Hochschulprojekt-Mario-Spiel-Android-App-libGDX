@@ -48,6 +48,7 @@ public class MapsActivity extends AppCompatActivity {
     private LocationRequest locationRequest;
     private SyncService sync;
     private SearchView searchView;
+    private ArrayList<Marker> markerArrayList;
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,6 +93,7 @@ public class MapsActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                deleteSearchMarkers();
                 SearchService searchService = new SearchService();
                 Toast.makeText(MapsActivity.this, searchView.getQuery().toString(), Toast.LENGTH_SHORT).show();
                 searchService.search(searchView.getQuery().toString(),MapsActivity.this);
@@ -103,17 +105,7 @@ public class MapsActivity extends AppCompatActivity {
                 return false;
             }
         });
-//        searchView.setOnSearchClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                SearchService searchService = new SearchService();
-//                Toast.makeText(MapsActivity.this, searchView.toString(), Toast.LENGTH_SHORT).show();
-//                searchService.search(searchView.toString(),MapsActivity.this);
-//            }
-//       }
-//        );
-
-
+            markerArrayList = new ArrayList<>();
     }
 
     public void requestLocationUpdates()
@@ -194,6 +186,7 @@ public class MapsActivity extends AppCompatActivity {
     }
 
     public void setSearchResults(MapObject[] searchResults) {
+
         for(int counter=0;counter<searchResults.length;counter++){
             GeoPoint searchPoint = new GeoPoint(searchResults[counter].getLatitude(),searchResults[counter].getLongitude());
             Marker searchMarker = new Marker(map);
@@ -202,9 +195,19 @@ public class MapsActivity extends AppCompatActivity {
             searchMarker.setAnchor(0.5f,0.5f);
             searchMarker.setSnippet(searchResults[counter].getLabel());
             map.getOverlays().add(searchMarker);
+            markerArrayList.add(searchMarker);
         }
         GeoPoint centerPoint = new GeoPoint(searchResults[0].getLatitude(),searchResults[0].getLongitude());
         mapController.setCenter(centerPoint);
         map.invalidate();
+    }
+
+    public void deleteSearchMarkers(){
+        if(!markerArrayList.isEmpty()){
+            for(Marker marker:markerArrayList){
+                map.getOverlays().remove(marker);
+            }
+        }
+
     }
 }
