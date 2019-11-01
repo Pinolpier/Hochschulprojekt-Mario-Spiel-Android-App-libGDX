@@ -187,19 +187,23 @@ public class MapsActivity extends AppCompatActivity {
 
     public void setSearchResults(MapObject[] searchResults) {
         deleteSearchMarkers();
-        for(int counter=0;counter<searchResults.length;counter++){
-            GeoPoint searchPoint = new GeoPoint(searchResults[counter].getLatitude(),searchResults[counter].getLongitude());
-            Marker searchMarker = new Marker(map);
-            searchMarker.setIcon(getDrawable(R.drawable.ic_pin_drop_blue_24dp));
-            searchMarker.setPosition(searchPoint);
-            searchMarker.setAnchor(0.5f,0.5f);
-            searchMarker.setSnippet(searchResults[counter].getLabel());
-            map.getOverlays().add(searchMarker);
-            markerArrayList.add(searchMarker);
+        if(searchResults.length>=1) {
+            for (int counter = 0; counter < searchResults.length; counter++) {
+                GeoPoint searchPoint = new GeoPoint(searchResults[counter].getLatitude(), searchResults[counter].getLongitude());
+                Marker searchMarker = new Marker(map);
+                searchMarker.setIcon(getDrawable(R.drawable.ic_pin_drop_blue_24dp));
+                searchMarker.setPosition(searchPoint);
+                searchMarker.setAnchor(0.5f, 0.5f);
+                searchMarker.setSnippet(searchResults[counter].getLabel());
+                map.getOverlays().add(searchMarker);
+                markerArrayList.add(searchMarker);
+            }
+            GeoPoint centerPoint = new GeoPoint(searchResults[0].getLatitude(), searchResults[0].getLongitude());
+            mapController.setCenter(centerPoint);
+            map.invalidate();
         }
-        GeoPoint centerPoint = new GeoPoint(searchResults[0].getLatitude(),searchResults[0].getLongitude());
-        mapController.setCenter(centerPoint);
-        map.invalidate();
+        else
+            Toast.makeText(this,"Suchbegriff konnte nicht gefunden werden!",Toast.LENGTH_SHORT).show();
     }
 
     public void deleteSearchMarkers(){
