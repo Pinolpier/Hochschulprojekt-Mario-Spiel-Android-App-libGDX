@@ -8,8 +8,6 @@ import retrofit2.http.GET;
 import retrofit2.http.QueryMap;
 
 public interface SearchAPI {
-
-
     @GET("search")
     Call<List<SearchResultDummy>> getSearchResult(@QueryMap Map<String, String> parameters);
 }

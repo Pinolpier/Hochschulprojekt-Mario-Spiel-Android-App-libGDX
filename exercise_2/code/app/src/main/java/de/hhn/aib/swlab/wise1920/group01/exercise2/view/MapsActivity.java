@@ -36,6 +36,7 @@ import java.util.ArrayList;
 
 import de.hhn.aib.swlab.wise1920.group01.exercise2.R;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.controller.SyncService;
+import de.hhn.aib.swlab.wise1920.group01.exercise2.controller.extensions.FuelSearchPricesService;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.controller.extensions.SearchService;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.MapObject;
 
@@ -182,6 +183,8 @@ public class MapsActivity extends AppCompatActivity {
     {
         GeoPoint centerPoint = new GeoPoint(latitude,longitude);
         mapController.setCenter(centerPoint);
+        FuelSearchPricesService fuelSearchPricesService = new FuelSearchPricesService();
+        fuelSearchPricesService.search(latitude,longitude,this);
         map.invalidate();
     }
 
