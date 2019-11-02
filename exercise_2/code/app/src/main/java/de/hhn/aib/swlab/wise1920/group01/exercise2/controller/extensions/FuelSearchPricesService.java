@@ -32,12 +32,12 @@ public class FuelSearchPricesService {
 
     public void search(double lat, double lng, final MapsActivity activity){
         HashMap<String,String> map = new HashMap<>();
-        map.put("lat",""+lat);
-        map.put("lng",""+lng);
-        map.put("rad","10");
+        map.put("lat", Double.toString(lat));
+        map.put("lng", Double.toString(lng));
+        map.put("rad", "99999999.99");
         map.put("type","all");
         map.put("apikey",apikey);
-        Call<List<FuelDummy>> call = api.getSearchResult("list.php?",map);
+        Call<List<FuelDummy>> call = api.getSearchResult("list.php", map);
         call.enqueue(new Callback<List<FuelDummy>>() {
             @Override
             public void onResponse(Call<List<FuelDummy>> call, Response<List<FuelDummy>> response) {
