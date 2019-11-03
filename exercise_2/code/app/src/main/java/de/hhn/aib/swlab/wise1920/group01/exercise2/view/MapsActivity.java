@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,7 +25,6 @@ import com.nabinbhandari.android.permissions.PermissionHandler;
 import com.nabinbhandari.android.permissions.Permissions;
 
 import org.osmdroid.config.Configuration;
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.tileprovider.tilesource.TileSourcePolicy;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.GeoPoint;
@@ -190,14 +190,16 @@ public class MapsActivity extends AppCompatActivity {
 
     public void setSearchResults(MapObject[] searchResults) {
         deleteSearchMarkers();
+        Log.d("MapsActivity", "setSearchResults has been called. Length of the array arg is: " + searchResults.length);
         if(searchResults.length>=1) {
             for (int counter = 0; counter < searchResults.length; counter++) {
-                GeoPoint searchPoint = new GeoPoint(searchResults[counter].getLatitude(), searchResults[counter].getLongitude());
+                //GeoPoint searchPoint = new GeoPoint(searchResults[counter].getLatitude(), searchResults[counter].getLongitude());
                 Marker searchMarker = new Marker(map);
                 searchMarker.setIcon(getDrawable(R.drawable.ic_pin_drop_blue_24dp));
-                searchMarker.setPosition(searchPoint);
+                searchMarker.setPosition(searchResults[counter]);
                 searchMarker.setAnchor(0.5f, 0.5f);
-                searchMarker.setSnippet(searchResults[counter].getLabel());
+                //TODO use Label to set a name and rest of the description as description.
+                searchMarker.setSnippet(searchResults[counter].getDescription());
                 map.getOverlays().add(searchMarker);
                 markerArrayList.add(searchMarker);
             }
