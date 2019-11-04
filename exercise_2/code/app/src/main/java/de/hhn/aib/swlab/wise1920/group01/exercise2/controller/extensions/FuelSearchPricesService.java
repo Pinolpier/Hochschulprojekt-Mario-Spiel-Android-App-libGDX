@@ -51,12 +51,12 @@ public class FuelSearchPricesService {
                 List<GasStationDummy> searchResults = response.body().getStationsAround();
                 if (searchResults != null) {
                     for (GasStationDummy i : searchResults) {
-
-                        String description = i.getStreet() + " " + i.getHouseNumber() + "\n" + i.getPostCode() + " " + i.getPlace() + "\n" + "Diesel: " + i.getDiesel() + "\n" + "Super e5: " + i.getE5() + "\n" + "Super e10: " + i.getE10();
+                        String description = i.getStreet() + " " + i.getHouseNumber() + "\n" + i.getPostCode() + " " + i.getPlace();
+                        String label = i.getName()+"\n"+"Diesel: " + i.getDiesel() + "\n" + "Super e5: " + i.getE5() + "\n" + "Super e10: " + i.getE10();
                         Log.d("FuelSearchPriceService", "Got a new gas station with parsed description: " + description);
-                        searchResultList.add(new MapObject(i.getLatitude(), i.getLongitude(), i.getName(), description));
+                        searchResultList.add(new MapObject(i.getLatitude(), i.getLongitude(), label, description));
                     }
-                    fuelPricesReceivedInterface.onSuccess((MapObject[]) searchResultList.toArray());
+                    fuelPricesReceivedInterface.onSuccess(searchResultList);
                 } else
                     Toast.makeText(context, "Liste ist leer", Toast.LENGTH_SHORT).show();
             }

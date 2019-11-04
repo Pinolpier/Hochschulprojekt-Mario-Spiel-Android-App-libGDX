@@ -2,6 +2,7 @@ package de.hhn.aib.swlab.wise1920.group01.exercise2.controller;
 
 import android.util.Log;
 
+
 public class SettingsFunction {
     public void changeRadius(String s) {
         //TODO chnage radius with use of the string s

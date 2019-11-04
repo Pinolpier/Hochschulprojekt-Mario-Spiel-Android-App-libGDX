@@ -39,6 +39,7 @@ import de.hhn.aib.swlab.wise1920.group01.exercise2.controller.MapFunctionality;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.controller.extensions.FuelSearchPricesService;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.controller.extensions.SearchService;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.MapObject;
+import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.Position;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.extensions.FuelPricesReceivedInterface;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.extensions.SearchResultsReceivedInterface;
 
@@ -56,17 +57,8 @@ public class MapsActivity extends AppCompatActivity {
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //handle permissions first, before map is created. not depicted here
-        //load/initialize the osmdroid configuration, this can be done
         Context ctx = getApplicationContext();
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
-        //setting this before the layout is inflated is a good idea
-        //it 'should' ensure that the map has a writable location for the map cache, even without permissions
-        //if no tiles are displayed, you can try overriding the cache path using Configuration.getInstance().setCachePath
-        //see also StorageUtils
-        //note, the load method also sets the HTTP User Agent to your application's package name, abusing osm's tile servers will get you banned based on this string
-        Bundle bundle = getIntent().getExtras();
-        //inflate and create the map
         callPermissions();
         setContentView(R.layout.activity_maps);
         map = findViewById(R.id.map);
@@ -85,7 +77,7 @@ public class MapsActivity extends AppCompatActivity {
         mapController = (MapController) map.getController();
         mapController.setZoom(17);
 
-        GeoPoint startpoint = new GeoPoint(49.122831, 9.210871);
+        GeoPoint startpoint = new GeoPoint(49.122831, 9.210871); //Koordinaten der Hochschule Heilbronn
         mapController.setCenter(startpoint);
         marker = new Marker(map);
         marker.setSnippet("My current Location");
@@ -96,20 +88,8 @@ public class MapsActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                deleteSearchMarkers();
-                SearchService searchService = new SearchService();
-                Toast.makeText(MapsActivity.this, searchView.getQuery().toString(), Toast.LENGTH_SHORT).show();
-                searchService.search(searchView.getQuery().toString(), new SearchResultsReceivedInterface() {
-                    @Override
-                    public void onSuccess(MapObject[] searchResultsList) {
-                        setSearchResults(searchResultsList);
-                    }
-
-                    @Override
-                    public void onFailure() {
-
-                    }
-                });
+                controller.search(query);
+                Toast.makeText(MapsActivity.this,query, Toast.LENGTH_SHORT).show();
                 return false;
             }
 
@@ -172,7 +152,6 @@ public class MapsActivity extends AppCompatActivity {
 
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
         if (id == R.id.settings) {
             startActivity(new Intent(this, SettingsActivity.class));
         }
@@ -182,9 +161,7 @@ public class MapsActivity extends AppCompatActivity {
     public void setCurrentPosition()
     {
         GeoPoint gPt = new GeoPoint(latitude,longitude);
-
         //Log.e("gps",longitude + " " + latitude);
-
         marker.setPosition(gPt);
         marker.setAnchor(0.5f,0.5f);
         map.getOverlays().add(marker);
@@ -194,51 +171,10 @@ public class MapsActivity extends AppCompatActivity {
     {
         GeoPoint centerPoint = new GeoPoint(latitude,longitude);
         mapController.setCenter(centerPoint);
-        FuelSearchPricesService fuelSearchPricesService = new FuelSearchPricesService(this);
-        fuelSearchPricesService.getFuelPrices(latitude, longitude, new FuelPricesReceivedInterface() {
-            @Override
-            public void onSuccess(MapObject[] fuelPrices) {
-                setSearchResults(fuelPrices);
-            }
-
-            @Override
-            public void onFailure() {
-
-            }
-        });
+        Position position = new Position(latitude,longitude);
+        //controller.getFuelPrices(position);
+        controller.requestUsersAround();
+        //controller.requestLocationHistory();
         map.invalidate();
-    }
-
-    public void setSearchResults(MapObject[] searchResults) {
-        deleteSearchMarkers();
-        Log.d("MapsActivity", "setSearchResults has been called. Length of the array arg is: " + searchResults.length);
-        if(searchResults.length>=1) {
-            for (int counter = 0; counter < searchResults.length; counter++) {
-                //GeoPoint searchPoint = new GeoPoint(searchResults[counter].getLatitude(), searchResults[counter].getLongitude());
-                Marker searchMarker = new Marker(map);
-                searchMarker.setIcon(getDrawable(R.drawable.ic_pin_drop_blue_24dp));
-                searchMarker.setPosition(searchResults[counter]);
-                searchMarker.setAnchor(0.5f, 0.5f);
-                //TODO use Label to set a name and rest of the description as description.
-                searchMarker.setTitle(searchResults[counter].getLabel());
-                searchMarker.setSnippet(searchResults[counter].getDescription());
-                map.getOverlays().add(searchMarker);
-                markerArrayList.add(searchMarker);
-            }
-            GeoPoint centerPoint = new GeoPoint(searchResults[0].getLatitude(), searchResults[0].getLongitude());
-            mapController.setCenter(centerPoint);
-            map.invalidate();
-        }
-        else
-            Toast.makeText(this,"Suchbegriff konnte nicht gefunden werden!",Toast.LENGTH_SHORT).show();
-    }
-
-    public void deleteSearchMarkers(){
-        if(!markerArrayList.isEmpty()){
-            for(Marker marker:markerArrayList){
-                map.getOverlays().remove(marker);
-            }
-        }
-
     }
 }

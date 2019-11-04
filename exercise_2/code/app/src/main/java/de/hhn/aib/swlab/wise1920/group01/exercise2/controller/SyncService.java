@@ -306,7 +306,7 @@ public class SyncService {
                     }
 //                    Log.d("Sync Service: ", "Size of the \"final ArrayList<MapObject> usersAroundList = new ArrayList<>();\": " + usersAroundList.size());
 //                    Log.d("Sync Service", "getUsersAround: " + Arrays.toString(usersAroundList.toArray()));
-                    usersAroundReceivedInterface.onSuccess((MapObject[]) usersAroundList.toArray());
+                    usersAroundReceivedInterface.onSuccess(usersAroundList);
                 }
             }
 

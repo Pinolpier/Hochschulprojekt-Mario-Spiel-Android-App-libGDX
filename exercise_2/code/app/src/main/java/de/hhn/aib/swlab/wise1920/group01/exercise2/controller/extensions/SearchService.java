@@ -42,7 +42,7 @@ public class SearchService {
                 for (SearchResultDummy i : searchResults) {
                     searchResultList.add(new MapObject(i.getLatitude(), i.getLongitude(),null, i.getDescription()));
                 }
-                searchResultsReceivedInterface.onSuccess((MapObject[]) searchResultList.toArray());
+                searchResultsReceivedInterface.onSuccess(searchResultList);
             }
             @Override
             public void onFailure(Call<List<SearchResultDummy>> call, Throwable t) {
