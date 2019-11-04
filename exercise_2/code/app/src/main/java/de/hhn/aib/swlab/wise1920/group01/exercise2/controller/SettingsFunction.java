@@ -29,6 +29,7 @@ public class SettingsFunction {
     }
 
     public void changeLocationHistoryTimeframe(String s) {
+        //TODO change locHistoryTimeframe with use of string s
         Log.e("cngLocHistorytimeframe", s);
     }
 
