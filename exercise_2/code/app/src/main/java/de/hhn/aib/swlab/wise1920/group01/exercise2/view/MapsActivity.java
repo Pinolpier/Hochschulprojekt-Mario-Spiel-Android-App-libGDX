@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,7 +25,6 @@ import com.nabinbhandari.android.permissions.PermissionHandler;
 import com.nabinbhandari.android.permissions.Permissions;
 
 import org.osmdroid.config.Configuration;
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.tileprovider.tilesource.TileSourcePolicy;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.GeoPoint;
@@ -36,6 +36,7 @@ import java.util.ArrayList;
 
 import de.hhn.aib.swlab.wise1920.group01.exercise2.R;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.controller.SyncService;
+import de.hhn.aib.swlab.wise1920.group01.exercise2.controller.extensions.FuelSearchPricesService;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.controller.extensions.SearchService;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.MapObject;
 
@@ -182,24 +183,33 @@ public class MapsActivity extends AppCompatActivity {
     {
         GeoPoint centerPoint = new GeoPoint(latitude,longitude);
         mapController.setCenter(centerPoint);
+        FuelSearchPricesService fuelSearchPricesService = new FuelSearchPricesService();
+        fuelSearchPricesService.search(latitude,longitude,this);
         map.invalidate();
     }
 
     public void setSearchResults(MapObject[] searchResults) {
         deleteSearchMarkers();
-        for(int counter=0;counter<searchResults.length;counter++){
-            GeoPoint searchPoint = new GeoPoint(searchResults[counter].getLatitude(),searchResults[counter].getLongitude());
-            Marker searchMarker = new Marker(map);
-            searchMarker.setIcon(getDrawable(R.drawable.ic_pin_drop_blue_24dp));
-            searchMarker.setPosition(searchPoint);
-            searchMarker.setAnchor(0.5f,0.5f);
-            searchMarker.setSnippet(searchResults[counter].getLabel());
-            map.getOverlays().add(searchMarker);
-            markerArrayList.add(searchMarker);
+        Log.d("MapsActivity", "setSearchResults has been called. Length of the array arg is: " + searchResults.length);
+        if(searchResults.length>=1) {
+            for (int counter = 0; counter < searchResults.length; counter++) {
+                //GeoPoint searchPoint = new GeoPoint(searchResults[counter].getLatitude(), searchResults[counter].getLongitude());
+                Marker searchMarker = new Marker(map);
+                searchMarker.setIcon(getDrawable(R.drawable.ic_pin_drop_blue_24dp));
+                searchMarker.setPosition(searchResults[counter]);
+                searchMarker.setAnchor(0.5f, 0.5f);
+                //TODO use Label to set a name and rest of the description as description.
+                searchMarker.setTitle(searchResults[counter].getLabel());
+                searchMarker.setSnippet(searchResults[counter].getDescription());
+                map.getOverlays().add(searchMarker);
+                markerArrayList.add(searchMarker);
+            }
+            GeoPoint centerPoint = new GeoPoint(searchResults[0].getLatitude(), searchResults[0].getLongitude());
+            mapController.setCenter(centerPoint);
+            map.invalidate();
         }
-        GeoPoint centerPoint = new GeoPoint(searchResults[0].getLatitude(),searchResults[0].getLongitude());
-        mapController.setCenter(centerPoint);
-        map.invalidate();
+        else
+            Toast.makeText(this,"Suchbegriff konnte nicht gefunden werden!",Toast.LENGTH_SHORT).show();
     }
 
     public void deleteSearchMarkers(){

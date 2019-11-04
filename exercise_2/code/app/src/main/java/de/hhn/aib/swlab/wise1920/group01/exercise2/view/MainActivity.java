@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.d("MainActivity: ", "Login button clicked!");
                 String username = textInputUsername.getText().toString();
                 String password = textInputPassword.getText().toString();
                 login(username, password);
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         buttonRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.d("MainActivity: ", "Register button clicked!");
                 String username = textInputUsername.getText().toString();
                 String password = textInputPassword.getText().toString();
                 auth.register(username, password, null, new RegistrationProcessedInterface() {
@@ -64,9 +66,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void login(String username, String password) {
+        Log.d("MainActivity: ", "Login method started!");
         auth.login(username, password, new LoginProcessedInterface() {
             @Override
             public void onSuccess() {
+                Log.d("MainActivity: ", "Login on Success");
                 Intent intent = new Intent(MainActivity.this, MapsActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("jwt", auth.getJWT());

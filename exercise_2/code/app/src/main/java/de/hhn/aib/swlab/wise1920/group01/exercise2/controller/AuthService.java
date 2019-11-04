@@ -100,7 +100,7 @@ public class AuthService {
                 }
                 if (response.code() == 403) {
                     Toast.makeText(context, "@string/loginFailedToastMessage", Toast.LENGTH_LONG).show();
-                    Log.d("Sync Service: ", "Login unsuccessful. Got HTTP return 403 forbidden.");
+                    Log.d("Auth Service: ", "Login unsuccessful. Got HTTP return 403 forbidden.");
                 }
                 if (response.isSuccessful() && response.code() != 200) {
                     Log.wtf("Sync Service: ", "An unexpected HTTP Response Code indicating successful login has been returned by the webservice: Response Code is " + response.code());
