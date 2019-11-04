@@ -51,8 +51,8 @@
     </string-array>
     //Zeit in Sekunden
     <string-array name="locationhistory_values">
-        <item>86.400</item>
-        <item>604.800‬</item>
-        <item>2.592.000</item>
+        <item>86400</item>
+        <item>604800‬</item>
+        <item>2592000</item>
     </string-array>
 </resources>

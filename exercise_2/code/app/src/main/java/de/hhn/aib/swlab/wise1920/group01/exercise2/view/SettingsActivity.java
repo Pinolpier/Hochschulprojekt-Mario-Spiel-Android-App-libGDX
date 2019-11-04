@@ -2,7 +2,7 @@ package de.hhn.aib.swlab.wise1920.group01.exercise2.view;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
+import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,6 +10,7 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
 import de.hhn.aib.swlab.wise1920.group01.exercise2.R;
+import de.hhn.aib.swlab.wise1920.group01.exercise2.controller.SettingsFunction;
 
 public class SettingsActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -36,12 +37,34 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        Log.e("PreListener", "fired: " + key);
-        if ("switch_poi".equals(key)) {
-            Log.e("PrefChange", "" + sharedPreferences.getBoolean(key, false));
-        } else if ("text_newpassword".equals(key)) {
-            if (!sharedPreferences.getString(key, "").isEmpty())
-                Log.e("PrefChange", "" + sharedPreferences.getString(key, ""));
+        SettingsFunction sf = new SettingsFunction();
+        switch (key) {
+            case "list_radius":
+                sf.changeRadius(sharedPreferences.getString(key, "-1"));
+                break;
+            case "list_interval":
+                sf.changeInterval(sharedPreferences.getString(key, "1800"));
+                break;
+            case "switch_poi":
+                sf.changePOI(sharedPreferences.getBoolean(key, false));
+                break;
+            case "switch_weatherdata":
+                sf.changeWeatherdata(sharedPreferences.getBoolean(key, false));
+                break;
+            case "switch_locationhistory":
+                sf.changeLocationHistory(sharedPreferences.getBoolean(key, false));
+                break;
+            case "list_locationhistorytimeframe":
+                sf.changeLocationHistoryTimeframe(sharedPreferences.getString(key, "604800"));
+                break;
+            case "text_newpassword":
+                if (!sharedPreferences.getString(key, "").isEmpty())
+                    sf.changePassword(sharedPreferences.getString(key, ""));
+                else
+                    Toast.makeText(this, "Passwort darf nicht leer sein!", Toast.LENGTH_LONG).show();
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + key);
         }
     }
 

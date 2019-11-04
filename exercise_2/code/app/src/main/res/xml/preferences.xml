@@ -38,10 +38,10 @@
         <ListPreference
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:defaultValue="604.800‬"
+            app:defaultValue="604800‬"
             app:entries="@array/locationhistory_entries"
             app:entryValues="@array/locationhistory_values"
-            app:key="list_locationhistory"
+            app:key="list_locationhistorytimeframe"
             app:summary="@string/locationhistory_desc_summary"
             app:title="@string/locationhistory_duration"
             app:useSimpleSummaryProvider="true" />
