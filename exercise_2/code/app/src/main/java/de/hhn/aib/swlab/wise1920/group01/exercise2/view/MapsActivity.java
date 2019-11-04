@@ -39,6 +39,8 @@ import de.hhn.aib.swlab.wise1920.group01.exercise2.controller.MapFunctionality;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.controller.extensions.FuelSearchPricesService;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.controller.extensions.SearchService;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.MapObject;
+import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.extensions.FuelPricesReceivedInterface;
+import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.extensions.SearchResultsReceivedInterface;
 
 public class MapsActivity extends AppCompatActivity {
 
@@ -97,7 +99,17 @@ public class MapsActivity extends AppCompatActivity {
                 deleteSearchMarkers();
                 SearchService searchService = new SearchService();
                 Toast.makeText(MapsActivity.this, searchView.getQuery().toString(), Toast.LENGTH_SHORT).show();
-                searchService.search(searchView.getQuery().toString(),MapsActivity.this);
+                searchService.search(searchView.getQuery().toString(), new SearchResultsReceivedInterface() {
+                    @Override
+                    public void onSuccess(MapObject[] searchResultsList) {
+                        setSearchResults(searchResultsList);
+                    }
+
+                    @Override
+                    public void onFailure() {
+
+                    }
+                });
                 return false;
             }
 
@@ -182,8 +194,18 @@ public class MapsActivity extends AppCompatActivity {
     {
         GeoPoint centerPoint = new GeoPoint(latitude,longitude);
         mapController.setCenter(centerPoint);
-        FuelSearchPricesService fuelSearchPricesService = new FuelSearchPricesService();
-        fuelSearchPricesService.getFuelPrices(latitude, longitude, this);
+        FuelSearchPricesService fuelSearchPricesService = new FuelSearchPricesService(this);
+        fuelSearchPricesService.getFuelPrices(latitude, longitude, new FuelPricesReceivedInterface() {
+            @Override
+            public void onSuccess(MapObject[] fuelPrices) {
+                setSearchResults(fuelPrices);
+            }
+
+            @Override
+            public void onFailure() {
+
+            }
+        });
         map.invalidate();
     }
 
