@@ -22,6 +22,7 @@ public class FuelSearchPricesService {
     private Retrofit retrofit;
     private FuelAPI api;
     private final String apikey = "f29f90a7-c993-4544-ac05-6fc8670d9d62";
+    private int radius=15;
 
     public FuelSearchPricesService() {
         retrofit = new Retrofit.Builder()
@@ -36,7 +37,7 @@ public class FuelSearchPricesService {
         HashMap<String, String> map = new HashMap<>();
         map.put("lat", Double.toString(lat));
         map.put("lng", Double.toString(lng));
-        map.put("rad", "20.0");
+        map.put("rad", ""+radius);
         map.put("type", "all");
         map.put("apikey", apikey);
         Call<FuelDummy> call = api.getSearchResult("list.php", map);

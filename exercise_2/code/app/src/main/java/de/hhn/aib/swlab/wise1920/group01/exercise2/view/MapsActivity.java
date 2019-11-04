@@ -199,6 +199,7 @@ public class MapsActivity extends AppCompatActivity {
                 searchMarker.setPosition(searchResults[counter]);
                 searchMarker.setAnchor(0.5f, 0.5f);
                 //TODO use Label to set a name and rest of the description as description.
+                searchMarker.setTitle(searchResults[counter].getLabel());
                 searchMarker.setSnippet(searchResults[counter].getDescription());
                 map.getOverlays().add(searchMarker);
                 markerArrayList.add(searchMarker);

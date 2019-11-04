@@ -32,6 +32,7 @@ public class SearchService {
         HashMap<String, String> map = new HashMap<String, String>();
         map.put("q", searchTerm);
         map.put("format", "json");
+        map.put("namedetails","1");
         Call<List<SearchResultDummy>> call = api.getSearchResult(map);
         call.enqueue(new Callback<List<SearchResultDummy>>() {
             @Override
@@ -39,7 +40,7 @@ public class SearchService {
                 ArrayList<MapObject> searchResultList = new ArrayList<>();
                 List<SearchResultDummy> searchResults = response.body();
                 for (SearchResultDummy i : searchResults) {
-                    searchResultList.add(new MapObject(i.getLatitude(), i.getLongitude(), i.getDescription(), null));
+                    searchResultList.add(new MapObject(i.getLatitude(), i.getLongitude(),null, i.getDescription()));
                 }
                 activity.setSearchResults(searchResultList.toArray(new MapObject[searchResultList.size()]));
             }
