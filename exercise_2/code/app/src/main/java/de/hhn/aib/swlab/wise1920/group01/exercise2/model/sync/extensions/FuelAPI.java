@@ -4,11 +4,9 @@ import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
-import retrofit2.http.Path;
 import retrofit2.http.QueryMap;
 
 public interface FuelAPI {
-    @GET("json/{path}")
-    Call<FuelDummy> getSearchResult(@Path("path") String path,
-                                    @QueryMap Map<String, String> parameters);
+    @GET("json/list.php")
+    Call<FuelDummy> getSearchResult(@QueryMap Map<String, String> parameters);
 }

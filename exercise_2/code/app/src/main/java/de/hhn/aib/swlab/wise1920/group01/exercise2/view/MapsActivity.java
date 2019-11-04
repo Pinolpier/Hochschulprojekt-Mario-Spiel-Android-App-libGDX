@@ -35,7 +35,7 @@ import org.osmdroid.views.overlay.Marker;
 import java.util.ArrayList;
 
 import de.hhn.aib.swlab.wise1920.group01.exercise2.R;
-import de.hhn.aib.swlab.wise1920.group01.exercise2.controller.SyncService;
+import de.hhn.aib.swlab.wise1920.group01.exercise2.controller.MapFunctionality;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.controller.extensions.FuelSearchPricesService;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.controller.extensions.SearchService;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.MapObject;
@@ -48,14 +48,12 @@ public class MapsActivity extends AppCompatActivity {
     private Marker marker;
     private FusedLocationProviderClient fusedLocationClient;
     private LocationRequest locationRequest;
-    private SyncService sync;
     private SearchView searchView;
     private ArrayList<Marker> markerArrayList;
+    private MapFunctionality controller;
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle bundle = getIntent().getExtras();
-        sync = new SyncService(this, bundle.getString("jwt"), bundle.getString("id"), bundle.getString("username"), bundle.getString("description"), bundle.getString("password"), bundle.getDouble("privacy"));
         //handle permissions first, before map is created. not depicted here
         //load/initialize the osmdroid configuration, this can be done
         Context ctx = getApplicationContext();
@@ -65,11 +63,12 @@ public class MapsActivity extends AppCompatActivity {
         //if no tiles are displayed, you can try overriding the cache path using Configuration.getInstance().setCachePath
         //see also StorageUtils
         //note, the load method also sets the HTTP User Agent to your application's package name, abusing osm's tile servers will get you banned based on this string
-
+        Bundle bundle = getIntent().getExtras();
         //inflate and create the map
         callPermissions();
         setContentView(R.layout.activity_maps);
         map = findViewById(R.id.map);
+        controller = new MapFunctionality(map, getIntent().getExtras(), this);
         map.setTileSource(new XYTileSource("Mapnik",
                 0, 19, 256, ".png", new String[] {
                 "https://swlab-maps.hhn.sisrv.de/" },"© OpenStreetMap contributors",
@@ -125,7 +124,7 @@ public class MapsActivity extends AppCompatActivity {
                     super.onLocationResult(locationResult);
                     latitude = locationResult.getLastLocation().getLatitude();
                     longitude = locationResult.getLastLocation().getLongitude();
-                    sync.sendLocation(latitude,longitude);
+                    //sync.sendLocation(latitude,longitude);
                     setCurrentPosition();
                 }
             }, getMainLooper());
@@ -184,7 +183,7 @@ public class MapsActivity extends AppCompatActivity {
         GeoPoint centerPoint = new GeoPoint(latitude,longitude);
         mapController.setCenter(centerPoint);
         FuelSearchPricesService fuelSearchPricesService = new FuelSearchPricesService();
-        fuelSearchPricesService.search(latitude,longitude,this);
+        fuelSearchPricesService.getFuelPrices(latitude, longitude, this);
         map.invalidate();
     }
 

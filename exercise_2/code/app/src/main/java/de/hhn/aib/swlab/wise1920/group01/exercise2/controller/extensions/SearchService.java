@@ -9,7 +9,7 @@ import java.util.List;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.MapObject;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.extensions.SearchAPI;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.extensions.SearchResultDummy;
-import de.hhn.aib.swlab.wise1920.group01.exercise2.view.MapsActivity;
+import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.extensions.SearchResultsReceivedInterface;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -28,7 +28,7 @@ public class SearchService {
         api = retrofit.create(SearchAPI.class);
     }
 
-    public void search(String searchTerm, final MapsActivity activity) {
+    public void search(String searchTerm, final SearchResultsReceivedInterface searchResultsReceivedInterface) {
         HashMap<String, String> map = new HashMap<String, String>();
         map.put("q", searchTerm);
         map.put("format", "json");
@@ -42,12 +42,12 @@ public class SearchService {
                 for (SearchResultDummy i : searchResults) {
                     searchResultList.add(new MapObject(i.getLatitude(), i.getLongitude(),null, i.getDescription()));
                 }
-                activity.setSearchResults(searchResultList.toArray(new MapObject[searchResultList.size()]));
+                searchResultsReceivedInterface.onSuccess((MapObject[]) searchResultList.toArray());
             }
-
             @Override
             public void onFailure(Call<List<SearchResultDummy>> call, Throwable t) {
                 Log.wtf("SearchService: ", "Fatal Error in SearchService.search()!");
+                searchResultsReceivedInterface.onFailure();
             }
         });
     }

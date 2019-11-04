@@ -6,15 +6,17 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+import de.hhn.aib.swlab.wise1920.group01.exercise2.R;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.MapObject;
+import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.LocationHistoryReceivedInterface;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.MapObjectDummy;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.Position;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.TimestampedPosition;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.User;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.UserAPI;
+import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.UsersAroundReceivedInterface;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -28,9 +30,7 @@ public class SyncService {
     private Context context;
     private User user;
     private CountDownTimer timer;
-    private long syncInterval, locationHistorySince;
-    private MapObject[] usersAround;
-    private TimestampedPosition[] locationHistory;
+    private long syncInterval;
 
     public SyncService(Context context, String jwt, String id, String username, String description, String password, Double privacy) {
         this.context = context;
@@ -62,18 +62,18 @@ public class SyncService {
             @Override
             public void onTick(long millisUntilFinished) {
                 if (!sendLocation(user.getPosition())) {
-                    Toast.makeText(context, "@string/sendLocationFailed", Toast.LENGTH_LONG);
-                    Log.e("Sync Service: ", "Couldn't send location because user object didn't exist or was invalid");
+                    Toast.makeText(context, R.string.sendLocationFailed, Toast.LENGTH_LONG);
+                    Log.e("Sync Service", "Couldn't send location because user object didn't exist or was invalid");
                 }
-                usersAround = getUsersAround(Integer.MAX_VALUE);
-                //locationHistory = getLocationHistory(locationHistorySince);
-                changePrivacyRadius(100000.0);
+                //TODO syncInterval muss über die MapFunctionality funktionieren und nur noch sendLocation aufrufen!
+//                usersAround = getUsersAround(Integer.MAX_VALUE);
+//                locationHistory = getLocationHistory(locationHistorySince);
                 Log.d("SyncService"," Sync successful");
             }
 
             @Override
             public void onFinish() {
-                Log.wtf("Sync Service: ", "Lol, the times has ended, the universe should have ended before this message can be shown...");
+                Log.wtf("Sync Service: ", "Lol, the time has ended, the universe should have ended before this message can be shown...");
             }
         };
         timer.start();
@@ -91,20 +91,8 @@ public class SyncService {
         return user.getUsername();
     }
 
-    public long getLocationHistorySince() {
-        return locationHistorySince;
-    }
-
-    public void setLocationHistorySince(long locationHistorySince) {
-        this.locationHistorySince = locationHistorySince;
-    }
-
-    public TimestampedPosition[] getLocationHistory() {
-        return locationHistory;
-    }
-
-    public MapObject[] getUsersAround() {
-        return usersAround;
+    public String getPassword() {
+        return user.getPassword();
     }
 
 //  This method is not supported by the webservice and can't be used.
@@ -186,16 +174,16 @@ public class SyncService {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (!response.isSuccessful() && response.code() != 304 && response.code() != 403) {
-                    Log.wtf("Sync Service: ", "An unexpected HTTP Response Code indicating an error has been returned by the webservice while update: Response Code is " + response.code());
+                    Log.wtf("Sync Service", "An unexpected HTTP Response Code indicating an error has been returned by the webservice while update: Response Code is " + response.code());
                     return;
                 }
                 if (response.isSuccessful() && response.code() != 304 && response.code() != 200) {
-                    Log.wtf("Sync Service: ", "An unexpected HTTP Response Code indicating successful update has been returned by the webservice: Response Code is " + response.code());
+                    Log.wtf("Sync Service", "An unexpected HTTP Response Code indicating successful update has been returned by the webservice: Response Code is " + response.code());
                     return;
                 }
                 if (response.code() == 403) {
-                    Toast.makeText(context, "@string/updateFailedInvalidJwtTokenToastMessage", Toast.LENGTH_LONG).show();
-                    Log.wtf("Sync Service: ", "Invalid JWT token has been used while updating user!");
+                    Toast.makeText(context, R.string.updateFailedInvalidJwtTokenToastMessage, Toast.LENGTH_LONG).show();
+                    Log.wtf("Sync Service", "Invalid JWT token has been used while updating user!");
                     //TODO Login Activity anzeigen, da ungueltiger JWT Token
                     return;
                 }
@@ -204,8 +192,8 @@ public class SyncService {
                     return;
                 }
                 if (response.code() == 200) {
-                    Toast.makeText(context, "@string/updateSuccessfulToastMessage", Toast.LENGTH_SHORT).show();
-                    Log.d("Symc Service: ", "Changes to users submitted to the webservice successfully.");
+                    Toast.makeText(context, R.string.updateSuccessfulToastMessage, Toast.LENGTH_SHORT).show();
+                    Log.d("Sync Service", "Changes to user submitted to the webservice successfully.");
                 }
             }
 
@@ -234,7 +222,7 @@ public class SyncService {
      */
     public boolean sendLocation(Position position) {
         if (user == null || user.getId() == null || user.getJwtAuthorization() == null) {
-            Log.wtf("Sync Service: ", "Something went wrong, either user or ID or JWT is null: " + user);
+            Log.wtf("Sync Service", "Something went wrong, either user or ID or JWT is null: " + user);
             return false;
         }
         user.setPosition(position);
@@ -243,21 +231,21 @@ public class SyncService {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (!response.isSuccessful() && response.code() != 403) {
-                    Log.wtf("Sync Service: ", "An unexpected HTTP Response Code indicating an error has been returned by the webservice while sendLocation: Response Code is " + response.code());
+                    Log.wtf("Sync Service", "An unexpected HTTP Response Code indicating an error has been returned by the webservice while sendLocation: Response Code is " + response.code());
                     return;
                 }
                 if (response.isSuccessful() && response.code() != 200) {
-                    Log.wtf("Sync Service: ", "An unexpected HTTP Response Code indicating successfully sending location has been returned by the webservice: Response Code is " + response.code());
+                    Log.wtf("Sync Service", "An unexpected HTTP Response Code indicating successfully sending location has been returned by the webservice: Response Code is " + response.code());
                     return;
                 }
                 if (response.code() == 403) {
-                    Toast.makeText(context, "@string/sendLocationFailedInvalidJwtTokenToastMessage", Toast.LENGTH_LONG).show();
-                    Log.wtf("Sync Service: ", "Invalid JWT token has been used while sending location!");
+                    Toast.makeText(context, R.string.sendLocationFailedInvalidJwtTokenToastMessage, Toast.LENGTH_LONG).show();
+                    Log.wtf("Sync Service", "Invalid JWT token has been used while sending location!");
                     //TODO Login Activity anzeigen, da ungueltiger JWT Token
                     return;
                 }
                 if (response.code() == 200) {
-                    Log.d("Sync Service: ", "Sent location successfully!");
+                    Log.d("Sync Service", "Sent location successfully!");
                 }
             }
 
@@ -275,8 +263,8 @@ public class SyncService {
      * @param radius the radius in which all users available will be returned.
      * @return an array containing all information to display the users around on the map.
      */
-    private MapObject[] getUsersAround(int radius) {
-        return getUsersAround(user.getPosition(), radius);
+    public void getUsersAround(int radius, UsersAroundReceivedInterface usersAroundReceivedInterface) {
+        getUsersAround(user.getPosition(), radius, usersAroundReceivedInterface);
     }
 
     /**
@@ -286,44 +274,48 @@ public class SyncService {
      * @param radius   the radius in which all users available will be returned.
      * @return an array containing all information to display the users around on the map.
      */
-    private MapObject[] getUsersAround(Position position, int radius) {
+    public void getUsersAround(Position position, int radius, final UsersAroundReceivedInterface usersAroundReceivedInterface) {
         final ArrayList<MapObject> usersAroundList = new ArrayList<>();
         Call<List<MapObjectDummy>> call = api.getEverythingAround(user.getJwtAuthorization(), radius, position.getLatitude(), position.getLongitude());
         call.enqueue(new Callback<List<MapObjectDummy>>() {
             @Override
             public void onResponse(Call<List<MapObjectDummy>> call, Response<List<MapObjectDummy>> response) {
                 if (!response.isSuccessful() && response.code() != 403) {
-                    Log.wtf("Sync Service: ", "An unexpected HTTP Response Code indicating an error has been returned by the webservice while getUsersAround: Response Code is " + response.code());
+                    Log.wtf("Sync Service", "An unexpected HTTP Response Code indicating an error has been returned by the webservice while getUsersAround: Response Code is " + response.code());
+                    usersAroundReceivedInterface.onFailure();
                     return;
                 }
                 if (response.isSuccessful() && response.code() != 200) {
-                    Log.wtf("Sync Service: ", "An unexpected HTTP Response Code indicating successfully sending location has been returned by the webservice: Response Code is " + response.code());
+                    Log.wtf("Sync Service", "An unexpected HTTP Response Code indicating success has been returned by the webservice while getUsersAround: Response Code is " + response.code());
+                    usersAroundReceivedInterface.onFailure();
                     return;
                 }
                 if (response.code() == 403) {
-                    Toast.makeText(context, "@string/getUsersFailedInvalidJwtTokenToastMessage", Toast.LENGTH_LONG).show();
-                    Log.wtf("Sync Service: ", "Invalid JWT token has been used while sending location!");
+                    Toast.makeText(context, R.string.getUsersFailedInvalidJwtTokenToastMessage, Toast.LENGTH_LONG).show();
+                    Log.wtf("Sync Service", "Invalid JWT token has been used while getting users around!");
                     //TODO Login Activity anzeigen, da ungueltiger JWT Token
+                    usersAroundReceivedInterface.onFailure();
                     return;
                 }
                 if (response.code() == 200) {
-                    Log.d("Sync Service: ", "Received locations successfully!");
+                    Log.d("Sync Service", "Received locations successfully!");
                     List<MapObjectDummy> usersAround = response.body();
-                    Log.d("Sync Service: ", "Size of the \"List<MapObjectDummy> usersAround = response.body();\": " + usersAround.size());
+//                    Log.d("Sync Service", "Size of the \"List<MapObjectDummy> usersAround = response.body();\": " + usersAround.size());
                     for (MapObjectDummy i : usersAround) {
                         usersAroundList.add(new MapObject(i.getPosition().getLatitude(), i.getPosition().getLongitude(), i.getName(), i.getDescription()));
                     }
-                    Log.d("Sync Service: ", "Size of the \"final ArrayList<MapObject> usersAroundList = new ArrayList<>();\": " + usersAroundList.size());
-                    Log.d("Sync Service: ", "getUsersAround: " + Arrays.toString(usersAroundList.toArray()));
+//                    Log.d("Sync Service: ", "Size of the \"final ArrayList<MapObject> usersAroundList = new ArrayList<>();\": " + usersAroundList.size());
+//                    Log.d("Sync Service", "getUsersAround: " + Arrays.toString(usersAroundList.toArray()));
+                    usersAroundReceivedInterface.onSuccess((MapObject[]) usersAroundList.toArray());
                 }
             }
 
             @Override
             public void onFailure(Call<List<MapObjectDummy>> call, Throwable t) {
                 Log.wtf("Sync Service: ", "A serious error with the webservice occurred during getUsersAround, error:" + t.getMessage());
+                usersAroundReceivedInterface.onFailure();
             }
         });
-        return usersAroundList.toArray(new MapObject[usersAroundList.size()]);
     }
 
     /**
@@ -332,43 +324,47 @@ public class SyncService {
      * @param since The earliest time from when on the location history should be returned. May be {@code null} in that case the 1st January 2010 will 00:00:00.0000 GMT will be used
      * @return All locations where the user has been since the param. Order from oldest (index 0) to the newest positions.
      */
-    private TimestampedPosition[] getLocationHistory(Long since) {
+    public void getLocationHistory(Long since, final LocationHistoryReceivedInterface locationHistoryReceivedInterface) {
         final ArrayList<TimestampedPosition> locationHistoryList = new ArrayList<>();
         if (since == null) {
-            since = 1262304000000l;
+            since = 1262304000000L; //1st of January 2010
         }
         Call<List<TimestampedPosition>> call = api.getLocationHistory(user.getJwtAuthorization(), user.getId(), since);
         call.enqueue(new Callback<List<TimestampedPosition>>() {
             @Override
             public void onResponse(Call<List<TimestampedPosition>> call, Response<List<TimestampedPosition>> response) {
                 if (!response.isSuccessful() && response.code() != 403) {
-                    Log.wtf("Sync Service: ", "An unexpected HTTP Response Code indicating an error has been returned by the webservice while getLocationHistory: Response Code is " + response.code());
+                    Log.wtf("Sync Service", "An unexpected HTTP Response Code indicating an error has been returned by the webservice while getLocationHistory: Response Code is " + response.code());
+                    locationHistoryReceivedInterface.onFailure();
                     return;
                 }
                 if (response.isSuccessful() && response.code() != 200) {
-                    Log.wtf("Sync Service: ", "An unexpected HTTP Response Code indicating successfully sending location has been returned by the webservice: Response Code is " + response.code());
+                    Log.wtf("Sync Service", "An unexpected HTTP Response Code indicating success has been returned by the webservice getLocationHistory: Response Code is " + response.code());
+                    locationHistoryReceivedInterface.onFailure();
                     return;
                 }
                 if (response.code() == 403) {
-                    Toast.makeText(context, "@string/getUsersFailedInvalidJwtTokenToastMessage", Toast.LENGTH_LONG).show();
-                    Log.wtf("Sync Service: ", "Invalid JWT token has been used while sending location!");
+                    Toast.makeText(context, R.string.getUsersFailedInvalidJwtTokenToastMessage, Toast.LENGTH_LONG).show();
+                    Log.wtf("Sync Service", "Invalid JWT token has been used while receiving location history!");
                     //TODO Login Activity anzeigen, da ungueltiger JWT Token
+                    locationHistoryReceivedInterface.onFailure();
                     return;
                 }
                 if (response.code() == 200) {
-                    Log.d("Sync Service: ", "Received location history successfully!");
+                    Log.d("Sync Service", "Received location history successfully!");
                     List<TimestampedPosition> usersAround = response.body();
                     for (TimestampedPosition i : usersAround) {
                         locationHistoryList.add(i);
                     }
+                    locationHistoryReceivedInterface.onSuccess((TimestampedPosition[]) locationHistoryList.toArray());
                 }
             }
 
             @Override
             public void onFailure(Call<List<TimestampedPosition>> call, Throwable t) {
                 Log.wtf("Sync Service: ", "A serious error with the webservice occurred during getLocationHistory, error:" + t.getMessage());
+                locationHistoryReceivedInterface.onFailure();
             }
         });
-        return locationHistoryList.toArray(new TimestampedPosition[locationHistoryList.size()]);
     }
 }
