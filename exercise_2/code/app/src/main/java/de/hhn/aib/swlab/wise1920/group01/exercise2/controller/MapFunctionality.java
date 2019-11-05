@@ -63,23 +63,32 @@ public class MapFunctionality {
         calendar.set(2019,10,01);
         sync.getLocationHistory(calendar.getTimeInMillis(), new LocationHistoryReceivedInterface() {
             @Override
-            public void onSuccess(TimestampedPosition[] locationHistory) {
-                //deleteSearchMarkers(timeStampedList);
-                for(int x = 0;x<locationHistory.length;x++){
-                    Marker timeStampedMarker = new Marker(map);
-                    timeStampedMarker.setTitle(locationHistory[x].toString());
-                    timeStampedMarker.setPosition(new GeoPoint(locationHistory[x].getLatitude(),locationHistory[x].getLongitude()));
-                    timeStampedMarker.setIcon(context.getDrawable(R.drawable.ic_pin_drop_blue_24dp));
-                    timeStampedMarker.setAnchor(0.5f, 0.5f);
-                    map.getOverlays().add(timeStampedMarker);
-                    timeStampedList.add(timeStampedMarker);
+            public void onSuccess(ArrayList<TimestampedPosition> locationHistory) {
+                deleteSearchMarkers(timeStampedList);
+                Log.d("MapsActivity", "setSearchResults has been called. Length of the array arg is: " + locationHistory.size());
+                if(locationHistory.size()>=1) {
+                    for (int counter = 0; counter < locationHistory.size(); counter++) {
+                        //GeoPoint searchPoint = new GeoPoint(searchResults[counter].getLatitude(), searchResults[counter].getLongitude());
+                        Marker searchMarker = new Marker(map);
+                        searchMarker.setIcon(context.getDrawable(R.drawable.ic_pin_drop_blue_24dp));
+                        GeoPoint gpt = new GeoPoint(locationHistory.get(counter).getLatitude(),locationHistory.get(counter).getLongitude());
+                        searchMarker.setPosition(gpt);
+                        searchMarker.setAnchor(0.5f, 0.5f);
+                        searchMarker.setTitle(locationHistory.get(counter).getDateString());
+                        map.getOverlays().add(searchMarker);
+                        markerArrayList.add(searchMarker);
+                    }
+
+                    map.invalidate();
                 }
-                map.invalidate();
+                else
+                    Toast.makeText(context,"Suchbegriff konnte nicht gefunden werden!",Toast.LENGTH_SHORT).show();
             }
+
 
             @Override
             public void onFailure() {
-                Toast.makeText(context,"Fehler",Toast.LENGTH_LONG).show();
+
             }
         });
     }

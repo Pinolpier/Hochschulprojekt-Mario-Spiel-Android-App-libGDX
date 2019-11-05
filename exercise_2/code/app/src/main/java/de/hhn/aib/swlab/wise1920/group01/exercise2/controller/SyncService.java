@@ -356,7 +356,7 @@ public class SyncService {
                     for (TimestampedPosition i : usersAround) {
                         locationHistoryList.add(i);
                     }
-                    locationHistoryReceivedInterface.onSuccess((TimestampedPosition[]) locationHistoryList.toArray());
+                    locationHistoryReceivedInterface.onSuccess(locationHistoryList);
                 }
             }
 

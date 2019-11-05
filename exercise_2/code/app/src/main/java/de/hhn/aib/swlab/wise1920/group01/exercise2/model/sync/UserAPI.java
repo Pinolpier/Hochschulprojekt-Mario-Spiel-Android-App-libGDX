@@ -35,7 +35,7 @@ public interface UserAPI {
                                                    @Path("lat") Double latitude,
                                                    @Path("long") Double longitude);
 
-    @GET("user/{userID}/location)")
+    @GET("user/{userID}/location")
     Call<List<TimestampedPosition>> getLocationHistory(@Header("Authorization") String jwt,
                                                        @Path("userID") String id,
                                                        @Query("minDate") Long timestamp);

@@ -173,8 +173,8 @@ public class MapsActivity extends AppCompatActivity {
         mapController.setCenter(centerPoint);
         Position position = new Position(latitude,longitude);
         //controller.getFuelPrices(position);
-        controller.requestUsersAround();
-        //controller.requestLocationHistory();
+        //controller.requestUsersAround();
+        controller.requestLocationHistory();
         map.invalidate();
     }
 }
