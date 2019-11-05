@@ -2,15 +2,19 @@ package de.hhn.aib.swlab.wise1920.group01.exercise2.controller;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.widget.Toast;
 
 import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.views.overlay.TilesOverlay;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Timer;
 
 import de.hhn.aib.swlab.wise1920.group01.exercise2.R;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.controller.extensions.FuelSearchPricesService;
@@ -31,6 +35,9 @@ public class MapFunctionality {
     private ArrayList<Marker> markerArrayList, timeStampedList;
     private Context context;
     private double latitude, longitude;
+    MapController mapController;
+    CountDownTimer timer;
+    private long syncInterval = 60000;
 
     public MapFunctionality(MapView map, Bundle bundle, Context context) {
         this.map = map;
@@ -40,6 +47,19 @@ public class MapFunctionality {
         markerArrayList = new ArrayList<>();
         timeStampedList = new ArrayList<>();
         this.context = context;
+        mapController = new MapController(map);
+        timer = new CountDownTimer(Long.MAX_VALUE, syncInterval) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+
+                }
+
+            @Override
+            public void onFinish() {
+                Log.wtf("Sync Service: ", "Lol, the time has ended, the universe should have ended before this message can be shown...");
+            }
+        };
+        timer.start();
     }
 
     public void requestUsersAround() {
@@ -49,7 +69,6 @@ public class MapFunctionality {
             public void onSuccess(ArrayList<MapObject> usersAround) {
                 setSearchResults(usersAround);
             }
-
             @Override
             public void onFailure() {
                 Toast.makeText(context,"Fehler bei UsersArround",Toast.LENGTH_LONG).show();
@@ -60,7 +79,7 @@ public class MapFunctionality {
     public void requestLocationHistory() {
         //TODO Set the earliest timestamp in milliseconds unix otherwise 1st january 2010 will be used.
         Calendar calendar = Calendar.getInstance();
-        calendar.set(2019,10,01);
+        calendar.set(2019,11,01);
         sync.getLocationHistory(calendar.getTimeInMillis(), new LocationHistoryReceivedInterface() {
             @Override
             public void onSuccess(ArrayList<TimestampedPosition> locationHistory) {
@@ -78,17 +97,14 @@ public class MapFunctionality {
                         map.getOverlays().add(searchMarker);
                         markerArrayList.add(searchMarker);
                     }
-
                     map.invalidate();
                 }
                 else
                     Toast.makeText(context,"Suchbegriff konnte nicht gefunden werden!",Toast.LENGTH_SHORT).show();
             }
-
-
             @Override
             public void onFailure() {
-
+            Toast.makeText(context,"Fehler", Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -102,7 +118,7 @@ public class MapFunctionality {
 
             @Override
             public void onFailure() {
-
+                Toast.makeText(context,"Fehler", Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -116,7 +132,7 @@ public class MapFunctionality {
 
             @Override
             public void onFailure() {
-
+            Toast.makeText(context,"no response",Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -136,7 +152,8 @@ public class MapFunctionality {
                 map.getOverlays().add(searchMarker);
                 markerArrayList.add(searchMarker);
             }
-
+            GeoPoint geoPoint = new GeoPoint(searchResults.get(0).getLatitude(),searchResults.get(0).getLatitude());
+            mapController.setCenter(geoPoint);
             map.invalidate();
         }
         else
@@ -150,6 +167,5 @@ public class MapFunctionality {
             }
             markers.clear();
         }
-
     }
 }

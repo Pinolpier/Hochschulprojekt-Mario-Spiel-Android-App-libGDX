@@ -4,6 +4,7 @@ import android.util.Log;
 
 
 public class SettingsFunction {
+
     public void changeRadius(String s) {
         //TODO chnage radius with use of the string s
         Log.wtf("cngRadius", s);
