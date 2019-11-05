@@ -3,8 +3,6 @@ package de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.extensions;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
-
 public class PoiDummy {
     @SerializedName("lat")
     @Expose
@@ -18,10 +16,15 @@ public class PoiDummy {
     @Expose
     PoiTagsDummy poiTagsList;
 
-    public PoiDummy(Double lat, Double lon, PoiTagsDummy poiTagsList) {
+    @SerializedName("type")
+    @Expose
+    String type;
+
+    public PoiDummy(Double lat, Double lon, PoiTagsDummy poiTagsList, String type) {
         this.lat = lat;
         this.lon = lon;
         this.poiTagsList = poiTagsList;
+        this.type = type;
     }
 
     public Double getLat() {
@@ -46,5 +49,9 @@ public class PoiDummy {
 
     public void setPoiTagsList(PoiTagsDummy poiTagsList) {
         this.poiTagsList = poiTagsList;
+    }
+
+    public String getType() {
+        return type;
     }
 }
