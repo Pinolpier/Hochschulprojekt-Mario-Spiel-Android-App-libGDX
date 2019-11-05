@@ -33,14 +33,14 @@ public class PoiSearchService {
         api = retrofit.create(PoiAPI.class);
     }
     public void getPois(BoundingBox boundingBox, final PoisReceivedInterface poisReceivedInterface){
-        String bounding = boundingBox.getLatNorth()+","+boundingBox.getLonWest()+","+boundingBox.getLatSouth()+","+boundingBox.getLonEast();
+        //String bounding = boundingBox.getLatNorth()+","+boundingBox.getLonWest()+","+boundingBox.getLatSouth()+","+boundingBox.getLonEast();
         String data = "[out:json][timeout:25];\n" +
                 "// gather results\n" +
                 "(\n" +
                 "  // query part for: “\"sehenswürdigkeit\"”\n" +
-                "  node[\"tourism\"=\"attraction\"]"+bounding+";\n" +
-                "  way[\"tourism\"=\"attraction\"]"+bounding+";\n" +
-                "  relation[\"tourism\"=\"attraction\"]"+bounding+";\n" +
+                "  node[\"tourism\"=\"attraction\"](49.133767131768884,9.196586608886719,49.171435238357176,9.242849349975586);\n" +
+                "  way[\"tourism\"=\"attraction\"](49.133767131768884,9.196586608886719,49.171435238357176,9.242849349975586);\n" +
+                "  relation[\"tourism\"=\"attraction\"](49.133767131768884,9.196586608886719,49.171435238357176,9.242849349975586);\n" +
                 ");\n" +
                 "// print results\n" +
                 "out body;\n" +
@@ -56,10 +56,13 @@ public class PoiSearchService {
                 if (searchResults != null) {
                     if (searchResults.size() >= 0) {
                         for (PoiDummy a : searchResults) {
+                            if(a.getPoiTagsList()!=null){
                             PoiTagsDummy tag = a.getPoiTagsList();
-                            String label = tag.getName();
+                            String label="";
+                            if (tag.getName()!=null) {label = tag.getName();}
+                            if(a.getLat()!=null){
                             searchResultList.add(new MapObject(a.getLat(), a.getLon(), label, null));
-                        }
+                        }}}
                         poisReceivedInterface.onSuccess(searchResultList);
                     } else
                         Toast.makeText(context, "Poi Liste ist leer!", Toast.LENGTH_SHORT).show();

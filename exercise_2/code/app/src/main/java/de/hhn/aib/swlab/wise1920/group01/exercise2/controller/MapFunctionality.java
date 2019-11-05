@@ -158,22 +158,22 @@ public class MapFunctionality {
     private void getPois(){
         poiSearchService.getPois(map.getBoundingBox(), new PoisReceivedInterface() {
             @Override
-            public void onSuccess(ArrayList<MapObject> poiElements) {
-                if(poiElements.size()>=1) {
-                    for (int counter = 0; counter < poiElements.size(); counter++) {
+            public void onSuccess(ArrayList<MapObject> fuelPrices) {
+                if(fuelPrices.size()>=1) {
+                    for (int counter = 0; counter < fuelPrices.size(); counter++) {
                         Marker poiMarker = new Marker(map);
                         poiMarker.setIcon(context.getDrawable(R.drawable.ic_pin_drop_blue_24dp));
-                        poiMarker.setPosition(poiElements.get(counter));
+                        poiMarker.setPosition(fuelPrices.get(counter));
                         poiMarker.setAnchor(0.5f, 0.5f);
-                        poiMarker.setTitle(poiElements.get(counter).getLabel());
-                        poiMarker.setSnippet(poiElements.get(counter).getDescription());
+                        poiMarker.setTitle(fuelPrices.get(counter).getLabel());
+                        poiMarker.setSnippet(fuelPrices.get(counter).getDescription());
                         map.getOverlays().add(poiMarker);
                         poiMarkerList.add(poiMarker);
                     }
                     map.invalidate();
                 }
                 else
-                    Toast.makeText(context,"Poi Liste ist leer",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context,"Fehler bei den Pois",Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -252,8 +252,8 @@ public class MapFunctionality {
     {
         GeoPoint centerPoint = new GeoPoint(latitude,longitude);
         mapController.setCenter(centerPoint);
-        map.invalidate();
         getPois();
+        map.invalidate();
     }
     public void callPermissions()
     {
