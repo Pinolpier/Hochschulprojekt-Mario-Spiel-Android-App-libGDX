@@ -31,4 +31,9 @@
     <string name="sendLocationFailedInvalidJwtTokenToastMessage">Konnte die Position nicht senden. Interner Fehler, bitte neu einloggen.</string>
     <string name="getUsersFailedInvalidJwtTokenToastMessage">Konnte keine Standorte abrufen. Interner Fehler, bitte neu einloggen.</string>
     <string name="sendLocationFailed">ACHTUNG: Die Location konnte nicht an den Server gesendet werden!</string>
+
+    <!--Map Functionality-->
+    <string name="onFailureFuelSearch">Fehler beim abfragen der Tankpreise</string>
+    <string name="noUsersAround">Keine Nutzer in der Umgebung gefunden!</string>
+    <string name="usersAroundFailure">Fehler beim Versuch die Nutzer in der Umgebung zu suchen</string>
 </resources>

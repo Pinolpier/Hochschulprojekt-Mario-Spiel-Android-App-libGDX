@@ -3,12 +3,23 @@ package de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.extensions;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class PoiElementsDummy {
-    @SerializedName("attraction")
-    @Expose
-    String attraction;
+import java.util.List;
 
-    @SerializedName("name")
+
+public class PoiElementsDummy {
+    @SerializedName("elements")
     @Expose
-    String name;
+    List<PoiDummy> poiDummyArray;
+
+    public PoiElementsDummy(List<PoiDummy> poiDummyArray) {
+        this.poiDummyArray = poiDummyArray;
+    }
+
+    public List<PoiDummy> getPoiDummyArray() {
+        return poiDummyArray;
+    }
+
+    public void setPoiDummyArray(List<PoiDummy> poiDummyArray) {
+        this.poiDummyArray = poiDummyArray;
+    }
 }

@@ -16,9 +16,9 @@ public class PoiDummy {
 
     @SerializedName("tags")
     @Expose
-    List<PoiElementsDummy> poiTagsList;
+    PoiTagsDummy poiTagsList;
 
-    public PoiDummy(Double lat, Double lon, List<PoiElementsDummy> poiTagsList) {
+    public PoiDummy(Double lat, Double lon, PoiTagsDummy poiTagsList) {
         this.lat = lat;
         this.lon = lon;
         this.poiTagsList = poiTagsList;
@@ -40,11 +40,11 @@ public class PoiDummy {
         this.lon = lon;
     }
 
-    public List<PoiElementsDummy> getPoiTagsList() {
+    public PoiTagsDummy getPoiTagsList() {
         return poiTagsList;
     }
 
-    public void setPoiTagsList(List<PoiElementsDummy> poiTagsList) {
+    public void setPoiTagsList(PoiTagsDummy poiTagsList) {
         this.poiTagsList = poiTagsList;
     }
 }
