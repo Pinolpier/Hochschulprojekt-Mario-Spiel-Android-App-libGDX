@@ -59,7 +59,7 @@ public class MapsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Context ctx = getApplicationContext();
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
-        callPermissions();
+      //  callPermissions();
         setContentView(R.layout.activity_maps);
         map = findViewById(R.id.map);
         controller = new MapFunctionality(map, getIntent().getExtras(), this);
@@ -78,10 +78,10 @@ public class MapsActivity extends AppCompatActivity {
         mapController.setZoom(17);
 
         GeoPoint startpoint = new GeoPoint(49.122831, 9.210871); //Koordinaten der Hochschule Heilbronn
-        mapController.setCenter(startpoint);
+        /*mapController.setCenter(startpoint);
         marker = new Marker(map);
         marker.setSnippet("My current Location");
-        marker.setIcon(getDrawable((R.drawable.ic_location_on_red_24dp)));
+        marker.setIcon(getDrawable((R.drawable.ic_location_on_red_24dp)));*/
         map.invalidate();
 
         searchView = findViewById(R.id.search_bar);
@@ -169,12 +169,6 @@ public class MapsActivity extends AppCompatActivity {
     }
     public void setCenter(View v)
     {
-        GeoPoint centerPoint = new GeoPoint(latitude,longitude);
-        mapController.setCenter(centerPoint);
-        Position position = new Position(latitude,longitude);
-        //controller.getFuelPrices(position);
-        //controller.requestUsersAround();
-        controller.requestLocationHistory();
-        map.invalidate();
+        controller.setCenter();
     }
 }

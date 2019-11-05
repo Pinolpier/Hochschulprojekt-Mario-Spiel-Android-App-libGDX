@@ -1,10 +1,19 @@
 package de.hhn.aib.swlab.wise1920.group01.exercise2.controller;
 
+import android.Manifest;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.nabinbhandari.android.permissions.PermissionHandler;
+import com.nabinbhandari.android.permissions.Permissions;
 
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapController;
@@ -16,6 +25,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Timer;
 
+import androidx.core.content.ContextCompat;
+import androidx.core.content.PermissionChecker;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.R;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.controller.extensions.FuelSearchPricesService;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.controller.extensions.SearchService;
@@ -27,7 +38,11 @@ import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.UsersAroundReceive
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.extensions.FuelPricesReceivedInterface;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.extensions.SearchResultsReceivedInterface;
 
+import static android.os.Looper.getMainLooper;
+
 public class MapFunctionality {
+    private FusedLocationProviderClient fusedLocationClient;
+    private LocationRequest locationRequest;
     private MapView map;
     private SyncService sync;
     private FuelSearchPricesService fuelService;
@@ -38,6 +53,9 @@ public class MapFunctionality {
     MapController mapController;
     CountDownTimer timer;
     private long syncInterval = 60000;
+    Boolean tankSearch = true;
+    Position position;
+    private Marker marker;
 
     public MapFunctionality(MapView map, Bundle bundle, Context context) {
         this.map = map;
@@ -48,10 +66,17 @@ public class MapFunctionality {
         timeStampedList = new ArrayList<>();
         this.context = context;
         mapController = new MapController(map);
+        marker = new Marker(map);
+        marker.setSnippet("My current Location");
+        marker.setIcon(context.getDrawable((R.drawable.ic_location_on_red_24dp)));
+        callPermissions();
+
         timer = new CountDownTimer(Long.MAX_VALUE, syncInterval) {
             @Override
             public void onTick(long millisUntilFinished) {
-
+                    if(tankSearch){
+                       // getFuelPrices(new Position(latitude,longitude));
+                    }
                 }
 
             @Override
@@ -60,6 +85,65 @@ public class MapFunctionality {
             }
         };
         timer.start();
+    }
+    public void setCenter()
+    {
+        GeoPoint centerPoint = new GeoPoint(latitude,longitude);
+        mapController.setCenter(centerPoint);
+        map.invalidate();
+    }
+    public void callPermissions()
+    {
+        String[] permissions = {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
+        Permissions.check(context, permissions, "Location permissions are required to get User Location",
+                new Permissions.Options().setSettingsDialogTitle("Warning").setRationaleDialogTitle("Info"),
+                new PermissionHandler() {
+                    @Override
+                    public void onGranted() {
+                        requestLocationUpdates();
+                    }
+                    @Override
+                    public void onDenied(Context context, ArrayList<String> deniedPermissions) {
+                        super.onDenied(context, deniedPermissions);
+                        callPermissions();
+                    }
+                });
+    }
+
+    public void requestLocationUpdates()
+    {
+        if(ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PermissionChecker.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PermissionChecker.PERMISSION_GRANTED) {
+            fusedLocationClient = new FusedLocationProviderClient(context);
+            locationRequest = new LocationRequest();
+            locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+            locationRequest.setFastestInterval(2000);
+            locationRequest.setInterval(4000);
+            fusedLocationClient.requestLocationUpdates(locationRequest, new LocationCallback() {
+                @Override
+                public void onLocationResult(LocationResult locationResult) {
+                    super.onLocationResult(locationResult);
+                    latitude = locationResult.getLastLocation().getLatitude();
+                    longitude = locationResult.getLastLocation().getLongitude();
+                    //sync.sendLocation(latitude,longitude);
+                    setCurrentPosition();
+                }
+            }, getMainLooper());
+        }
+        else
+        {
+            callPermissions();
+        }
+    }
+
+    public void setCurrentPosition()
+    {
+        GeoPoint gPt = new GeoPoint(latitude,longitude);
+        //Log.e("gps",longitude + " " + latitude);
+        marker.setPosition(gPt);
+        marker.setAnchor(0.5f,0.5f);
+        map.getOverlays().add(marker);
+        map.invalidate();
     }
 
     public void requestUsersAround() {
@@ -152,8 +236,6 @@ public class MapFunctionality {
                 map.getOverlays().add(searchMarker);
                 markerArrayList.add(searchMarker);
             }
-            GeoPoint geoPoint = new GeoPoint(searchResults.get(0).getLatitude(),searchResults.get(0).getLatitude());
-            mapController.setCenter(geoPoint);
             map.invalidate();
         }
         else
