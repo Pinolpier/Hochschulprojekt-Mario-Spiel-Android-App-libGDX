@@ -47,26 +47,25 @@ public class MapFunctionality {
     private SyncService sync;
     private FuelSearchPricesService fuelService;
     private SearchService searchService;
-    private PoiSearchService poiSearchService;
     private ArrayList<Marker> searchMarkerArrayList, timeStampedMarkerList,fuelMarkerList, poiMarkerList;
-    private Context context;
+    private final Context context;
     private double latitude, longitude;
     private MapController mapController;
     private CountDownTimer timer;
-    private long syncInterval = 60000;
-    private Boolean tankSearch = true;
+    private long syncInterval = 6000;
+    private Boolean tankSearch = false;
     private Marker marker;
 
-    public MapFunctionality(MapView map, Bundle bundle, Context context) {
+    public MapFunctionality(final MapView map, Bundle bundle, final Context context) {
+        this.context = context;
         this.map = map;
         sync = new SyncService(context, bundle.getString("jwt"), bundle.getString("id"), bundle.getString("username"), bundle.getString("description"), bundle.getString("password"), bundle.getDouble("privacy"));
         fuelService = new FuelSearchPricesService(context);
         searchService = new SearchService();
-        poiSearchService = new PoiSearchService(context);
         searchMarkerArrayList = new ArrayList<>();
         timeStampedMarkerList = new ArrayList<>(); fuelMarkerList = new ArrayList<>(); poiMarkerList = new ArrayList<>();
 
-        this.context = context;
+
         mapController = (MapController) map.getController();
         mapController.setZoom(17);
         GeoPoint startpoint = new GeoPoint(49.122831, 9.210871); //Koordinaten der Hochschule Heilbronn
@@ -81,8 +80,9 @@ public class MapFunctionality {
             public void onTick(long millisUntilFinished) {
                     if(tankSearch){
                         getFuelPrices(new Position(latitude,longitude));
-
                     }
+                    BoundingBox boundingBox  = map.getBoundingBox();
+                Toast.makeText(context, boundingBox.getLatSouth()+","+boundingBox.getLonWest()+","+boundingBox.getLatNorth()+","+boundingBox.getLonEast(), Toast.LENGTH_LONG).show();
                 }
 
             @Override
@@ -156,6 +156,7 @@ public class MapFunctionality {
     }
 
     private void getPois(){
+        PoiSearchService poiSearchService = new PoiSearchService(context);
         poiSearchService.getPois(map.getBoundingBox(), new PoisReceivedInterface() {
             @Override
             public void onSuccess(ArrayList<MapObject> fuelPrices) {
