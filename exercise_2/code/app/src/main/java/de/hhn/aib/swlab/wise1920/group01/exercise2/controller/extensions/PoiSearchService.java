@@ -60,7 +60,7 @@ public class PoiSearchService {
                         double lat;
                         double lng;
                         if(searchResults.get(x).getType().equals("relation")){
-                                PoiDummy dummy = findByRef(searchResults.get(x).getPoiMembers().get(0).getRef());
+                                PoiDummy dummy = findByRef(searchResults.get(x).getPoiMembers());
                                 PoiTagsDummy tagsDummy = searchResults.get(x).getPoiTagsDummy();
                                 lat = dummy.getLat();
                                 lng = dummy.getLon();
@@ -114,11 +114,18 @@ public class PoiSearchService {
         });
     }
 
-    private PoiDummy findByRef(long referenz){
+    private PoiDummy findByRef(ArrayList<PoiDummy> poiDummies){
+
         for(int x=0;x<searchResults.size();x++){
-                if (searchResults.get(x).getId()==referenz){
+                if (searchResults.get(x).getId()==poiDummies.get(0).getRef()){
                     long id = searchResults.get(x).getNodesArrayList().get(0);
-                    searchResults.remove(x);
+                    for (int index = 0;index<searchResults.size();index++){
+                        for (int ways=0;ways<poiDummies.size();ways++){
+                            if (searchResults.get(index).getId()==poiDummies.get(ways).getRef()){
+                                searchResults.remove(index);
+                            }
+                        }
+                    }
                     return findById(searchResults,id);
                 }
             }
