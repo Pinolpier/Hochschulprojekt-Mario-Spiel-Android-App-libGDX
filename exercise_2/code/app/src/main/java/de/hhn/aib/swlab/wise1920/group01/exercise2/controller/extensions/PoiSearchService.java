@@ -34,14 +34,14 @@ public class PoiSearchService {
         api = retrofit.create(PoiAPI.class);
     }
     public void getPois(BoundingBox boundingBox, final PoisReceivedInterface poisReceivedInterface){
-        String bounding = boundingBox.getLatNorth()+","+boundingBox.getLonWest()+","+boundingBox.getLatSouth()+","+boundingBox.getLonEast();
+        String bounding = boundingBox.getLatSouth()+","+boundingBox.getLonWest()+","+boundingBox.getLatNorth()+","+boundingBox.getLonEast();
         String data = "[out:json][timeout:25];\n" +
                 "// gather results\n" +
                 "(\n" +
                 "  // query part for: “\"sehenswürdigkeit\"”\n" +
-                "  node[\"tourism\"=\"attraction\"](49.133767131768884,9.196586608886719,49.171435238357176,9.242849349975586);\n" +
-                "  way[\"tourism\"=\"attraction\"](49.133767131768884,9.196586608886719,49.171435238357176,9.242849349975586);\n" +
-                "  relation[\"tourism\"=\"attraction\"](49.133767131768884,9.196586608886719,49.171435238357176,9.242849349975586);\n" +
+                "  node[\"tourism\"=\"attraction\"]("+bounding+");\n" +
+                "  way[\"tourism\"=\"attraction\"]("+bounding+");\n" +
+                "  relation[\"tourism\"=\"attraction\"]("+bounding+");\n" +
                 ");\n" +
                 "// print results\n" +
                 "out body;\n" +
@@ -53,41 +53,40 @@ public class PoiSearchService {
             @Override
             public void onResponse(Call<PoiElementsDummy> call, Response<PoiElementsDummy> response) {
                 ArrayList<MapObject> searchResultList = new ArrayList();
-                searchResults = response.body().getPoiDummyArray();
-                if (searchResults != null){
-                    for (int x=0;x<searchResults.size();x++){
-                        String label = "";
-                        double lat;
-                        double lng;
-                        if(searchResults.get(x).getType().equals("relation")){
+                if(response.body().getPoiDummyArray()!=null) {
+                    searchResults = response.body().getPoiDummyArray();
+                    if (searchResults != null) {
+                        for (int x = 0; x < searchResults.size(); x++) {
+                            String label = "";
+                            double lat;
+                            double lng;
+                            if (searchResults.get(x).getType().equals("relation")) {
                                 PoiDummy dummy = findByRef(searchResults.get(x).getPoiMembers());
                                 PoiTagsDummy tagsDummy = searchResults.get(x).getPoiTagsDummy();
                                 lat = dummy.getLat();
                                 lng = dummy.getLon();
                                 label = tagsDummy.getName();
-                                searchResultList.add(new MapObject(lat,lng,label,null));
+                                searchResultList.add(new MapObject(lat, lng, label, null));
                                 searchResults.remove(x);
                             }
                         }
-                    for (PoiDummy a : searchResults){
-                        String label = "";
-                        double lat;
-                        double lng;
-                        if (a.getType().equals("way")) {
-                            if(a.getPoiTagsDummy()!=null){
-                                PoiTagsDummy tagsDummy = a.getPoiTagsDummy();
-                                label = tagsDummy.getName();
-                            }
+                        for (PoiDummy a : searchResults) {
+                            String label = "";
+                            double lat;
+                            double lng;
+                            if (a.getType().equals("way")) {
+                                if (a.getPoiTagsDummy() != null) {
+                                    PoiTagsDummy tagsDummy = a.getPoiTagsDummy();
+                                    label = tagsDummy.getName();
+                                }
 
                                 ArrayList<Long> secondList = a.getNodesArrayList();
-                                long id =secondList.get(0);
+                                long id = secondList.get(0);
                                 PoiDummy dummy = findById(searchResults, id);
                                 lat = dummy.getLat();
                                 lng = dummy.getLon();
                                 searchResultList.add(new MapObject(lat, lng, label, null));
-                            }
-
-                            else if(a.getType().equals("node")){
+                            } else if (a.getType().equals("node")) {
                                 if (a.getPoiTagsDummy() != null) {
                                     PoiTagsDummy tag = a.getPoiTagsDummy();
                                     if (tag.getName() != null) {
@@ -101,11 +100,10 @@ public class PoiSearchService {
                         }
                         poisReceivedInterface.onSuccess(searchResultList);
 
-                    }
-                else {
+                    } else {
                         Toast.makeText(context, "Poi Liste ist leer!", Toast.LENGTH_SHORT).show();
+                    }
                 }
-
             }
             @Override
             public void onFailure(Call<PoiElementsDummy> call, Throwable t) {

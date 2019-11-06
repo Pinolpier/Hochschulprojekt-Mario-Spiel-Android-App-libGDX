@@ -52,7 +52,7 @@ public class MapFunctionality {
     private double latitude, longitude;
     private MapController mapController;
     private CountDownTimer timer;
-    private long syncInterval = 6000;
+    private long syncInterval = 5000;
     private Boolean tankSearch = false;
     private Marker marker;
 
@@ -81,8 +81,7 @@ public class MapFunctionality {
                     if(tankSearch){
                         getFuelPrices(new Position(latitude,longitude));
                     }
-                    BoundingBox boundingBox  = map.getBoundingBox();
-                Toast.makeText(context, boundingBox.getLatSouth()+","+boundingBox.getLonWest()+","+boundingBox.getLatNorth()+","+boundingBox.getLonEast(), Toast.LENGTH_LONG).show();
+                    getPois();
                 }
 
             @Override
