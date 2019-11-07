@@ -123,7 +123,7 @@ public class MapFunctionality {
         });
     }
 
-    private void requestLocationHistory() {
+    private void getLocationHistory() {
         //TODO Set the earliest timestamp in milliseconds unix otherwise 1st january 2010 will be used.
         deleteSearchMarkers(timeStampedMarkerList);
         sync.getLocationHistory(null, new LocationHistoryReceivedInterface() {
