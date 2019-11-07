@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -45,7 +46,6 @@ public class MapsActivity extends AppCompatActivity {
                                 | TileSourcePolicy.FLAG_USER_AGENT_MEANINGFUL
                                 | TileSourcePolicy.FLAG_USER_AGENT_NORMALIZED
                 )));
-
         map.setMultiTouchControls(true);
         map.getOverlays().clear();
         map.invalidate();
@@ -86,5 +86,12 @@ public class MapsActivity extends AppCompatActivity {
      */
     public void setCenter(View v){
         controller.setCenter();
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        controller.getPoi();
+        System.out.println("testtttt");
+        return super.onTouchEvent(event);
     }
 }

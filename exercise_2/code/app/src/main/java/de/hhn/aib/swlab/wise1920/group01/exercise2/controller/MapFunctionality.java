@@ -102,7 +102,7 @@ public class MapFunctionality {
                 if(usersAround.size()>=1) {
                     for (int counter = 0; counter < usersAround.size(); counter++) {
                         Marker searchMarker = new Marker(map);
-                        searchMarker.setIcon(context.getDrawable(R.drawable.ic_pin_drop_blue_24dp));
+                        searchMarker.setIcon(context.getDrawable(R.drawable.ic_location_usersaround_green_24dp));
                         searchMarker.setPosition(usersAround.get(counter));
                         searchMarker.setAnchor(0.5f, 0.5f);
                         searchMarker.setTitle(usersAround.get(counter).getLabel());
@@ -155,7 +155,7 @@ public class MapFunctionality {
         });
     }
 
-    private void getPoi(){
+    public void getPoi(){
         if(poiSearch) {
             deleteSearchMarkers(poiMarkerList);
             PoiSearchService poiSearchService = new PoiSearchService(context);
@@ -194,7 +194,7 @@ public class MapFunctionality {
                 if(fuelPrices.size()>=1) {
                     for (int counter = 0; counter < fuelPrices.size(); counter++) {
                         Marker fuelMarker = new Marker(map);
-                        fuelMarker.setIcon(context.getDrawable(R.drawable.ic_pin_drop_blue_24dp));
+                        fuelMarker.setIcon(context.getDrawable(R.drawable.ic_local_gas_station_red_24dp));
                         fuelMarker.setPosition(fuelPrices.get(counter));
                         fuelMarker.setAnchor(0.5f, 0.5f);
                         fuelMarker.setTitle(fuelPrices.get(counter).getLabel());
@@ -223,7 +223,7 @@ public class MapFunctionality {
                 if(searchResultsList.size()>=1) {
                     for (int counter = 0; counter < searchResultsList.size(); counter++) {
                         Marker searchMarker = new Marker(map);
-                        searchMarker.setIcon(context.getDrawable(R.drawable.ic_pin_drop_blue_24dp));
+                        searchMarker.setIcon(context.getDrawable(R.drawable.ic_star_yellow_24dp));
                         searchMarker.setPosition(searchResultsList.get(counter));
                         searchMarker.setAnchor(0.5f, 0.5f);
                         searchMarker.setTitle(searchResultsList.get(counter).getLabel());
@@ -260,6 +260,7 @@ public class MapFunctionality {
         requestLocationHistory();
         map.invalidate();
     }
+
     public void callPermissions()
     {
         String[] permissions = {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
