@@ -3,6 +3,7 @@ package de.hhn.aib.swlab.wise1920.group01.exercise2.view;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,6 +36,8 @@ public class MapsActivity extends AppCompatActivity {
         Context ctx = getApplicationContext();
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
         setContentView(R.layout.activity_maps);
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
         map = findViewById(R.id.map);
         controller = new MapFunctionality(map, getIntent().getExtras(), this);
         map.setTileSource(new XYTileSource("Mapnik",

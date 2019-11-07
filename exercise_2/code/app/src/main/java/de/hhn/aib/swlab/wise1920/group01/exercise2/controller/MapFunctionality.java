@@ -2,6 +2,7 @@ package de.hhn.aib.swlab.wise1920.group01.exercise2.controller;
 
 import android.Manifest;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -15,10 +16,14 @@ import com.google.android.gms.location.LocationResult;
 import com.nabinbhandari.android.permissions.PermissionHandler;
 import com.nabinbhandari.android.permissions.Permissions;
 
+import org.osmdroid.bonuspack.routing.OSRMRoadManager;
+import org.osmdroid.bonuspack.routing.Road;
+import org.osmdroid.bonuspack.routing.RoadManager;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.views.overlay.PolyOverlayWithIW;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -56,6 +61,7 @@ public class MapFunctionality {
     private Boolean tankSearch = false;
     private Boolean poiSearch = false;
     private Marker marker;
+    private ArrayList<GeoPoint> track;
 
     public MapFunctionality(final MapView map, Bundle bundle, final Context context) {
         this.context = context;
@@ -66,6 +72,7 @@ public class MapFunctionality {
         searchService = new SearchService();
         searchMarkerArrayList = new ArrayList<>();
         timeStampedMarkerList = new ArrayList<>(); fuelMarkerList = new ArrayList<>(); poiMarkerList = new ArrayList<>();
+        track = new ArrayList<>();
 
         mapController = (MapController) map.getController();
         mapController.setZoom(17);
@@ -134,14 +141,24 @@ public class MapFunctionality {
                     for (int counter = 0; counter < locationHistory.size(); counter++) {
                         //GeoPoint searchPoint = new GeoPoint(searchResults[counter].getLatitude(), searchResults[counter].getLongitude());
                         Marker searchMarker = new Marker(map);
-                        searchMarker.setIcon(context.getDrawable(R.drawable.ic_pin_drop_blue_24dp));
+                        searchMarker.setIcon(context.getDrawable(R.drawable.ic_locationhistory_24dp));
                         GeoPoint gpt = new GeoPoint(locationHistory.get(counter).getLatitude(),locationHistory.get(counter).getLongitude());
+                        track.add(gpt);
+
                         searchMarker.setPosition(gpt);
                         searchMarker.setAnchor(0.5f, 0.5f);
                         searchMarker.setTitle(locationHistory.get(counter).getDateString());
                         map.getOverlays().add(searchMarker);
                         searchMarkerArrayList.add(searchMarker);
+
                     }
+                    RoadManager roadManager = new OSRMRoadManager(context);
+                    roadManager.addRequestOption("routeType=pedestrian");
+                    Road road = roadManager.getRoad(track);
+                    PolyOverlayWithIW roadOverlay = RoadManager.buildRoadOverlay(road);
+                    roadOverlay.getOutlinePaint().setColor(Color.MAGENTA);
+                    roadOverlay.getOutlinePaint().setStrokeWidth(5);
+                    map.getOverlays().add(roadOverlay);
                     map.invalidate();
                 }
                 else
@@ -256,7 +273,7 @@ public class MapFunctionality {
     {
         GeoPoint centerPoint = new GeoPoint(latitude,longitude);
         mapController.setCenter(centerPoint);
-        //requestLocationHistory();
+        getLocationHistory();
         map.invalidate();
     }
 
