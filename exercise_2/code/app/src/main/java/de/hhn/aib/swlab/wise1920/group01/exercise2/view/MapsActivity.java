@@ -14,6 +14,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import org.osmdroid.config.Configuration;
+import org.osmdroid.events.MapListener;
+import org.osmdroid.events.ScrollEvent;
+import org.osmdroid.events.ZoomEvent;
 import org.osmdroid.tileprovider.tilesource.TileSourcePolicy;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.views.MapView;
@@ -89,12 +92,5 @@ public class MapsActivity extends AppCompatActivity {
      */
     public void setCenter(View v){
         controller.setCenter();
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        controller.getPoi();
-        System.out.println("testtttt");
-        return super.onTouchEvent(event);
     }
 }

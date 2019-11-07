@@ -19,6 +19,9 @@ import com.nabinbhandari.android.permissions.Permissions;
 import org.osmdroid.bonuspack.routing.OSRMRoadManager;
 import org.osmdroid.bonuspack.routing.Road;
 import org.osmdroid.bonuspack.routing.RoadManager;
+import org.osmdroid.events.MapListener;
+import org.osmdroid.events.ScrollEvent;
+import org.osmdroid.events.ZoomEvent;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
@@ -58,7 +61,7 @@ public class MapFunctionality {
     private MapController mapController;
     private CountDownTimer timer;
     private long syncInterval = 60000;
-    private Boolean tankSearch = false;
+    private Boolean tankSearch = true;
     private Boolean poiSearch = false;
     private Marker marker;
     private ArrayList<GeoPoint> track;
@@ -100,6 +103,20 @@ public class MapFunctionality {
             }
         };
         timer.start();
+
+        map.addMapListener(new MapListener() {
+            @Override
+            public boolean onScroll(ScrollEvent event) {
+                getPoi();
+                return false;
+            }
+
+            @Override
+            public boolean onZoom(ZoomEvent event) {
+                getPoi();
+                return false;
+            }
+        });
     }
 
     private void getUsersAround() {
@@ -156,7 +173,7 @@ public class MapFunctionality {
                     roadManager.addRequestOption("routeType=pedestrian");
                     Road road = roadManager.getRoad(track);
                     PolyOverlayWithIW roadOverlay = RoadManager.buildRoadOverlay(road);
-                    roadOverlay.getOutlinePaint().setColor(Color.MAGENTA);
+                    roadOverlay.getOutlinePaint().setColor(Color.GRAY);
                     roadOverlay.getOutlinePaint().setStrokeWidth(5);
                     map.getOverlays().add(roadOverlay);
                     map.invalidate();
@@ -239,7 +256,7 @@ public class MapFunctionality {
                 if(searchResultsList.size()>=1) {
                     for (int counter = 0; counter < searchResultsList.size(); counter++) {
                         Marker searchMarker = new Marker(map);
-                        searchMarker.setIcon(context.getDrawable(R.drawable.ic_star_yellow_24dp));
+                        searchMarker.setIcon(context.getDrawable(R.drawable.ic_star_gold_24dp));
                         searchMarker.setPosition(searchResultsList.get(counter));
                         searchMarker.setAnchor(0.5f, 0.5f);
                         searchMarker.setTitle(searchResultsList.get(counter).getLabel());
@@ -274,6 +291,7 @@ public class MapFunctionality {
         GeoPoint centerPoint = new GeoPoint(latitude,longitude);
         mapController.setCenter(centerPoint);
         getLocationHistory();
+        getFuelPrices(new Position(latitude,longitude));
         map.invalidate();
     }
 
