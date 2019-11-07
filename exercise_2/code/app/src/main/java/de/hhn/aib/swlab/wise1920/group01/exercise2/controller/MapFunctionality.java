@@ -1,9 +1,12 @@
 package de.hhn.aib.swlab.wise1920.group01.exercise2.controller;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.preference.PreferenceManager;
 
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
@@ -40,6 +43,13 @@ public class MapFunctionality {
         markerArrayList = new ArrayList<>();
         timeStampedList = new ArrayList<>();
         this.context = context;
+
+        PreferenceManager.getDefaultSharedPreferences(context).registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener() {
+            @Override
+            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+                Log.e("MapFunctionality", "listenerFired");
+            }
+        });
     }
 
     public void requestUsersAround() {
