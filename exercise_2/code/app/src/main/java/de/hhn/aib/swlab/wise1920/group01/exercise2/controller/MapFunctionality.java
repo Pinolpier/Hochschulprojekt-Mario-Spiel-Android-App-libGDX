@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -93,7 +94,6 @@ public class MapFunctionality {
         timer.start();
     }
 
-
     private void requestUsersAround() {
         //TODO Set the correct radius or use an appropriate constant value that should be defined as constant.
         sync.getUsersAround(10, new UsersAroundReceivedInterface() {
@@ -126,7 +126,7 @@ public class MapFunctionality {
         //TODO Set the earliest timestamp in milliseconds unix otherwise 1st january 2010 will be used.
         deleteSearchMarkers(timeStampedMarkerList);
         Calendar calendar = Calendar.getInstance();
-        calendar.set(2019,11,01);
+        calendar.set(2019,11,1);
         sync.getLocationHistory(calendar.getTimeInMillis(), new LocationHistoryReceivedInterface() {
             @Override
             public void onSuccess(ArrayList<TimestampedPosition> locationHistory) {
@@ -156,33 +156,34 @@ public class MapFunctionality {
     }
 
     private void getPoi(){
-        deleteSearchMarkers(poiMarkerList);
-        PoiSearchService poiSearchService = new PoiSearchService(context);
-        poiSearchService.getPois(map.getBoundingBox(), new PoisReceivedInterface() {
-            @Override
-            public void onSuccess(ArrayList<MapObject> fuelPrices) {
-                if(fuelPrices.size()>=1) {
-                    for (int counter = 0; counter < fuelPrices.size(); counter++) {
-                        Marker poiMarker = new Marker(map);
-                        poiMarker.setIcon(context.getDrawable(R.drawable.ic_pin_drop_blue_24dp));
-                        poiMarker.setPosition(fuelPrices.get(counter));
-                        poiMarker.setAnchor(0.5f, 0.5f);
-                        poiMarker.setTitle(fuelPrices.get(counter).getLabel());
-                        poiMarker.setSnippet(fuelPrices.get(counter).getDescription());
-                        map.getOverlays().add(poiMarker);
-                        poiMarkerList.add(poiMarker);
-                    }
-                    map.invalidate();
+        if(poiSearch) {
+            deleteSearchMarkers(poiMarkerList);
+            PoiSearchService poiSearchService = new PoiSearchService(context);
+            poiSearchService.getPois(map.getBoundingBox(), new PoisReceivedInterface() {
+                @Override
+                public void onSuccess(ArrayList<MapObject> poiArrayList) {
+                    if (poiArrayList.size() >= 1) {
+                        for (int counter = 0; counter < poiArrayList.size(); counter++) {
+                            Marker poiMarker = new Marker(map);
+                            poiMarker.setIcon(context.getDrawable(R.drawable.ic_pin_drop_blue_24dp));
+                            poiMarker.setPosition(poiArrayList.get(counter));
+                            poiMarker.setAnchor(0.5f, 0.5f);
+                            poiMarker.setTitle(poiArrayList.get(counter).getLabel());
+                            poiMarker.setSnippet(poiArrayList.get(counter).getDescription());
+                            map.getOverlays().add(poiMarker);
+                            poiMarkerList.add(poiMarker);
+                        }
+                        map.invalidate();
+                    } else
+                        Toast.makeText(context, R.string.noPoisFound, Toast.LENGTH_SHORT).show();
                 }
-                else
-                    Toast.makeText(context,R.string.noPoisFound,Toast.LENGTH_SHORT).show();
-            }
 
-            @Override
-            public void onFailure() {
-                Toast.makeText(context,R.string.noPoisFound, Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onFailure() {
+                    Toast.makeText(context, R.string.noPoisFound, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
     private void getFuelPrices(Position position) {
