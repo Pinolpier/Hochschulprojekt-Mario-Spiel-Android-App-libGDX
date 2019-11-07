@@ -52,20 +52,20 @@ public class MapFunctionality {
     private double latitude, longitude;
     private MapController mapController;
     private CountDownTimer timer;
-    private long syncInterval = 5000;
+    private long syncInterval = 60000;
     private Boolean tankSearch = false;
     private Boolean poiSearch = false;
     private Marker marker;
 
     public MapFunctionality(final MapView map, Bundle bundle, final Context context) {
         this.context = context;
+        callPermissions();
         this.map = map;
         sync = new SyncService(context, bundle.getString("jwt"), bundle.getString("id"), bundle.getString("username"), bundle.getString("description"), bundle.getString("password"), bundle.getDouble("privacy"));
         fuelService = new FuelSearchPricesService(context);
         searchService = new SearchService();
         searchMarkerArrayList = new ArrayList<>();
         timeStampedMarkerList = new ArrayList<>(); fuelMarkerList = new ArrayList<>(); poiMarkerList = new ArrayList<>();
-
 
         mapController = (MapController) map.getController();
         mapController.setZoom(17);
@@ -74,7 +74,6 @@ public class MapFunctionality {
         marker = new Marker(map);
         marker.setSnippet("My current Location");
         marker.setIcon(context.getDrawable((R.drawable.ic_location_on_red_24dp)));
-        callPermissions();
 
         timer = new CountDownTimer(Long.MAX_VALUE, syncInterval) {
             @Override
@@ -82,8 +81,10 @@ public class MapFunctionality {
                     if(tankSearch){
                         getFuelPrices(new Position(latitude,longitude));
                     }
-                    if(poiSearch)
-                    getPoi();
+                    if(poiSearch) {
+                        getPoi();
+                    }
+                    getUsersAround();
                 }
 
             @Override
@@ -94,7 +95,7 @@ public class MapFunctionality {
         timer.start();
     }
 
-    private void requestUsersAround() {
+    private void getUsersAround() {
         //TODO Set the correct radius or use an appropriate constant value that should be defined as constant.
         sync.getUsersAround(10, new UsersAroundReceivedInterface() {
             @Override
@@ -125,12 +126,10 @@ public class MapFunctionality {
     private void requestLocationHistory() {
         //TODO Set the earliest timestamp in milliseconds unix otherwise 1st january 2010 will be used.
         deleteSearchMarkers(timeStampedMarkerList);
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(2019,11,1);
-        sync.getLocationHistory(calendar.getTimeInMillis(), new LocationHistoryReceivedInterface() {
+        sync.getLocationHistory(null, new LocationHistoryReceivedInterface() {
             @Override
             public void onSuccess(ArrayList<TimestampedPosition> locationHistory) {
-                Log.d("MapsActivity", "setSearchResults has been called. Length of the array arg is: " + locationHistory.size());
+                Log.d("MapsActivity", "requestLocationHistory has been called. Length of the array arg is: " + locationHistory.size());
                 if(locationHistory.size()>=1) {
                     for (int counter = 0; counter < locationHistory.size(); counter++) {
                         //GeoPoint searchPoint = new GeoPoint(searchResults[counter].getLatitude(), searchResults[counter].getLongitude());
@@ -257,7 +256,7 @@ public class MapFunctionality {
     {
         GeoPoint centerPoint = new GeoPoint(latitude,longitude);
         mapController.setCenter(centerPoint);
-        requestLocationHistory();
+        //requestLocationHistory();
         map.invalidate();
     }
     public void callPermissions()
@@ -285,8 +284,8 @@ public class MapFunctionality {
             fusedLocationClient = new FusedLocationProviderClient(context);
             locationRequest = new LocationRequest();
             locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-            locationRequest.setFastestInterval(2000);
-            locationRequest.setInterval(4000);
+            locationRequest.setFastestInterval(100);
+            locationRequest.setInterval(1000);
             fusedLocationClient.requestLocationUpdates(locationRequest, new LocationCallback() {
                 @Override
                 public void onLocationResult(LocationResult locationResult) {

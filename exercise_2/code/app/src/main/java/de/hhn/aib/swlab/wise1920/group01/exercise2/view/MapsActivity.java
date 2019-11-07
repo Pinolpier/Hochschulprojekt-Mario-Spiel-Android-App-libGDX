@@ -82,7 +82,7 @@ public class MapsActivity extends AppCompatActivity {
     /**
      * This Method calls the Controller to center the map to tha actual location of the User
      * It gets calles when de User push the center button in the View
-     * @param v
+     * @param v View of the actual Activity
      */
     public void setCenter(View v){
         controller.setCenter();
