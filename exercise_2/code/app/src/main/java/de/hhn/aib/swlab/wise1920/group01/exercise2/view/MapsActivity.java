@@ -20,6 +20,9 @@ import org.osmdroid.views.MapView;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.R;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.controller.MapFunctionality;
 
+/**
+ * The class represents the view on a Map with a search button and a center Button
+ */
 public class MapsActivity extends AppCompatActivity {
 
     MapView map;
@@ -44,6 +47,7 @@ public class MapsActivity extends AppCompatActivity {
                 )));
 
         map.setMultiTouchControls(true);
+        map.getOverlays().clear();
         map.invalidate();
 
         searchView = findViewById(R.id.search_bar);
@@ -74,6 +78,12 @@ public class MapsActivity extends AppCompatActivity {
         }
         return true;
     }
+
+    /**
+     * This Method calls the Controller to center the map to tha actual location of the User
+     * It gets calles when de User push the center button in the View
+     * @param v
+     */
     public void setCenter(View v){
         controller.setCenter();
     }

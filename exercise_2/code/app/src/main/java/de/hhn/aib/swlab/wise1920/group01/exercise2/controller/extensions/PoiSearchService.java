@@ -6,6 +6,8 @@ import android.widget.Toast;
 import org.osmdroid.util.BoundingBox;
 import java.util.ArrayList;
 import java.util.List;
+
+import de.hhn.aib.swlab.wise1920.group01.exercise2.R;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.MapObject;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.extensions.PoiAPI;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.extensions.PoiDummy;
@@ -18,6 +20,13 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+/**
+ * Die Klasse Repräsentiert die Suche nach Points of Interessts für
+ * die OpenStreetMap
+ * @author mhaering
+ * @version 1.0
+ *
+ */
 public class PoiSearchService {
 
     private Retrofit retrofit;
@@ -101,17 +110,23 @@ public class PoiSearchService {
                         poisReceivedInterface.onSuccess(searchResultList);
 
                     } else {
-                        Toast.makeText(context, "Poi Liste ist leer!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context,R.string.noPoisFound, Toast.LENGTH_SHORT).show();
                     }
                 }
             }
             @Override
             public void onFailure(Call<PoiElementsDummy> call, Throwable t) {
-                Toast.makeText(context, "Fehler beim abfragen der Pois", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context,R.string.noPoisFound, Toast.LENGTH_SHORT).show();
             }
         });
     }
 
+    /**
+     * Wenn ein Poi vom Typ "relation" ist sollen die dazu passende ways gefunden
+     * und aus der Liste gelöscht werden.
+     * @param poiDummies die Liste der zugehörigen PoiDummies des Types "way"
+     * @return den Poi der Stellvertretend für alle im ID Bereich des "relation" Punktes gesetzt werden soll
+     */
     private PoiDummy findByRef(ArrayList<PoiDummy> poiDummies){
 
         for(int x=0;x<searchResults.size();x++){
@@ -130,6 +145,12 @@ public class PoiSearchService {
         return null;
     }
 
+    /**
+     * Wenn ein Poi vom Typ "Way" ist sollen hier der Zugehörige node anhand der ID gefunden werden
+     * @param dummyArrayList Liste mit den Nodes
+     * @param id des Nodes, welcher gesucht werden soll
+     * @return den Poi der stellvertretend für alle Poi's im Bereich des "Way" angezeigt werden soll
+     */
     private PoiDummy findById(List<PoiDummy> dummyArrayList ,long id){
         for (PoiDummy dummy : dummyArrayList){
             if(dummy.getId()==id){

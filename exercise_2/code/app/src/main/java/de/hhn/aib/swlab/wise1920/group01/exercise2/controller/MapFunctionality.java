@@ -14,7 +14,6 @@ import com.google.android.gms.location.LocationResult;
 import com.nabinbhandari.android.permissions.PermissionHandler;
 import com.nabinbhandari.android.permissions.Permissions;
 
-import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
@@ -54,6 +53,7 @@ public class MapFunctionality {
     private CountDownTimer timer;
     private long syncInterval = 5000;
     private Boolean tankSearch = false;
+    private Boolean poiSearch = false;
     private Marker marker;
 
     public MapFunctionality(final MapView map, Bundle bundle, final Context context) {
@@ -68,8 +68,8 @@ public class MapFunctionality {
 
         mapController = (MapController) map.getController();
         mapController.setZoom(17);
-        GeoPoint startpoint = new GeoPoint(49.122831, 9.210871); //Koordinaten der Hochschule Heilbronn
-        mapController.setCenter(startpoint);
+        GeoPoint startPoint = new GeoPoint(49.122831, 9.210871); //Koordinaten der Hochschule Heilbronn
+        mapController.setCenter(startPoint);
         marker = new Marker(map);
         marker.setSnippet("My current Location");
         marker.setIcon(context.getDrawable((R.drawable.ic_location_on_red_24dp)));
@@ -81,7 +81,8 @@ public class MapFunctionality {
                     if(tankSearch){
                         getFuelPrices(new Position(latitude,longitude));
                     }
-                    getPois();
+                    if(poiSearch)
+                    getPoi();
                 }
 
             @Override
@@ -93,7 +94,7 @@ public class MapFunctionality {
     }
 
 
-    public void requestUsersAround() {
+    private void requestUsersAround() {
         //TODO Set the correct radius or use an appropriate constant value that should be defined as constant.
         sync.getUsersAround(10, new UsersAroundReceivedInterface() {
             @Override
@@ -121,14 +122,14 @@ public class MapFunctionality {
         });
     }
 
-    public void requestLocationHistory() {
+    private void requestLocationHistory() {
         //TODO Set the earliest timestamp in milliseconds unix otherwise 1st january 2010 will be used.
+        deleteSearchMarkers(timeStampedMarkerList);
         Calendar calendar = Calendar.getInstance();
         calendar.set(2019,11,01);
         sync.getLocationHistory(calendar.getTimeInMillis(), new LocationHistoryReceivedInterface() {
             @Override
             public void onSuccess(ArrayList<TimestampedPosition> locationHistory) {
-                deleteSearchMarkers(timeStampedMarkerList);
                 Log.d("MapsActivity", "setSearchResults has been called. Length of the array arg is: " + locationHistory.size());
                 if(locationHistory.size()>=1) {
                     for (int counter = 0; counter < locationHistory.size(); counter++) {
@@ -145,16 +146,17 @@ public class MapFunctionality {
                     map.invalidate();
                 }
                 else
-                    Toast.makeText(context,"LocationHistory is empty",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context,R.string.noLocationHistory,Toast.LENGTH_SHORT).show();
             }
             @Override
             public void onFailure() {
-            Toast.makeText(context,"Fehler beim Versuch die LocationHistory zu bekommen", Toast.LENGTH_LONG).show();
+            Toast.makeText(context,R.string.locationHistoryFailure, Toast.LENGTH_LONG).show();
             }
         });
     }
 
-    private void getPois(){
+    private void getPoi(){
+        deleteSearchMarkers(poiMarkerList);
         PoiSearchService poiSearchService = new PoiSearchService(context);
         poiSearchService.getPois(map.getBoundingBox(), new PoisReceivedInterface() {
             @Override
@@ -173,17 +175,18 @@ public class MapFunctionality {
                     map.invalidate();
                 }
                 else
-                    Toast.makeText(context,"Fehler bei den Pois",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context,R.string.noPoisFound,Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFailure() {
-                Toast.makeText(context, "Fehler bei den Pois", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context,R.string.noPoisFound, Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void getFuelPrices(Position position) {
+        deleteSearchMarkers(fuelMarkerList);
         fuelService.getFuelPrices(position.getLatitude(), position.getLongitude(), new FuelPricesReceivedInterface() {
             @Override
             public void onSuccess(ArrayList<MapObject> fuelPrices) {
@@ -212,6 +215,7 @@ public class MapFunctionality {
     }
 
     public void search(String searchTerm) {
+        deleteSearchMarkers(searchMarkerArrayList);
         searchService.search(searchTerm, new SearchResultsReceivedInterface() {
             @Override
             public void onSuccess(ArrayList<MapObject> searchResultsList) {
@@ -229,12 +233,12 @@ public class MapFunctionality {
                     map.invalidate();
                 }
                 else
-                    Toast.makeText(context,"Suchbegriff konnte nicht gefunden werden!",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context,R.string.noSearchResults,Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFailure() {
-            Toast.makeText(context,"Suche konnte nicht ausgeführt werden",Toast.LENGTH_LONG).show();
+            Toast.makeText(context,R.string.searchFunctionFailure,Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -252,7 +256,7 @@ public class MapFunctionality {
     {
         GeoPoint centerPoint = new GeoPoint(latitude,longitude);
         mapController.setCenter(centerPoint);
-        getPois();
+        requestLocationHistory();
         map.invalidate();
     }
     public void callPermissions()

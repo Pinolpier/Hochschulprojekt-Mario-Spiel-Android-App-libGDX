@@ -62,7 +62,7 @@ public class SyncService {
             @Override
             public void onTick(long millisUntilFinished) {
                 if (!sendLocation(user.getPosition())) {
-                    Toast.makeText(context, R.string.sendLocationFailed, Toast.LENGTH_LONG);
+                    Toast.makeText(context, R.string.sendLocationFailed, Toast.LENGTH_LONG).show();
                     Log.e("Sync Service", "Couldn't send location because user object didn't exist or was invalid");
                 }
                 //TODO syncInterval muss über die MapFunctionality funktionieren und nur noch sendLocation aufrufen!
