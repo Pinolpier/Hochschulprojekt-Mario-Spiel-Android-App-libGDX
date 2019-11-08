@@ -3,15 +3,20 @@ package de.hhn.aib.swlab.wise1920.group01.exercise2.view;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import org.osmdroid.config.Configuration;
+import org.osmdroid.events.MapListener;
+import org.osmdroid.events.ScrollEvent;
+import org.osmdroid.events.ZoomEvent;
 import org.osmdroid.tileprovider.tilesource.TileSourcePolicy;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.views.MapView;
@@ -34,6 +39,8 @@ public class MapsActivity extends AppCompatActivity {
         Context ctx = getApplicationContext();
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
         setContentView(R.layout.activity_maps);
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
         map = findViewById(R.id.map);
         controller = new MapFunctionality(map, getIntent().getExtras(), this);
         map.setTileSource(new XYTileSource("Mapnik",
@@ -45,7 +52,6 @@ public class MapsActivity extends AppCompatActivity {
                                 | TileSourcePolicy.FLAG_USER_AGENT_MEANINGFUL
                                 | TileSourcePolicy.FLAG_USER_AGENT_NORMALIZED
                 )));
-
         map.setMultiTouchControls(true);
         map.getOverlays().clear();
         map.invalidate();
