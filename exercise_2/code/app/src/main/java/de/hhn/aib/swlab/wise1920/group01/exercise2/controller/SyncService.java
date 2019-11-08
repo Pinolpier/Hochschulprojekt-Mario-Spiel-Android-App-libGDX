@@ -62,7 +62,7 @@ public class SyncService {
             @Override
             public void onTick(long millisUntilFinished) {
                 if (!sendLocation(user.getPosition())) {
-                    Toast.makeText(context, R.string.sendLocationFailed, Toast.LENGTH_LONG);
+                    Toast.makeText(context, R.string.sendLocationFailed, Toast.LENGTH_LONG).show();
                     Log.e("Sync Service", "Couldn't send location because user object didn't exist or was invalid");
                 }
                 //TODO syncInterval muss über die MapFunctionality funktionieren und nur noch sendLocation aufrufen!
@@ -94,25 +94,6 @@ public class SyncService {
     public String getPassword() {
         return user.getPassword();
     }
-
-//  This method is not supported by the webservice and can't be used.
-//
-//    /**
-//     * Used to change the logged in user's username
-//     * If no user is logged in nothing will be done and {code false} will be returned.
-//     *
-//     * @param newUsername the new username to send to the server
-//     * @return {code true}, if a user is logged in and the operation was successful; {code false} if no users is logged in
-//     */
-//    @Deprecated
-//    public boolean changeUsername(String newUsername) {
-//        if (user == null || user.getId() == null || user.getJwtAuthorization() == null) {
-//            return false;
-//        }
-//        user.setUsername(newUsername);
-//        update();
-//        return true;
-//    }
 
     /**
      * Used to change the logged in user's password
@@ -356,6 +337,7 @@ public class SyncService {
                     for (TimestampedPosition i : usersAround) {
                         locationHistoryList.add(i);
                     }
+                    Log.wtf("Sync Service: ", ""+locationHistoryList.size());
                     locationHistoryReceivedInterface.onSuccess(locationHistoryList);
                 }
             }

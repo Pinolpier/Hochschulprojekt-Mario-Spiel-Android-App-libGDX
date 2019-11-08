@@ -19,6 +19,9 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+/**
+ * This class represents the search for fuelprices with his own retrofit adapter
+ */
 public class FuelSearchPricesService {
     private Retrofit retrofit;
     private FuelAPI api;
