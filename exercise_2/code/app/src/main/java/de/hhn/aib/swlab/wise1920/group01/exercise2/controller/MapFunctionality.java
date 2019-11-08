@@ -2,12 +2,16 @@ package de.hhn.aib.swlab.wise1920.group01.exercise2.controller;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.widget.Toast;
+
+import androidx.core.content.ContextCompat;
+import androidx.core.content.PermissionChecker;
+import androidx.preference.PreferenceManager;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -30,10 +34,7 @@ import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.PolyOverlayWithIW;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
-import androidx.core.content.ContextCompat;
-import androidx.core.content.PermissionChecker;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.R;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.controller.extensions.FuelSearchPricesService;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.controller.extensions.PoiSearchService;
@@ -66,6 +67,8 @@ public class MapFunctionality {
     private Boolean poiSearch = false;
     private Marker marker;
     private ArrayList<GeoPoint> track;
+    private SharedPreferences prefs;
+    private SharedPreferences.OnSharedPreferenceChangeListener listener;
 
     public MapFunctionality(final MapView map, Bundle bundle, final Context context) {
         this.context = context;
@@ -118,6 +121,15 @@ public class MapFunctionality {
                 return false;
             }
         },1000));
+
+        prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+            @Override
+            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+                Log.e("MapFunctionality", "listenerFired");
+            }
+        };
+        prefs.registerOnSharedPreferenceChangeListener(listener);
     }
 
     private void getUsersAround() {
