@@ -256,6 +256,8 @@ public class MapFunctionality {
     {
         GeoPoint centerPoint = new GeoPoint(latitude,longitude);
         mapController.setCenter(centerPoint);
+        poiSearch = true;
+        getPoi();
         //requestLocationHistory();
         map.invalidate();
     }

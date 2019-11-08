@@ -62,6 +62,7 @@ public class PoiSearchService {
             @Override
             public void onResponse(Call<PoiElementsDummy> call, Response<PoiElementsDummy> response) {
                 ArrayList<MapObject> searchResultList = new ArrayList();
+                if(response.body()!=null){
                 if(response.body().getPoiDummyArray()!=null) {
                     searchResults = response.body().getPoiDummyArray();
                     if (searchResults != null) {
@@ -113,7 +114,7 @@ public class PoiSearchService {
                         Toast.makeText(context,R.string.noPoisFound, Toast.LENGTH_SHORT).show();
                     }
                 }
-            }
+            }}
             @Override
             public void onFailure(Call<PoiElementsDummy> call, Throwable t) {
                 Toast.makeText(context,R.string.noPoisFound, Toast.LENGTH_SHORT).show();
