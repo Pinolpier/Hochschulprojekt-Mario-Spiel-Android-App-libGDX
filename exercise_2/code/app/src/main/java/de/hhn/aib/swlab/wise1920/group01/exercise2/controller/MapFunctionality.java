@@ -19,6 +19,7 @@ import com.nabinbhandari.android.permissions.Permissions;
 import org.osmdroid.bonuspack.routing.OSRMRoadManager;
 import org.osmdroid.bonuspack.routing.Road;
 import org.osmdroid.bonuspack.routing.RoadManager;
+import org.osmdroid.events.DelayedMapListener;
 import org.osmdroid.events.MapListener;
 import org.osmdroid.events.ScrollEvent;
 import org.osmdroid.events.ZoomEvent;
@@ -104,7 +105,7 @@ public class MapFunctionality {
         };
         timer.start();
 
-        map.addMapListener(new MapListener() {
+        map.addMapListener(new DelayedMapListener(new MapListener() {
             @Override
             public boolean onScroll(ScrollEvent event) {
                 getPoi();
@@ -116,7 +117,7 @@ public class MapFunctionality {
                 getPoi();
                 return false;
             }
-        });
+        },1000));
     }
 
     private void getUsersAround() {
