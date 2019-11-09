@@ -50,7 +50,7 @@ import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.extensions.SearchR
 
 import static android.os.Looper.getMainLooper;
 
-public class MapFunctionality<privaet> {
+public class MapFunctionality {
     private FusedLocationProviderClient fusedLocationClient;
     private LocationRequest locationRequest;
     private MapView map;
@@ -152,7 +152,7 @@ public class MapFunctionality<privaet> {
 
     private void getUsersAround() {
         //TODO Set the correct radius or use an appropriate constant value that should be defined as constant.
-        sync.getUsersAround(10, new UsersAroundReceivedInterface() {
+        sync.getUsersAround(getLocHistoryTimeframe(), new UsersAroundReceivedInterface() {
             @Override
             public void onSuccess(ArrayList<MapObject> usersAround) {
                 if(usersAround.size()>=1) {
@@ -188,16 +188,16 @@ public class MapFunctionality<privaet> {
                 if(locationHistory.size()>=1) {
                     for (int counter = 0; counter < locationHistory.size(); counter++) {
                         //GeoPoint searchPoint = new GeoPoint(searchResults[counter].getLatitude(), searchResults[counter].getLongitude());
-                        Marker searchMarker = new Marker(map);
-                        searchMarker.setIcon(context.getDrawable(R.drawable.ic_locationhistory_24dp));
+                        Marker locationHistoryMarker = new Marker(map);
+                        locationHistoryMarker.setIcon(context.getDrawable(R.drawable.ic_locationhistory_24dp));
                         GeoPoint gpt = new GeoPoint(locationHistory.get(counter).getLatitude(),locationHistory.get(counter).getLongitude());
                         track.add(gpt);
 
-                        searchMarker.setPosition(gpt);
-                        searchMarker.setAnchor(0.5f, 0.5f);
-                        searchMarker.setTitle(locationHistory.get(counter).getDateString());
-                        map.getOverlays().add(searchMarker);
-                        searchMarkerArrayList.add(searchMarker);
+                        locationHistoryMarker.setPosition(gpt);
+                        locationHistoryMarker.setAnchor(0.5f, 0.5f);
+                        locationHistoryMarker.setTitle(locationHistory.get(counter).getDateString());
+                        map.getOverlays().add(locationHistoryMarker);
+                        timeStampedMarkerList.add(locationHistoryMarker);
 
                     }
                     RoadManager roadManager = new OSRMRoadManager(context);
@@ -323,7 +323,7 @@ public class MapFunctionality<privaet> {
         mapController.setCenter(centerPoint);
         poiSearch = true;
         getPoi();
-        //requestLocationHistory();
+        getLocationHistory();
         map.invalidate();
     }
 
@@ -410,7 +410,7 @@ public class MapFunctionality<privaet> {
         if (b) {
             getLocationHistory();
         } else {
-            //TODO ?
+            deleteSearchMarkers(timeStampedMarkerList);
         }
     }
 }
