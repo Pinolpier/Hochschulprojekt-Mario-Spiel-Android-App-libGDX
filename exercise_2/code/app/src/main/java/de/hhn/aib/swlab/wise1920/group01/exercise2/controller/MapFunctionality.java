@@ -50,7 +50,7 @@ import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.extensions.SearchR
 
 import static android.os.Looper.getMainLooper;
 
-public class MapFunctionality {
+public class MapFunctionality<privaet> {
     private FusedLocationProviderClient fusedLocationClient;
     private LocationRequest locationRequest;
     private MapView map;
@@ -63,7 +63,7 @@ public class MapFunctionality {
     private MapController mapController;
     private CountDownTimer timer;
     private long syncInterval = 60000;
-    private Boolean tankSearch = true;
+    private Boolean tankSearch = false;
     private Boolean poiSearch = false;
     private Marker marker;
     private ArrayList<GeoPoint> track;
@@ -130,18 +130,21 @@ public class MapFunctionality {
                 switch (key) {
                     case "switch_poi":
                         Log.d("cngPOI", "" + sharedPreferences.getBoolean(key, false));
+                        switchPoi(sharedPreferences.getBoolean("switch_poi", false));
                         break;
                     case "switch_fuelprice":
                         Log.d("cngFuelprice", "" + sharedPreferences.getBoolean(key, false));
+                        switchFuelprice(sharedPreferences.getBoolean(key, false));
                         break;
                     case "switch_locationhistory":
                         Log.d("cngLocHistory", "" + sharedPreferences.getBoolean(key, false));
+                        switchLocHisory(sharedPreferences.getBoolean(key, false));
                         break;
                     case "list_locationhistorytimeframe":
                         Log.d("cngLocHistoryTimeFrame", sharedPreferences.getString(key, "604800"));
+                        //TODO locHistoryTimeframe
                         break;
                 }
-
             }
         };
         prefs.registerOnSharedPreferenceChangeListener(listener);
@@ -379,5 +382,35 @@ public class MapFunctionality {
 
     public int getLocHistoryTimeframe() {
         return Integer.parseInt(prefs.getString("list_locationhistorytimeframe", "604800"));
+    }
+
+    private void switchPoi(Boolean b) {
+        if (b) {
+            poiSearch = true;
+            getPoi();
+        } else {
+            poiSearch = false;
+            getPoi();
+            deleteSearchMarkers(poiMarkerList);
+        }
+    }
+
+    private void switchFuelprice(Boolean b) {
+        if (b) {
+            tankSearch = true;
+            getFuelPrices(new Position(latitude, longitude));
+        } else {
+            tankSearch = false;
+            getFuelPrices(new Position(latitude, longitude));
+            deleteSearchMarkers(fuelMarkerList);
+        }
+    }
+
+    private void switchLocHisory(Boolean b) {
+        if (b) {
+            getLocationHistory();
+        } else {
+            //TODO ?
+        }
     }
 }

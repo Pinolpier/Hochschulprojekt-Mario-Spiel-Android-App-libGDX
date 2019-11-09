@@ -61,13 +61,16 @@ public class SyncService {
                 switch (key) {
                     case "list_radius":
                         Log.d("cngRadius", sharedPreferences.getString(key, "-1"));
+                        changePrivacyRadius(Double.valueOf(sharedPreferences.getString(key, "-1")));
                         break;
                     case "list_interval":
                         Log.d("cngInterval", sharedPreferences.getString(key, "1800"));
+                        setSyncInterval(Long.parseLong(sharedPreferences.getString(key, "1800")));
                         break;
                     case "text_newpassword":
                         if (!sharedPreferences.getString(key, "").isEmpty()) {
                             Log.d("cngPassword", sharedPreferences.getString(key, ""));
+                            changePassword(sharedPreferences.getString(key, ""));
                         } else {
                             Toast.makeText(context, "Passwort darf nicht leer sein, bitte ein gültiges Passwort eingeben", Toast.LENGTH_LONG).show();
                         }
@@ -76,6 +79,7 @@ public class SyncService {
             }
         };
         prefs.registerOnSharedPreferenceChangeListener(listener);
+        setPasswordField(password);
     }
 
     public long getSyncInterval() {
@@ -379,17 +383,17 @@ public class SyncService {
         });
     }
 
-    public int getInterval() {
-        return Integer.parseInt(prefs.getString("list_interval", "-1"));
+    private long getInterval() {
+        return Long.parseLong(prefs.getString("list_interval", "-1"));
     }
 
-    public void setRadius(int radius) {
+    private void setRadius(int radius) {
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString("list_radius", String.valueOf(radius));
         editor.apply();
     }
 
-    public void setPasswordField(String password) {
+    private void setPasswordField(String password) {
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString("text_newpassword", password);
         editor.apply();
