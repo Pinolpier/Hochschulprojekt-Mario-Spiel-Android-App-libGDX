@@ -50,7 +50,7 @@ import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.extensions.SearchR
 
 import static android.os.Looper.getMainLooper;
 
-public class MapFunctionality {
+public class MapFunctionality<privaet> {
     private FusedLocationProviderClient fusedLocationClient;
     private LocationRequest locationRequest;
     private MapView map;
@@ -152,7 +152,7 @@ public class MapFunctionality {
 
     private void getUsersAround() {
         //TODO Set the correct radius or use an appropriate constant value that should be defined as constant.
-        sync.getUsersAround(getLocHistoryTimeframe(), new UsersAroundReceivedInterface() {
+        sync.getUsersAround(10, new UsersAroundReceivedInterface() {
             @Override
             public void onSuccess(ArrayList<MapObject> usersAround) {
                 if(usersAround.size()>=1) {
