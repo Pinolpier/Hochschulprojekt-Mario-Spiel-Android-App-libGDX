@@ -69,6 +69,7 @@ public class MapFunctionality {
     private ArrayList<GeoPoint> track;
     private SharedPreferences prefs;
     private SharedPreferences.OnSharedPreferenceChangeListener listener;
+    private PolyOverlayWithIW roadOverlay;
 
     public MapFunctionality(final MapView map, Bundle bundle, final Context context) {
         this.context = context;
@@ -185,7 +186,7 @@ public class MapFunctionality {
                     RoadManager roadManager = new OSRMRoadManager(context);
                     roadManager.addRequestOption("routeType=pedestrian");
                     Road road = roadManager.getRoad(track);
-                    PolyOverlayWithIW roadOverlay = RoadManager.buildRoadOverlay(road);
+                    roadOverlay = RoadManager.buildRoadOverlay(road);
                     roadOverlay.getOutlinePaint().setColor(Color.GRAY);
                     roadOverlay.getOutlinePaint().setStrokeWidth(5);
                     map.getOverlays().add(roadOverlay);
@@ -297,6 +298,7 @@ public class MapFunctionality {
             }
             markers.clear();
         }
+        map.getOverlays().remove(roadOverlay);
     }
 
     public void setCenter()
