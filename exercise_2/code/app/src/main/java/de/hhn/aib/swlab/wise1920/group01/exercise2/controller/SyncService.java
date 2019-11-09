@@ -1,9 +1,12 @@
 package de.hhn.aib.swlab.wise1920.group01.exercise2.controller;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.CountDownTimer;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.preference.PreferenceManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,8 +34,10 @@ public class SyncService {
     private User user;
     private CountDownTimer timer;
     private long syncInterval;
+    private SharedPreferences prefs;
+    private SharedPreferences.OnSharedPreferenceChangeListener listener;
 
-    public SyncService(Context context, String jwt, String id, String username, String description, String password, Double privacy) {
+    public SyncService(final Context context, String jwt, String id, String username, String description, String password, Double privacy) {
         this.context = context;
         user = new User(username, password);
         user.setJwtAuthorization(jwt);
@@ -47,6 +52,30 @@ public class SyncService {
         api = retrofit.create(UserAPI.class);
         //TODO syncInterval aus den Settings bekommen und dementsprechend setzten!
         setSyncInterval(60000L); //Standardwert Sync alle 5 Minuten bis Verknüpfung mit Settings
+
+        prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+            @Override
+            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+                Log.d("SyncService", "listenerFired");
+                switch (key) {
+                    case "list_radius":
+                        Log.d("cngRadius", sharedPreferences.getString(key, "-1"));
+                        break;
+                    case "list_interval":
+                        Log.d("cngInterval", sharedPreferences.getString(key, "1800"));
+                        break;
+                    case "text_newpassword":
+                        if (!sharedPreferences.getString(key, "").isEmpty()) {
+                            Log.d("cngPassword", sharedPreferences.getString(key, ""));
+                        } else {
+                            Toast.makeText(context, "Passwort darf nicht leer sein, bitte ein gültiges Passwort eingeben", Toast.LENGTH_LONG).show();
+                        }
+                        break;
+                }
+            }
+        };
+        prefs.registerOnSharedPreferenceChangeListener(listener);
     }
 
     public long getSyncInterval() {
@@ -348,5 +377,15 @@ public class SyncService {
                 locationHistoryReceivedInterface.onFailure();
             }
         });
+    }
+
+    public int getInterval() {
+        return Integer.parseInt(prefs.getString("list_interval", "-1"));
+    }
+
+    public void setRadius(int radius) {
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("list_radius", String.valueOf(radius));
+        editor.apply();
     }
 }
