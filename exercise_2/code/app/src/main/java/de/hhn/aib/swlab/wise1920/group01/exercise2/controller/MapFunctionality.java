@@ -126,7 +126,22 @@ public class MapFunctionality {
         listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
             @Override
             public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-                Log.e("MapFunctionality", "listenerFired");
+                Log.d("MapFunctionality", "listenerFired");
+                switch (key) {
+                    case "switch_poi":
+                        Log.d("cngPOI", "" + sharedPreferences.getBoolean(key, false));
+                        break;
+                    case "switch_fuelprice":
+                        Log.d("cngFuelprice", "" + sharedPreferences.getBoolean(key, false));
+                        break;
+                    case "switch_locationhistory":
+                        Log.d("cngLocHistory", "" + sharedPreferences.getBoolean(key, false));
+                        break;
+                    case "list_locationhistorytimeframe":
+                        Log.d("cngLocHistoryTimeFrame", sharedPreferences.getString(key, "604800"));
+                        break;
+                }
+
             }
         };
         prefs.registerOnSharedPreferenceChangeListener(listener);
@@ -360,5 +375,9 @@ public class MapFunctionality {
         marker.setAnchor(0.5f,0.5f);
         map.getOverlays().add(marker);
         map.invalidate();
+    }
+
+    public int getLocHistoryTimeframe() {
+        return Integer.parseInt(prefs.getString("list_locationhistorytimeframe", "604800"));
     }
 }
