@@ -388,4 +388,10 @@ public class SyncService {
         editor.putString("list_radius", String.valueOf(radius));
         editor.apply();
     }
+
+    public void setPasswordField(String password) {
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("text_newpassword", password);
+        editor.apply();
+    }
 }
