@@ -95,9 +95,6 @@ public class MapFunctionality<privaet> {
                     if(tankSearch){
                         getFuelPrices(new Position(latitude,longitude));
                     }
-                    if(poiSearch) {
-                        getPoi();
-                    }
                     getUsersAround();
                 }
 
@@ -252,6 +249,7 @@ public class MapFunctionality<privaet> {
 
     private void getFuelPrices(Position position) {
         deleteSearchMarkers(fuelMarkerList);
+        if(tankSearch){
         fuelService.getFuelPrices(position.getLatitude(), position.getLongitude(), new FuelPricesReceivedInterface() {
             @Override
             public void onSuccess(ArrayList<MapObject> fuelPrices) {
@@ -277,6 +275,7 @@ public class MapFunctionality<privaet> {
                 Toast.makeText(context,R.string.onFailureFuelSearch, Toast.LENGTH_LONG).show();
             }
         });
+        }
     }
 
     public void search(String searchTerm) {
@@ -295,6 +294,7 @@ public class MapFunctionality<privaet> {
                         map.getOverlays().add(searchMarker);
                         searchMarkerArrayList.add(searchMarker);
                     }
+                    mapController.setCenter(new GeoPoint(searchResultsList.get(0).getLatitude(),searchResultsList.get(0).getLongitude()));
                     map.invalidate();
                 }
                 else
@@ -322,7 +322,6 @@ public class MapFunctionality<privaet> {
         GeoPoint centerPoint = new GeoPoint(latitude,longitude);
         mapController.setCenter(centerPoint);
         poiSearch = true;
-        getPoi();
         getLocationHistory();
         map.invalidate();
     }
@@ -390,7 +389,6 @@ public class MapFunctionality<privaet> {
             getPoi();
         } else {
             poiSearch = false;
-            getPoi();
             deleteSearchMarkers(poiMarkerList);
         }
     }
@@ -401,7 +399,6 @@ public class MapFunctionality<privaet> {
             getFuelPrices(new Position(latitude, longitude));
         } else {
             tankSearch = false;
-            getFuelPrices(new Position(latitude, longitude));
             deleteSearchMarkers(fuelMarkerList);
         }
     }
