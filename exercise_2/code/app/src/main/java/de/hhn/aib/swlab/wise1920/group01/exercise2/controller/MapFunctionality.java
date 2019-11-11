@@ -383,7 +383,7 @@ public class MapFunctionality<privaet> {
     }
 
     private Long getLocHistoryTimeframe() {
-        return Long.valueOf(prefs.getString("list_locationhistorytimeframe", "86400000"));
+        return Long.valueOf(prefs.getString("list_locationhistorytimeframe", "604800000"));
     }
 
     private void switchPoi(Boolean b) {
