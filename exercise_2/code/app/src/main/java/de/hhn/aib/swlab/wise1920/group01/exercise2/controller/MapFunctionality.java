@@ -58,7 +58,7 @@ public class MapFunctionality<privaet> {
     private SyncService sync;
     private FuelSearchPricesService fuelService;
     private SearchService searchService;
-    private ArrayList<Marker> searchMarkerArrayList, timeStampedMarkerList,fuelMarkerList, poiMarkerList;
+    private ArrayList<Marker> searchMarkerArrayList, timeStampedMarkerList,fuelMarkerList, poiMarkerList,usersAroundMarker;
     private final Context context;
     private double latitude, longitude;
     private MapController mapController;
@@ -81,7 +81,7 @@ public class MapFunctionality<privaet> {
         fuelService = new FuelSearchPricesService(context);
         searchService = new SearchService();
         searchMarkerArrayList = new ArrayList<>();
-        timeStampedMarkerList = new ArrayList<>(); fuelMarkerList = new ArrayList<>(); poiMarkerList = new ArrayList<>();
+        timeStampedMarkerList = new ArrayList<>(); fuelMarkerList = new ArrayList<>(); poiMarkerList = new ArrayList<>(); usersAroundMarker = new ArrayList<>();
         track = new ArrayList<>();
 
         mapController = (MapController) map.getController();
@@ -142,7 +142,7 @@ public class MapFunctionality<privaet> {
                         break;
                     case "list_locationhistorytimeframe":
                         Log.d("cngLocHistoryTimeFrame", sharedPreferences.getString(key, "604800"));
-                        //TODO locHistoryTimeframe
+                        getLocationHistory();
                         break;
                 }
             }
@@ -153,7 +153,7 @@ public class MapFunctionality<privaet> {
     }
 
     private void getUsersAround() {
-        //TODO Set the correct radius or use an appropriate constant value that should be defined as constant.
+        deleteSearchMarkers(usersAroundMarker);
         sync.getUsersAround(10, new UsersAroundReceivedInterface() {
             @Override
             public void onSuccess(ArrayList<MapObject> usersAround) {
@@ -166,7 +166,7 @@ public class MapFunctionality<privaet> {
                         searchMarker.setTitle(usersAround.get(counter).getLabel());
                         searchMarker.setSnippet(usersAround.get(counter).getDescription());
                         map.getOverlays().add(searchMarker);
-                        searchMarkerArrayList.add(searchMarker);
+                        usersAroundMarker.add(searchMarker);
                     }
                     map.invalidate();
                 }
@@ -181,7 +181,6 @@ public class MapFunctionality<privaet> {
     }
 
     private void getLocationHistory() {
-        //TODO Set the earliest timestamp in milliseconds unix otherwise 1st january 2010 will be used.
         deleteSearchMarkers(timeStampedMarkerList);
         if (historyBoolean) {
             Calendar calendar = Calendar.getInstance();
@@ -192,7 +191,6 @@ public class MapFunctionality<privaet> {
                     Log.d("MapsActivity", "requestLocationHistory has been called. Length of the array arg is: " + locationHistory.size());
                     if (locationHistory.size() >= 1) {
                         for (int counter = 0; counter < locationHistory.size(); counter++) {
-                            //GeoPoint searchPoint = new GeoPoint(searchResults[counter].getLatitude(), searchResults[counter].getLongitude());
                             Marker locationHistoryMarker = new Marker(map);
                             locationHistoryMarker.setIcon(context.getDrawable(R.drawable.ic_locationhistory_24dp));
                             GeoPoint gpt = new GeoPoint(locationHistory.get(counter).getLatitude(), locationHistory.get(counter).getLongitude());
@@ -328,8 +326,7 @@ public class MapFunctionality<privaet> {
 
     public void setCenter()
     {
-        GeoPoint centerPoint = new GeoPoint(latitude,longitude);
-        mapController.setCenter(centerPoint);
+        mapController.setCenter(new GeoPoint(latitude,longitude));
         map.invalidate();
     }
 
@@ -366,7 +363,7 @@ public class MapFunctionality<privaet> {
                     super.onLocationResult(locationResult);
                     latitude = locationResult.getLastLocation().getLatitude();
                     longitude = locationResult.getLastLocation().getLongitude();
-                    //sync.sendLocation(latitude,longitude);
+                    sync.sendLocation(latitude,longitude);
                     setCurrentPosition();
                 }
             }, getMainLooper());
