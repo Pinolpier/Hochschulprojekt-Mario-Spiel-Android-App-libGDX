@@ -34,6 +34,7 @@ import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.PolyOverlayWithIW;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import de.hhn.aib.swlab.wise1920.group01.exercise2.R;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.controller.extensions.FuelSearchPricesService;
@@ -65,6 +66,7 @@ public class MapFunctionality<privaet> {
     private long syncInterval = 60000;
     private Boolean tankSearch = false;
     private Boolean poiSearch = false;
+    private Boolean historyBoolean = false;
     private Marker marker;
     private ArrayList<GeoPoint> track;
     private SharedPreferences prefs;
@@ -181,44 +183,47 @@ public class MapFunctionality<privaet> {
     private void getLocationHistory() {
         //TODO Set the earliest timestamp in milliseconds unix otherwise 1st january 2010 will be used.
         deleteSearchMarkers(timeStampedMarkerList);
-        sync.getLocationHistory(null, new LocationHistoryReceivedInterface() {
-            @Override
-            public void onSuccess(ArrayList<TimestampedPosition> locationHistory) {
-                Log.d("MapsActivity", "requestLocationHistory has been called. Length of the array arg is: " + locationHistory.size());
-                if(locationHistory.size()>=1) {
-                    for (int counter = 0; counter < locationHistory.size(); counter++) {
-                        //GeoPoint searchPoint = new GeoPoint(searchResults[counter].getLatitude(), searchResults[counter].getLongitude());
-                        Marker locationHistoryMarker = new Marker(map);
-                        locationHistoryMarker.setIcon(context.getDrawable(R.drawable.ic_locationhistory_24dp));
-                        GeoPoint gpt = new GeoPoint(locationHistory.get(counter).getLatitude(),locationHistory.get(counter).getLongitude());
-                        track.add(gpt);
+        if (historyBoolean) {
+            Calendar calendar = Calendar.getInstance();
+            Long time = calendar.getTimeInMillis() -getLocHistoryTimeframe();
+            sync.getLocationHistory(time, new LocationHistoryReceivedInterface() {
+                @Override
+                public void onSuccess(ArrayList<TimestampedPosition> locationHistory) {
+                    Log.d("MapsActivity", "requestLocationHistory has been called. Length of the array arg is: " + locationHistory.size());
+                    if (locationHistory.size() >= 1) {
+                        for (int counter = 0; counter < locationHistory.size(); counter++) {
+                            //GeoPoint searchPoint = new GeoPoint(searchResults[counter].getLatitude(), searchResults[counter].getLongitude());
+                            Marker locationHistoryMarker = new Marker(map);
+                            locationHistoryMarker.setIcon(context.getDrawable(R.drawable.ic_locationhistory_24dp));
+                            GeoPoint gpt = new GeoPoint(locationHistory.get(counter).getLatitude(), locationHistory.get(counter).getLongitude());
+                            track.add(gpt);
 
-                        locationHistoryMarker.setPosition(gpt);
-                        locationHistoryMarker.setAnchor(0.5f, 0.5f);
-                        locationHistoryMarker.setTitle(locationHistory.get(counter).getDateString());
-                        map.getOverlays().add(locationHistoryMarker);
-                        timeStampedMarkerList.add(locationHistoryMarker);
+                            locationHistoryMarker.setPosition(gpt);
+                            locationHistoryMarker.setAnchor(0.5f, 0.5f);
+                            locationHistoryMarker.setTitle(locationHistory.get(counter).getDateString());
+                            map.getOverlays().add(locationHistoryMarker);
+                            timeStampedMarkerList.add(locationHistoryMarker);
 
-                    }
-                    RoadManager roadManager = new OSRMRoadManager(context);
-                    roadManager.addRequestOption("routeType=pedestrian");
-                    Road road = roadManager.getRoad(track);
-                    roadOverlay = RoadManager.buildRoadOverlay(road);
-                    roadOverlay.getOutlinePaint().setColor(Color.GRAY);
-                    roadOverlay.getOutlinePaint().setStrokeWidth(5);
-                    map.getOverlays().add(roadOverlay);
-                    map.invalidate();
+                        }
+                        RoadManager roadManager = new OSRMRoadManager(context);
+                        roadManager.addRequestOption("routeType=pedestrian");
+                        Road road = roadManager.getRoad(track);
+                        roadOverlay = RoadManager.buildRoadOverlay(road);
+                        roadOverlay.getOutlinePaint().setColor(Color.GRAY);
+                        roadOverlay.getOutlinePaint().setStrokeWidth(5);
+                        map.getOverlays().add(roadOverlay);
+                        map.invalidate();
+                    } else
+                        Toast.makeText(context, R.string.noLocationHistory, Toast.LENGTH_SHORT).show();
                 }
-                else
-                    Toast.makeText(context,R.string.noLocationHistory,Toast.LENGTH_SHORT).show();
-            }
-            @Override
-            public void onFailure() {
-            Toast.makeText(context,R.string.locationHistoryFailure, Toast.LENGTH_LONG).show();
-            }
-        });
-    }
 
+                @Override
+                public void onFailure() {
+                    Toast.makeText(context, R.string.locationHistoryFailure, Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+    }
     public void getPoi(){
         if(poiSearch) {
             deleteSearchMarkers(poiMarkerList);
@@ -325,8 +330,6 @@ public class MapFunctionality<privaet> {
     {
         GeoPoint centerPoint = new GeoPoint(latitude,longitude);
         mapController.setCenter(centerPoint);
-        poiSearch = true;
-        getLocationHistory();
         map.invalidate();
     }
 
@@ -409,8 +412,10 @@ public class MapFunctionality<privaet> {
 
     private void switchLocHisory(Boolean b) {
         if (b) {
+            historyBoolean = true;
             getLocationHistory();
         } else {
+            historyBoolean = false;
             deleteSearchMarkers(timeStampedMarkerList);
         }
     }
