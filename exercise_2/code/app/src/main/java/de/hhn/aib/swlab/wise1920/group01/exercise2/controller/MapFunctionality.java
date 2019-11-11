@@ -148,6 +148,8 @@ public class MapFunctionality<privaet> {
             }
         };
         prefs.registerOnSharedPreferenceChangeListener(listener);
+
+        Log.e("timeFrame", "" + getLocHistoryTimeframe());
     }
 
     private void getUsersAround() {
@@ -380,8 +382,8 @@ public class MapFunctionality<privaet> {
         map.invalidate();
     }
 
-    public int getLocHistoryTimeframe() {
-        return Integer.parseInt(prefs.getString("list_locationhistorytimeframe", "604800"));
+    private Long getLocHistoryTimeframe() {
+        return Long.valueOf(prefs.getString("list_locationhistorytimeframe", "86400000"));
     }
 
     private void switchPoi(Boolean b) {
