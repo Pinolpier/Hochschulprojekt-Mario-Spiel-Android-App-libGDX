@@ -49,10 +49,10 @@
         <item>1 Woche</item>
         <item>1 Monat</item>
     </string-array>
-    //Zeit in Sekunden
+    //Zeit in Millisekunden
     <string-array name="locationhistory_values">
-        <item>86400</item>
-        <item>604800‬</item>
-        <item>2592000</item>
+        <item>86400000</item>
+        <item>604800000</item>
+        <item>2592000000</item>
     </string-array>
 </resources>
