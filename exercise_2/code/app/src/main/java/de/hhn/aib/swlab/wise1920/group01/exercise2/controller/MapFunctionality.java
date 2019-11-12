@@ -51,7 +51,7 @@ import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.extensions.SearchR
 
 import static android.os.Looper.getMainLooper;
 
-public class MapFunctionality<privaet> {
+public class MapFunctionality {
     private FusedLocationProviderClient fusedLocationClient;
     private LocationRequest locationRequest;
     private MapView map;
@@ -138,7 +138,7 @@ public class MapFunctionality<privaet> {
                         break;
                     case "switch_locationhistory":
                         Log.d("cngLocHistory", "" + sharedPreferences.getBoolean(key, false));
-                        switchLocHisory(sharedPreferences.getBoolean(key, false));
+                        switchLocHistory(sharedPreferences.getBoolean(key, false));
                         break;
                     case "list_locationhistorytimeframe":
                         Log.d("cngLocHistoryTimeFrame", sharedPreferences.getString(key, "604800"));
@@ -407,7 +407,7 @@ public class MapFunctionality<privaet> {
         }
     }
 
-    private void switchLocHisory(Boolean b) {
+    private void switchLocHistory(Boolean b) {
         if (b) {
             historyBoolean = true;
             getLocationHistory();
