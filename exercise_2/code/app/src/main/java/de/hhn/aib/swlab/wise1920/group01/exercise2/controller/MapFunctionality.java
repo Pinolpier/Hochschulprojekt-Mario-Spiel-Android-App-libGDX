@@ -64,7 +64,7 @@ public class MapFunctionality {
     private MapController mapController;
     private CountDownTimer timer;
     private long syncInterval = 60000;
-    private Boolean tankSearch = false;
+    private Boolean fuelSearch = false;
     private Boolean poiSearch = false;
     private Boolean historyBoolean = false;
     private Marker marker;
@@ -95,7 +95,7 @@ public class MapFunctionality {
         timer = new CountDownTimer(Long.MAX_VALUE, syncInterval) {
             @Override
             public void onTick(long millisUntilFinished) {
-                    if(tankSearch){
+                    if(fuelSearch){
                         getFuelPrices(new Position(latitude,longitude));
                     }
                     getUsersAround();
@@ -128,6 +128,10 @@ public class MapFunctionality {
             public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
                 Log.d("MapFunctionality", "listenerFired");
                 switch (key) {
+                    case "list_radius":
+                        Log.d("cngRadius", sharedPreferences.getString(key, "-1"));
+                        //TODO
+                        break;
                     case "switch_poi":
                         Log.d("cngPOI", "" + sharedPreferences.getBoolean(key, false));
                         switchPoi(sharedPreferences.getBoolean("switch_poi", false));
@@ -148,6 +152,10 @@ public class MapFunctionality {
             }
         };
         prefs.registerOnSharedPreferenceChangeListener(listener);
+
+        switchPoi(prefs.getBoolean("switch_poi",false));
+        switchFuelprice(prefs.getBoolean("switch_fuelprice",false));
+        switchLocHistory(prefs.getBoolean("switch_locationhistory",false));
 
         Log.e("timeFrame", "" + getLocHistoryTimeframe());
     }
@@ -182,6 +190,7 @@ public class MapFunctionality {
 
     private void getLocationHistory() {
         deleteSearchMarkers(timeStampedMarkerList);
+        deleteHistoryLines();
         if (historyBoolean) {
             Calendar calendar = Calendar.getInstance();
             Long time = calendar.getTimeInMillis() -getLocHistoryTimeframe();
@@ -255,7 +264,7 @@ public class MapFunctionality {
 
     private void getFuelPrices(Position position) {
         deleteSearchMarkers(fuelMarkerList);
-        if(tankSearch){
+        if(fuelSearch){
         fuelService.getFuelPrices(position.getLatitude(), position.getLongitude(), new FuelPricesReceivedInterface() {
             @Override
             public void onSuccess(ArrayList<MapObject> fuelPrices) {
@@ -314,6 +323,9 @@ public class MapFunctionality {
         });
     }
 
+    private void deleteHistoryLines(){
+        map.getOverlays().remove(roadOverlay);
+    }
     private void deleteSearchMarkers(ArrayList<Marker> markers){
         if(!markers.isEmpty()){
             for(Marker marker:markers){
@@ -321,7 +333,7 @@ public class MapFunctionality {
             }
             markers.clear();
         }
-        map.getOverlays().remove(roadOverlay);
+
     }
 
     public void setCenter()
@@ -399,10 +411,10 @@ public class MapFunctionality {
 
     private void switchFuelprice(Boolean b) {
         if (b) {
-            tankSearch = true;
+            fuelSearch = true;
             getFuelPrices(new Position(latitude, longitude));
         } else {
-            tankSearch = false;
+            fuelSearch = false;
             deleteSearchMarkers(fuelMarkerList);
         }
     }
@@ -414,6 +426,7 @@ public class MapFunctionality {
         } else {
             historyBoolean = false;
             deleteSearchMarkers(timeStampedMarkerList);
+            deleteHistoryLines();
         }
     }
 }
