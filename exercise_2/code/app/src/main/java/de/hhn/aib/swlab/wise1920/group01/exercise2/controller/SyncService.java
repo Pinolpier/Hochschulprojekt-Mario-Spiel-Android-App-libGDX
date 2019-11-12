@@ -84,8 +84,8 @@ public class SyncService {
         prefs.registerOnSharedPreferenceChangeListener(listener);
         setPasswordField(password);
         setDescField(description);
-        setRadius();
-        setInterval();
+        //setRadius();
+        //setInterval();
     }
 
     public long getSyncInterval() {
