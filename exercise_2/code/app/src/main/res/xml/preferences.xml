@@ -49,6 +49,12 @@
     <PreferenceCategory android:title="@string/settings_account">
 
         <EditTextPreference
+            android:defaultValue="Default value"
+            android:key="text_userdesc"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/userdescription" />
+        <EditTextPreference
             android:key="text_newpassword"
             android:selectAllOnFocus="true"
             android:singleLine="true"

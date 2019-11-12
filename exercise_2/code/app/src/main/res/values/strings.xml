@@ -20,6 +20,7 @@
     <string name="locationhistory_desc_summary">Lege das Zeitfenster für den Standortverlauf fest</string>
     <string name="locationhistory_duration">Zeitfenster</string>
     <string name="locationhistory">Standortverlauf</string>
+    <string name="userdescription">Eigene Beschreibung</string>
 
     <!-- Sync Service -->
     <string name="usernameNotAvailableToastMessage">Der Username ist schon vergeben, die Registrierung konnte nicht abgeschlossen werden, bitte einen anderen Namen wählen und erneut versuchen oder aber Einloggen!</string>
