@@ -85,6 +85,8 @@ public class SyncService {
         prefs.registerOnSharedPreferenceChangeListener(listener);
         setPasswordField(password);
         setDescField(description);
+        setRadius();
+        setInterval();
     }
 
     public long getSyncInterval() {
@@ -407,6 +409,18 @@ public class SyncService {
     private void setDescField(String description) {
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString("text_userdesc", description);
+        editor.apply();
+    }
+
+    private void setRadius() {
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("list_radius", String.valueOf(getPrivacyRadius()));
+        editor.apply();
+    }
+
+    private void setInterval() {
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("list_radius", String.valueOf(getInterval()));
         editor.apply();
     }
 }
