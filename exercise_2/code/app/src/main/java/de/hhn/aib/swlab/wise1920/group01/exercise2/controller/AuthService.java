@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import de.hhn.aib.swlab.wise1920.group01.exercise2.R;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.LoginProcessedInterface;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.RegistrationProcessedInterface;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.User;
@@ -58,14 +59,14 @@ public class AuthService {
                     Log.wtf("Sync Service: ", "An unexpected HTTP Response Code indicating an error has been returned by the webservice: Response Code is " + response.code());
                 }
                 if (response.code() == 409) {
-                    Toast.makeText(context, "@string/usernameNotAvailableToastMessage", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, R.string.usernameNotAvailableToastMessage, Toast.LENGTH_LONG).show();
                     Log.d("Sync Service: ", "Username was not available. Couldn't complete registration.");
                 }
                 if (response.isSuccessful() && response.code() != 200) {
                     Log.wtf("Sync Service: ", "An unexpected HTTP Response Code indicating successful registration has been returned by the webservice: Response Code is " + response.code());
                 }
                 if (response.code() == 200) {
-                    Toast.makeText(context, "@string/registrationSuccessfulToastMessage", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, R.string.registrationSuccessfulToastMessage, Toast.LENGTH_LONG).show();
                     registrationProcessedInterface.onSuccess(username, password);
                     return;
                 }
@@ -106,7 +107,7 @@ public class AuthService {
                     Log.wtf("Sync Service: ", "An unexpected HTTP Response Code indicating successful login has been returned by the webservice: Response Code is " + response.code());
                 }
                 if (response.code() == 200) {
-                    Toast.makeText(context, "@string/loginSuccessfulToastMessage", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.loginSuccessfulToastMessage, Toast.LENGTH_SHORT).show();
                     User respondedUser = response.body();
                     user.setId(respondedUser.getId());
                     if (!respondedUser.getUsername().equals(username)) {
