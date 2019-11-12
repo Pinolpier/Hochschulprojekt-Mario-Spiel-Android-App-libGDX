@@ -63,7 +63,6 @@ public class SyncService {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         api = retrofit.create(UserAPI.class);
-        setSyncInterval(getInterval()); //Standardwert Sync alle 5 Minuten bis Verknüpfung mit Settings
 
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
         listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
@@ -404,6 +403,9 @@ public class SyncService {
         });
     }
 
+    /**
+     * used internally to get a new JWT.
+     */
     private void getNewJWT() {
         final User sendUser = new User(user.getUsername(), user.getPassword());
         Call<User> call = api.login(sendUser);
