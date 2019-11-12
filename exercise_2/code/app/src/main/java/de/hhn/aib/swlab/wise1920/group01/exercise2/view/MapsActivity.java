@@ -73,6 +73,12 @@ public class MapsActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onDestroy() {
+        controller.onDestroy();
+        super.onDestroy();
+    }
+
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
         return true;

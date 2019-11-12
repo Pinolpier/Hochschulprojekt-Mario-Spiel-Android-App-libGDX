@@ -104,32 +104,4 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-//    public void testWebserviceImplementation() {
-//        final SyncService sync = new SyncService(this);
-//        sync.register("group01_dummy9", "group01_dummy9_password", null, new RegistrationProcessedInterface() {
-//
-//            @Override
-//            public void onSuccess(String username, String password) {
-//                sync.login(username, password, new LoginProcessedInterface() {
-//                    @Override
-//                    public void onSuccess() {
-//                        sync.sendLocation(0.0, 0.0);
-//                        sync.changePrivacyRadius(9999990);
-//                        sync.changeDescription("This is user9 description.");
-//                        Log.wtf("TestWebserviceImplementation: ", Arrays.toString(sync.getUsersAround(999999999)));
-//                    }
-//
-//                    @Override
-//                    public void onFailure() {
-//                        Log.wtf("Main Activity: ", "Login onFailure has been called");
-//                    }
-//                });
-//            }
-//
-//            @Override
-//            public void onFailure() {
-//                Log.wtf("Main Activity: ", "Register onFailure has been called");
-//            }
-//        });
-//    }
 }

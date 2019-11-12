@@ -67,6 +67,7 @@ public class MapFunctionality {
     private Boolean fuelSearch = false;
     private Boolean poiSearch = false;
     private Boolean historyBoolean = false;
+    private Boolean onDestroyBoolean = true;
     private Marker marker;
     private ArrayList<GeoPoint> track;
     private SharedPreferences prefs;
@@ -130,7 +131,7 @@ public class MapFunctionality {
                 switch (key) {
                     case "list_radius":
                         Log.d("cngRadius", sharedPreferences.getString(key, "-1"));
-                        //TODO
+                        getUsersAround();
                         break;
                     case "switch_poi":
                         Log.d("cngPOI", "" + sharedPreferences.getBoolean(key, false));
@@ -162,24 +163,25 @@ public class MapFunctionality {
 
     private void getUsersAround() {
         deleteSearchMarkers(usersAroundMarker);
-        sync.getUsersAround(10, new UsersAroundReceivedInterface() {
+        sync.getUsersAround(Integer.parseInt(prefs.getString("list_radius","-1")), new UsersAroundReceivedInterface() {
             @Override
             public void onSuccess(ArrayList<MapObject> usersAround) {
-                if(usersAround.size()>=1) {
-                    for (int counter = 0; counter < usersAround.size(); counter++) {
-                        Marker searchMarker = new Marker(map);
-                        searchMarker.setIcon(context.getDrawable(R.drawable.ic_location_usersaround_green_24dp));
-                        searchMarker.setPosition(usersAround.get(counter));
-                        searchMarker.setAnchor(0.5f, 0.5f);
-                        searchMarker.setTitle(usersAround.get(counter).getLabel());
-                        searchMarker.setSnippet(usersAround.get(counter).getDescription());
-                        map.getOverlays().add(searchMarker);
-                        usersAroundMarker.add(searchMarker);
-                    }
-                    map.invalidate();
+                if (onDestroyBoolean) {
+                    if (usersAround.size() >= 1) {
+                        for (int counter = 0; counter < usersAround.size(); counter++) {
+                            Marker searchMarker = new Marker(map);
+                            searchMarker.setIcon(context.getDrawable(R.drawable.ic_location_usersaround_green_24dp));
+                            searchMarker.setPosition(usersAround.get(counter));
+                            searchMarker.setAnchor(0.5f, 0.5f);
+                            searchMarker.setTitle(usersAround.get(counter).getLabel());
+                            searchMarker.setSnippet(usersAround.get(counter).getDescription());
+                            map.getOverlays().add(searchMarker);
+                            usersAroundMarker.add(searchMarker);
+                        }
+                        map.invalidate();
+                    } else
+                        Toast.makeText(context, R.string.noUsersAround, Toast.LENGTH_SHORT).show();
                 }
-                else
-                    Toast.makeText(context,R.string.noUsersAround,Toast.LENGTH_SHORT).show();
             }
             @Override
             public void onFailure() {
@@ -198,30 +200,32 @@ public class MapFunctionality {
                 @Override
                 public void onSuccess(ArrayList<TimestampedPosition> locationHistory) {
                     Log.d("MapsActivity", "requestLocationHistory has been called. Length of the array arg is: " + locationHistory.size());
-                    if (locationHistory.size() >= 1) {
-                        for (int counter = 0; counter < locationHistory.size(); counter++) {
-                            Marker locationHistoryMarker = new Marker(map);
-                            locationHistoryMarker.setIcon(context.getDrawable(R.drawable.ic_locationhistory_24dp));
-                            GeoPoint gpt = new GeoPoint(locationHistory.get(counter).getLatitude(), locationHistory.get(counter).getLongitude());
-                            track.add(gpt);
+                    if (onDestroyBoolean) {
+                        if (locationHistory.size() >= 1) {
+                            for (int counter = 0; counter < locationHistory.size(); counter++) {
+                                Marker locationHistoryMarker = new Marker(map);
+                                locationHistoryMarker.setIcon(context.getDrawable(R.drawable.ic_locationhistory_24dp));
+                                GeoPoint gpt = new GeoPoint(locationHistory.get(counter).getLatitude(), locationHistory.get(counter).getLongitude());
+                                track.add(gpt);
 
-                            locationHistoryMarker.setPosition(gpt);
-                            locationHistoryMarker.setAnchor(0.5f, 0.5f);
-                            locationHistoryMarker.setTitle(locationHistory.get(counter).getDateString());
-                            map.getOverlays().add(locationHistoryMarker);
-                            timeStampedMarkerList.add(locationHistoryMarker);
+                                locationHistoryMarker.setPosition(gpt);
+                                locationHistoryMarker.setAnchor(0.5f, 0.5f);
+                                locationHistoryMarker.setTitle(locationHistory.get(counter).getDateString());
+                                map.getOverlays().add(locationHistoryMarker);
+                                timeStampedMarkerList.add(locationHistoryMarker);
 
-                        }
-                        RoadManager roadManager = new OSRMRoadManager(context);
-                        roadManager.addRequestOption("routeType=pedestrian");
-                        Road road = roadManager.getRoad(track);
-                        roadOverlay = RoadManager.buildRoadOverlay(road);
-                        roadOverlay.getOutlinePaint().setColor(Color.rgb(255,165,0));
-                        roadOverlay.getOutlinePaint().setStrokeWidth(5);
-                        map.getOverlays().add(roadOverlay);
-                        map.invalidate();
-                    } else
-                        Toast.makeText(context, R.string.noLocationHistory, Toast.LENGTH_SHORT).show();
+                            }
+                            RoadManager roadManager = new OSRMRoadManager(context);
+                            roadManager.addRequestOption("routeType=pedestrian");
+                            Road road = roadManager.getRoad(track);
+                            roadOverlay = RoadManager.buildRoadOverlay(road);
+                            roadOverlay.getOutlinePaint().setColor(Color.rgb(255, 165, 0));
+                            roadOverlay.getOutlinePaint().setStrokeWidth(5);
+                            map.getOverlays().add(roadOverlay);
+                            map.invalidate();
+                        } else
+                            Toast.makeText(context, R.string.noLocationHistory, Toast.LENGTH_SHORT).show();
+                    }
                 }
 
                 @Override
@@ -238,20 +242,22 @@ public class MapFunctionality {
             poiSearchService.getPois(map.getBoundingBox(), new PoisReceivedInterface() {
                 @Override
                 public void onSuccess(ArrayList<MapObject> poiArrayList) {
-                    if (poiArrayList.size() >= 1) {
-                        for (int counter = 0; counter < poiArrayList.size(); counter++) {
-                            Marker poiMarker = new Marker(map);
-                            poiMarker.setIcon(context.getDrawable(R.drawable.ic_pin_drop_blue_24dp));
-                            poiMarker.setPosition(poiArrayList.get(counter));
-                            poiMarker.setAnchor(0.5f, 0.5f);
-                            poiMarker.setTitle(poiArrayList.get(counter).getLabel());
-                            poiMarker.setSnippet(poiArrayList.get(counter).getDescription());
-                            map.getOverlays().add(poiMarker);
-                            poiMarkerList.add(poiMarker);
-                        }
-                        map.invalidate();
-                    } else
-                        Toast.makeText(context, R.string.noPoisFound, Toast.LENGTH_SHORT).show();
+                    if (onDestroyBoolean) {
+                        if (poiArrayList.size() >= 1) {
+                            for (int counter = 0; counter < poiArrayList.size(); counter++) {
+                                Marker poiMarker = new Marker(map);
+                                poiMarker.setIcon(context.getDrawable(R.drawable.ic_pin_drop_blue_24dp));
+                                poiMarker.setPosition(poiArrayList.get(counter));
+                                poiMarker.setAnchor(0.5f, 0.5f);
+                                poiMarker.setTitle(poiArrayList.get(counter).getLabel());
+                                poiMarker.setSnippet(poiArrayList.get(counter).getDescription());
+                                map.getOverlays().add(poiMarker);
+                                poiMarkerList.add(poiMarker);
+                            }
+                            map.invalidate();
+                        } else
+                            Toast.makeText(context, R.string.noPoisFound, Toast.LENGTH_SHORT).show();
+                    }
                 }
 
                 @Override
@@ -268,21 +274,22 @@ public class MapFunctionality {
         fuelService.getFuelPrices(position.getLatitude(), position.getLongitude(), new FuelPricesReceivedInterface() {
             @Override
             public void onSuccess(ArrayList<MapObject> fuelPrices) {
-                if(fuelPrices.size()>=1) {
-                    for (int counter = 0; counter < fuelPrices.size(); counter++) {
-                        Marker fuelMarker = new Marker(map);
-                        fuelMarker.setIcon(context.getDrawable(R.drawable.ic_local_gas_station_red_24dp));
-                        fuelMarker.setPosition(fuelPrices.get(counter));
-                        fuelMarker.setAnchor(0.5f, 0.5f);
-                        fuelMarker.setTitle(fuelPrices.get(counter).getLabel());
-                        fuelMarker.setSnippet(fuelPrices.get(counter).getDescription());
-                        map.getOverlays().add(fuelMarker);
-                        fuelMarkerList.add(fuelMarker);
-                    }
-                    map.invalidate();
+                if (onDestroyBoolean) {
+                    if (fuelPrices.size() >= 1) {
+                        for (int counter = 0; counter < fuelPrices.size(); counter++) {
+                            Marker fuelMarker = new Marker(map);
+                            fuelMarker.setIcon(context.getDrawable(R.drawable.ic_local_gas_station_red_24dp));
+                            fuelMarker.setPosition(fuelPrices.get(counter));
+                            fuelMarker.setAnchor(0.5f, 0.5f);
+                            fuelMarker.setTitle(fuelPrices.get(counter).getLabel());
+                            fuelMarker.setSnippet(fuelPrices.get(counter).getDescription());
+                            map.getOverlays().add(fuelMarker);
+                            fuelMarkerList.add(fuelMarker);
+                        }
+                        map.invalidate();
+                    } else
+                        Toast.makeText(context, R.string.onFailureFuelSearch, Toast.LENGTH_SHORT).show();
                 }
-                else
-                    Toast.makeText(context,R.string.onFailureFuelSearch,Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -298,23 +305,25 @@ public class MapFunctionality {
         searchService.search(searchTerm, new SearchResultsReceivedInterface() {
             @Override
             public void onSuccess(ArrayList<MapObject> searchResultsList) {
-                if(searchResultsList.size()>=1) {
-                    for (int counter = 0; counter < searchResultsList.size(); counter++) {
-                        Marker searchMarker = new Marker(map);
-                        searchMarker.setIcon(context.getDrawable(R.drawable.ic_star_gold_24dp));
-                        searchMarker.setPosition(searchResultsList.get(counter));
-                        searchMarker.setAnchor(0.5f, 0.5f);
-                        searchMarker.setTitle(searchResultsList.get(counter).getLabel());
-                        searchMarker.setSnippet(searchResultsList.get(counter).getDescription());
-                        map.getOverlays().add(searchMarker);
-                        searchMarkerArrayList.add(searchMarker);
-                    }
-                    mapController.setCenter(new GeoPoint(searchResultsList.get(0).getLatitude(),searchResultsList.get(0).getLongitude()));
-                    map.invalidate();
+                if (onDestroyBoolean) {
+                    if (searchResultsList.size() >= 1) {
+                        for (int counter = 0; counter < searchResultsList.size(); counter++) {
+                            Marker searchMarker = new Marker(map);
+                            searchMarker.setIcon(context.getDrawable(R.drawable.ic_star_gold_24dp));
+                            searchMarker.setPosition(searchResultsList.get(counter));
+                            searchMarker.setAnchor(0.5f, 0.5f);
+                            searchMarker.setTitle(searchResultsList.get(counter).getLabel());
+                            searchMarker.setSnippet(searchResultsList.get(counter).getDescription());
+                            map.getOverlays().add(searchMarker);
+                            searchMarkerArrayList.add(searchMarker);
+                        }
+                        mapController.setCenter(new GeoPoint(searchResultsList.get(0).getLatitude(), searchResultsList.get(0).getLongitude()));
+                        map.invalidate();
+                    } else
+                        Toast.makeText(context, R.string.noSearchResults, Toast.LENGTH_SHORT).show();
                 }
-                else
-                    Toast.makeText(context,R.string.noSearchResults,Toast.LENGTH_SHORT).show();
             }
+
 
             @Override
             public void onFailure() {
@@ -428,5 +437,9 @@ public class MapFunctionality {
             deleteSearchMarkers(timeStampedMarkerList);
             deleteHistoryLines();
         }
+    }
+
+    public void onDestroy(){
+        onDestroyBoolean = false;
     }
 }
