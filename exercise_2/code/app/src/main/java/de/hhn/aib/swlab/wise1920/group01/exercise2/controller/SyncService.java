@@ -75,11 +75,15 @@ public class SyncService {
                             Toast.makeText(context, "Passwort darf nicht leer sein, bitte ein gültiges Passwort eingeben", Toast.LENGTH_LONG).show();
                         }
                         break;
+                    case "text_userdesc":
+                        Log.d("cngDesc", sharedPreferences.getString(key, ""));
+                        changeDescription(sharedPreferences.getString(key, ""));
                 }
             }
         };
         prefs.registerOnSharedPreferenceChangeListener(listener);
         setPasswordField(password);
+        setDescField(description);
     }
 
     public long getSyncInterval() {
@@ -396,6 +400,12 @@ public class SyncService {
     private void setPasswordField(String password) {
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString("text_newpassword", password);
+        editor.apply();
+    }
+
+    private void setDescField(String description) {
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("text_userdesc", description);
         editor.apply();
     }
 }
