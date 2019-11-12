@@ -78,6 +78,7 @@ public class SyncService {
                     case "text_userdesc":
                         Log.d("cngDesc", sharedPreferences.getString(key, ""));
                         changeDescription(sharedPreferences.getString(key, ""));
+                        break;
                 }
             }
         };
