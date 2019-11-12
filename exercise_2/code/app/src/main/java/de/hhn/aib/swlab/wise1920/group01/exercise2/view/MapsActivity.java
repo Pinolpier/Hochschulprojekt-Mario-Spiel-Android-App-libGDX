@@ -112,8 +112,4 @@ public class MapsActivity extends AppCompatActivity {
     public void setCenter(View v){
         controller.setCenter();
     }
-
-    public void onBackPressed() {
-        controller = null;
-    }
 }
