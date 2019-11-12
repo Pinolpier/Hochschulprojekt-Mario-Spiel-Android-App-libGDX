@@ -75,8 +75,8 @@ public class SyncService {
                         changePrivacyRadius(Double.valueOf(sharedPreferences.getString(key, "-1")));
                         break;
                     case "list_interval":
-                        Log.d("cngInterval", sharedPreferences.getString(key, "1800"));
-                        setSyncInterval(Long.parseLong(sharedPreferences.getString(key, "1800")));
+                        Log.d("cngInterval", sharedPreferences.getString(key, "1800000"));
+                        setSyncInterval(Long.parseLong(sharedPreferences.getString(key, "1800000")));
                         break;
                     case "text_newpassword":
                         if (!sharedPreferences.getString(key, "").isEmpty()) {
