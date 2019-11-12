@@ -216,7 +216,7 @@ public class MapFunctionality {
                         roadManager.addRequestOption("routeType=pedestrian");
                         Road road = roadManager.getRoad(track);
                         roadOverlay = RoadManager.buildRoadOverlay(road);
-                        roadOverlay.getOutlinePaint().setColor(Color.GRAY);
+                        roadOverlay.getOutlinePaint().setColor(Color.rgb(255,165,0));
                         roadOverlay.getOutlinePaint().setStrokeWidth(5);
                         map.getOverlays().add(roadOverlay);
                         map.invalidate();
