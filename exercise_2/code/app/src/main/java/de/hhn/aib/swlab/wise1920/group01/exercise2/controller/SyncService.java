@@ -408,16 +408,4 @@ public class SyncService {
         editor.putString("text_userdesc", description);
         editor.apply();
     }
-
-    private void setRadius() {
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString("list_radius", String.valueOf(getPrivacyRadius()));
-        editor.apply();
-    }
-
-    private void setInterval() {
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString("list_radius", String.valueOf(getInterval()));
-        editor.apply();
-    }
 }
