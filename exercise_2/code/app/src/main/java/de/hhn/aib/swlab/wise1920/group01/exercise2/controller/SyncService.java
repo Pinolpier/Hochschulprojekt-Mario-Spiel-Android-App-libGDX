@@ -63,7 +63,6 @@ public class SyncService {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         api = retrofit.create(UserAPI.class);
-        setSyncInterval(getInterval()); //Standardwert Sync alle 5 Minuten bis Verknüpfung mit Settings
 
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
         listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
