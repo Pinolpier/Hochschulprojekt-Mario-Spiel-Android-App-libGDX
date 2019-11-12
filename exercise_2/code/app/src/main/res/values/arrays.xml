@@ -31,16 +31,16 @@
         <item>30 Minuten</item>
         <item>1 Stunde</item>
     </string-array>
-    //Zeit in Sekunden
+    //Zeit in Millisekunden
     <string-array name="interval_values">
-        <item>1</item>
-        <item>10</item>
-        <item>30</item>
-        <item>60</item>
-        <item>300</item>
-        <item>600</item>
-        <item>1800</item>
-        <item>3600</item>
+        <item>1000</item>
+        <item>10000</item>
+        <item>30000</item>
+        <item>60000</item>
+        <item>300000</item>
+        <item>600000</item>
+        <item>1800000</item>
+        <item>3600000</item>
     </string-array>
 
     //1 Monat = 30 Tage
