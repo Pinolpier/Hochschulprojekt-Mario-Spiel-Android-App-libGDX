@@ -1,5 +1,6 @@
 package de.hhn.aib.swlab.wise1920.group01.exercise2.view;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -21,12 +23,13 @@ public class MainActivity extends AppCompatActivity {
     private EditText textInputUsername;
     private EditText textInputPassword;
     private AuthService auth;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        context = this;
 //        testWebserviceImplementation();
 
         textInputUsername = findViewById(R.id.editText_User);
@@ -49,24 +52,32 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("MainActivity: ", "Register button clicked!");
                 String username = textInputUsername.getText().toString();
                 String password = textInputPassword.getText().toString();
-                auth.register(username, password, null, new RegistrationProcessedInterface() {
+                if (username.equals(null) || password.equals(null) || username.equals("") || password.equals("")) {
+                    Toast.makeText(context, R.string.emptyCredentialsToastMessage, Toast.LENGTH_LONG).show();
+                } else {
+                    auth.register(username, password, null, new RegistrationProcessedInterface() {
 
-                    @Override
-                    public void onSuccess(String username, String password) {
-                        login(username, password);
-                    }
+                        @Override
+                        public void onSuccess(String username, String password) {
+                            login(username, password);
+                        }
 
-                    @Override
-                    public void onFailure() {
-                        Log.wtf("Main Activity: ", "Registration onFailure has benn called!");
-                    }
-                });
+                        @Override
+                        public void onFailure() {
+                            Log.wtf("Main Activity: ", "Registration onFailure has benn called!");
+                        }
+                    });
+                }
             }
         });
     }
 
     private void login(String username, String password) {
         Log.d("MainActivity: ", "Login method started!");
+        if (username.equals(null) || password.equals(null) || username.equals("") || password.equals("")) {
+            Toast.makeText(this, R.string.emptyCredentialsToastMessage, Toast.LENGTH_LONG).show();
+            return;
+        }
         auth.login(username, password, new LoginProcessedInterface() {
             @Override
             public void onSuccess() {
