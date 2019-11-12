@@ -13,6 +13,7 @@ import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.extensions.FuelAPI
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.extensions.FuelDummy;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.extensions.FuelPricesReceivedInterface;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.extensions.GasStationDummy;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -20,16 +21,18 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * This class represents the search for fuelprices with his own retrofit adapter
+ * This class is responsible for the search of fuelprices with its own retrofit adapter
  */
-public class FuelSearchPricesService {
+public class FuelPricesSearchService {
     private Retrofit retrofit;
     private FuelAPI api;
     private final String apikey = "f29f90a7-c993-4544-ac05-6fc8670d9d62";
     private int radius=15;
     private Context context;
-
-    public FuelSearchPricesService(Context context) {
+    /**
+     * Constructor for class FuelPricesSearchService
+     */
+    public FuelPricesSearchService(Context context) {
         this.context = context;
         retrofit = new Retrofit.Builder()
                 .baseUrl("https://creativecommons.tankerkoenig.de/")
@@ -38,6 +41,13 @@ public class FuelSearchPricesService {
         api = retrofit.create(FuelAPI.class);
     }
 
+    /**
+     * This method builds a query to get the fuelprices around the current position of the user and saves the information
+     * in an ArrayList
+     * @param lat           latitude of current location
+     * @param lng           longitude of current location
+     * @param fuelPricesReceivedInterface
+     */
     public void getFuelPrices(double lat, double lng, final FuelPricesReceivedInterface fuelPricesReceivedInterface) {
         Log.d("FuelSearchPriceService", "Fuel price search called!");
         HashMap<String, String> map = new HashMap<>();
@@ -63,7 +73,6 @@ public class FuelSearchPricesService {
                 } else
                     Toast.makeText(context, "Liste ist leer", Toast.LENGTH_SHORT).show();
             }
-
 
             @Override
             public void onFailure(Call<FuelDummy> call, Throwable t) {

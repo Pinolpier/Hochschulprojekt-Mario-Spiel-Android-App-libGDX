@@ -10,16 +10,23 @@ import de.hhn.aib.swlab.wise1920.group01.exercise2.model.MapObject;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.extensions.SearchAPI;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.extensions.SearchResultDummy;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.extensions.SearchResultsReceivedInterface;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+/**
+ * This class is responsible for the search of pois depending on searchterm from user with its own retrofit adapter
+ */
 public class SearchService {
     private Retrofit retrofit;
     private SearchAPI api;
 
+    /**
+     * Constructor for SearchService
+     */
     public SearchService() {
         retrofit = new Retrofit.Builder()
                 .baseUrl("https://nominatim.openstreetmap.org/")
@@ -28,6 +35,12 @@ public class SearchService {
         api = retrofit.create(SearchAPI.class);
     }
 
+    /**
+     * This method builds a query to get the MapObjects that are fitting for the searchterm from the user and puts them
+     * in a HashMap
+     * @param searchTerm
+     * @param searchResultsReceivedInterface
+     */
     public void search(String searchTerm, final SearchResultsReceivedInterface searchResultsReceivedInterface) {
         HashMap<String, String> map = new HashMap<String, String>();
         map.put("q", searchTerm);

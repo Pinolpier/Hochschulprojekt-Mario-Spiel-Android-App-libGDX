@@ -7,26 +7,22 @@ import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
 import org.osmdroid.config.Configuration;
-import org.osmdroid.events.MapListener;
-import org.osmdroid.events.ScrollEvent;
-import org.osmdroid.events.ZoomEvent;
 import org.osmdroid.tileprovider.tilesource.TileSourcePolicy;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.views.MapView;
-
 
 import de.hhn.aib.swlab.wise1920.group01.exercise2.R;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.controller.MapFunctionality;
 
 /**
- * The class represents the view on a Map with a search button and a center Button
+ * This class represents the view on our Map(Openstreetmap, osmdroid) with a search button and a center Button
  */
 public class MapsActivity extends AppCompatActivity {
 
@@ -34,6 +30,11 @@ public class MapsActivity extends AppCompatActivity {
     private SearchView searchView;
     private MapFunctionality controller;
 
+    /**
+     * This method gets called after the Login/Registration process of the Mainactivity was succesfull
+     * and creates our Mapview with assistance of the osmdroid library
+     * @param savedInstanceState    bundle with key for Syncservice
+     */
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Context ctx = getApplicationContext();
@@ -43,6 +44,7 @@ public class MapsActivity extends AppCompatActivity {
         StrictMode.setThreadPolicy(policy);
         map = findViewById(R.id.map);
         controller = new MapFunctionality(map, getIntent().getExtras(), this);
+        //Mapcache
         map.setTileSource(new XYTileSource("Mapnik",
                 0, 19, 256, ".png", new String[] {
                 "https://swlab-maps.hhn.sisrv.de/" },"© OpenStreetMap contributors",
@@ -70,7 +72,6 @@ public class MapsActivity extends AppCompatActivity {
                 return false;
             }
         });
-
     }
 
     @Override
@@ -79,10 +80,22 @@ public class MapsActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
+    /**
+     * This method creates a settingsmenubar at the top of the screen
+     * @param menu      settingsmenubar
+     * @return          true
+     */
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
         return true;
     }
+
+    /**
+     * This method configures each item of the settings menu and starts the SettinvsActivity when the user
+     * touches the item called "settings"
+     * @param item      items of the menu
+     * @return          true
+     */
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.settings) {
@@ -92,9 +105,9 @@ public class MapsActivity extends AppCompatActivity {
     }
 
     /**
-     * This Method calls the Controller to center the map to tha actual location of the User
-     * It gets calles when de User push the center button in the View
-     * @param v View of the actual Activity
+     * This method calls a method from the controller to center the map to tha current location of the user
+     * It gets called when the user touches the center button in the bottom right corner of the view
+     * @param v     View of the actual Activity
      */
     public void setCenter(View v){
         controller.setCenter();

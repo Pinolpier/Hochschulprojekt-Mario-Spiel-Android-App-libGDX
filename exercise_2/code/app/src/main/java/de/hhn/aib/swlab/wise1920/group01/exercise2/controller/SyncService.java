@@ -27,6 +27,9 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+/**
+ * This class is responsible for the connection and data transfer between client and server
+ */
 public class SyncService {
     private UserAPI api;
     private Retrofit retrofit;
@@ -37,6 +40,17 @@ public class SyncService {
     private SharedPreferences prefs;
     private SharedPreferences.OnSharedPreferenceChangeListener listener;
 
+    /**
+     * Constructor of class SyncService
+     * @param context       context
+     * @param jwt           users jwt
+     * @param id            users id
+     * @param username      users username
+     * @param description   users description
+     * @param password      users password
+     * @param privacy       users privacy
+     */
+    public SyncService(final Context context, String jwt, String id, String username, String description, String password, Double privacy) {
     SyncService(final Context context, String jwt, String id, String username, String description, String password, Double privacy) {
         this.context = context;
         user = new User(username, password);
