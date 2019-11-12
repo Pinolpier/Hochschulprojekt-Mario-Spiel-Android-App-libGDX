@@ -98,9 +98,6 @@ public class SyncService {
                     Toast.makeText(context, R.string.sendLocationFailed, Toast.LENGTH_LONG).show();
                     Log.e("Sync Service", "Couldn't send location because user object didn't exist or was invalid");
                 }
-                //TODO syncInterval muss über die MapFunctionality funktionieren und nur noch sendLocation aufrufen!
-//                usersAround = getUsersAround(Integer.MAX_VALUE);
-//                locationHistory = getLocationHistory(locationHistorySince);
                 Log.d("SyncService"," Sync successful");
             }
 
