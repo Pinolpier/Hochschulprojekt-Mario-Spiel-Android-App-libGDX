@@ -21,11 +21,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * Die Klasse Repräsentiert die Suche nach Points of Interessts für
- * die OpenStreetMap
- * @author mhaering
- * @version 1.0
- *
+ * This class is responsible for the search of Points of Interests(pois) with its own retrofit adapter
  */
 public class PoiSearchService {
 
@@ -34,6 +30,10 @@ public class PoiSearchService {
     private PoiAPI api;
     private List<PoiDummy> searchResults;
 
+    /**
+     * Constructor for PoiSearchService
+     * @param context
+     */
     public PoiSearchService(Context context){
         this.context = context;
         retrofit = new Retrofit.Builder()
@@ -42,6 +42,13 @@ public class PoiSearchService {
                 .build();
         api = retrofit.create(PoiAPI.class);
     }
+
+    /**
+     * This method builds a query to get the pois in the given bounding box and saves the information
+     * in an ArrayList
+     * @param boundingBox               area in which pois should be searched in
+     * @param poisReceivedInterface
+     */
     public void getPois(BoundingBox boundingBox, final PoisReceivedInterface poisReceivedInterface){
         String bounding = boundingBox.getLatSouth()+","+boundingBox.getLonWest()+","+boundingBox.getLatNorth()+","+boundingBox.getLonEast();
         String data = "[out:json][timeout:25];\n" +
@@ -123,10 +130,9 @@ public class PoiSearchService {
     }
 
     /**
-     * Wenn ein Poi vom Typ "relation" ist sollen die dazu passende ways gefunden
-     * und aus der Liste gelöscht werden.
-     * @param poiDummies die Liste der zugehörigen PoiDummies des Types "way"
-     * @return den Poi der Stellvertretend für alle im ID Bereich des "relation" Punktes gesetzt werden soll
+     * If a poi of type "relation" is found, suitable ways should get deleted from list
+     * @param poiDummies    list of PoiDummies of type "way"
+     * @return              poi thats representable for all IDs of "relation" point
      */
     private PoiDummy findByRef(ArrayList<PoiDummy> poiDummies){
 
@@ -147,10 +153,10 @@ public class PoiSearchService {
     }
 
     /**
-     * Wenn ein Poi vom Typ "Way" ist sollen hier der Zugehörige node anhand der ID gefunden werden
-     * @param dummyArrayList Liste mit den Nodes
-     * @param id des Nodes, welcher gesucht werden soll
-     * @return den Poi der stellvertretend für alle Poi's im Bereich des "Way" angezeigt werden soll
+     * If poi is of type "Way" all associated nodes should be found by ID
+     * @param dummyArrayList    list with nodes
+     * @param id                ID of node that should be searched
+     * @return                  poi that is representable for all pois that get shown in area of "Way"
      */
     private PoiDummy findById(List<PoiDummy> dummyArrayList ,long id){
         for (PoiDummy dummy : dummyArrayList){

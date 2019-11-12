@@ -17,6 +17,7 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
+
 import com.nabinbhandari.android.permissions.PermissionHandler;
 import com.nabinbhandari.android.permissions.Permissions;
 
@@ -37,7 +38,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import de.hhn.aib.swlab.wise1920.group01.exercise2.R;
-import de.hhn.aib.swlab.wise1920.group01.exercise2.controller.extensions.FuelSearchPricesService;
+import de.hhn.aib.swlab.wise1920.group01.exercise2.controller.extensions.FuelPricesSearchService;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.controller.extensions.PoiSearchService;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.controller.extensions.SearchService;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.MapObject;
@@ -51,12 +52,15 @@ import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.extensions.SearchR
 
 import static android.os.Looper.getMainLooper;
 
+/**
+ * This class is responsible for all the functionality-methods behind the MapsActivity view
+ */
 public class MapFunctionality {
     private FusedLocationProviderClient fusedLocationClient;
     private LocationRequest locationRequest;
     private MapView map;
     private SyncService sync;
-    private FuelSearchPricesService fuelService;
+    private FuelPricesSearchService fuelService;
     private SearchService searchService;
     private ArrayList<Marker> searchMarkerArrayList, timeStampedMarkerList,fuelMarkerList, poiMarkerList,usersAroundMarker;
     private final Context context;
@@ -73,12 +77,18 @@ public class MapFunctionality {
     private SharedPreferences.OnSharedPreferenceChangeListener listener;
     private PolyOverlayWithIW roadOverlay;
 
+    /**
+     * Constructor for class MapFunctionality
+     * @param map       mapview from MapsActivity
+     * @param bundle    bundle with key for Syncservice
+     * @param context   context from MapsActivity
+     */
     public MapFunctionality(final MapView map, Bundle bundle, final Context context) {
         this.context = context;
         callPermissions();
         this.map = map;
         sync = new SyncService(context, bundle.getString("jwt"), bundle.getString("id"), bundle.getString("username"), bundle.getString("description"), bundle.getString("password"), bundle.getDouble("privacy"));
-        fuelService = new FuelSearchPricesService(context);
+        fuelService = new FuelPricesSearchService(context);
         searchService = new SearchService();
         searchMarkerArrayList = new ArrayList<>();
         timeStampedMarkerList = new ArrayList<>(); fuelMarkerList = new ArrayList<>(); poiMarkerList = new ArrayList<>(); usersAroundMarker = new ArrayList<>();
@@ -160,6 +170,9 @@ public class MapFunctionality {
         Log.e("timeFrame", "" + getLocHistoryTimeframe());
     }
 
+    /**
+     * Shows all users around your current location on the map with a green marker
+     */
     private void getUsersAround() {
         deleteSearchMarkers(usersAroundMarker);
         sync.getUsersAround(10, new UsersAroundReceivedInterface() {
@@ -188,6 +201,9 @@ public class MapFunctionality {
         });
     }
 
+    /**
+     * Shows all timestamps from own locationhistory on the map with orange markers and connects them with orange lines (sort by time)
+     */
     private void getLocationHistory() {
         deleteSearchMarkers(timeStampedMarkerList);
         deleteHistoryLines();
@@ -223,7 +239,6 @@ public class MapFunctionality {
                     } else
                         Toast.makeText(context, R.string.noLocationHistory, Toast.LENGTH_SHORT).show();
                 }
-
                 @Override
                 public void onFailure() {
                     Toast.makeText(context, R.string.locationHistoryFailure, Toast.LENGTH_LONG).show();
@@ -231,6 +246,10 @@ public class MapFunctionality {
             });
         }
     }
+
+    /**
+     * Shows all Points of Interests (pois) around the current location on the map with a blue marker
+     */
     public void getPoi(){
         if(poiSearch) {
             deleteSearchMarkers(poiMarkerList);
@@ -262,6 +281,10 @@ public class MapFunctionality {
         }
     }
 
+    /**
+     * Shows all fuelprices around the users current location with a red marker in the shape of a gas station symbol
+     * @param position      current position of the user
+     */
     private void getFuelPrices(Position position) {
         deleteSearchMarkers(fuelMarkerList);
         if(fuelSearch){
@@ -293,6 +316,10 @@ public class MapFunctionality {
         }
     }
 
+    /**
+     * Sends a Query of the searchterm and shows all results on the map with a golden marker in shape of a star
+     * @param searchTerm        input of the user in searchview
+     */
     public void search(String searchTerm) {
         deleteSearchMarkers(searchMarkerArrayList);
         searchService.search(searchTerm, new SearchResultsReceivedInterface() {
@@ -323,9 +350,17 @@ public class MapFunctionality {
         });
     }
 
+    /**
+     * Deletes roadoverlay from the map (lines between the locationhistory markers)
+     */
     private void deleteHistoryLines(){
         map.getOverlays().remove(roadOverlay);
     }
+
+    /**
+     * Deletes markers from the map
+     * @param markers       all markers that should be deleted
+     */
     private void deleteSearchMarkers(ArrayList<Marker> markers){
         if(!markers.isEmpty()){
             for(Marker marker:markers){
@@ -336,12 +371,18 @@ public class MapFunctionality {
 
     }
 
+    /**
+     * Center the view of the map to the current position of the user
+     */
     public void setCenter()
     {
         mapController.setCenter(new GeoPoint(latitude,longitude));
         map.invalidate();
     }
 
+    /**
+     * Asks user for locationpermissions to give access and make app eligible of detecting location of users phone
+     */
     public void callPermissions()
     {
         String[] permissions = {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
@@ -360,6 +401,9 @@ public class MapFunctionality {
                 });
     }
 
+    /**
+     * Determines current location of the user and saves position in local variable "latitude" and "longitude"
+     */
     public void requestLocationUpdates()
     {
         if(ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PermissionChecker.PERMISSION_GRANTED &&
@@ -386,6 +430,9 @@ public class MapFunctionality {
         }
     }
 
+    /**
+     * Set current position marker on the current location
+     */
     public void setCurrentPosition()
     {
         GeoPoint gPt = new GeoPoint(latitude,longitude);
@@ -395,10 +442,18 @@ public class MapFunctionality {
         map.invalidate();
     }
 
+    /**
+     * Returns current timeframe value of locationhistory timeframe from the settings
+     * @return      Long value of timeframe in settings
+     */
     private Long getLocHistoryTimeframe() {
         return Long.valueOf(prefs.getString("list_locationhistorytimeframe", "604800000"));
     }
 
+    /**
+     * Show pois depending of the switch state in settings
+     * @param b     switchstate in settings
+     */
     private void switchPoi(Boolean b) {
         if (b) {
             poiSearch = true;
@@ -409,6 +464,10 @@ public class MapFunctionality {
         }
     }
 
+    /**
+     * Show fuelprices depending of the switch state in settings
+     * @param b     switchstate in settings
+     */
     private void switchFuelprice(Boolean b) {
         if (b) {
             fuelSearch = true;
@@ -419,6 +478,10 @@ public class MapFunctionality {
         }
     }
 
+    /**
+     * Show locationhistory depending of the switch state in settings
+     * @param b     switchstate in settings
+     */
     private void switchLocHistory(Boolean b) {
         if (b) {
             historyBoolean = true;

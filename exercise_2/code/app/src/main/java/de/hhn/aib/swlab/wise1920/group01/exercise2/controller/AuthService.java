@@ -11,19 +11,28 @@ import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.LoginProcessedInte
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.RegistrationProcessedInterface;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.User;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.UserAPI;
-import okhttp3.ResponseBody;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import okhttp3.ResponseBody;
+
+/**
+ * This class is responsible for sser login/registration process
+ */
 public class AuthService {
     private UserAPI api;
     private Retrofit retrofit;
     private Context context;
     private User user;
 
+    /**
+     * Constructor for class AuthService
+     * @param context
+     */
     public AuthService(Context context) {
         this.context = context;
         retrofit = new Retrofit.Builder()

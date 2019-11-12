@@ -9,11 +9,16 @@ import androidx.preference.PreferenceManager;
 
 import de.hhn.aib.swlab.wise1920.group01.exercise2.R;
 
+/**
+ * This class represents the Settingsview where the User can change his privacyradius, password, description,
+ * and adjust whether pois, fuel prices and what locationhistory gets shown on the map.
+ */
 public class SettingsActivity extends AppCompatActivity {
 
     /**
      * This method is called from a call of the system method startActivity(Intent) only. It starts
      * the activity and loads the preferences from the preferences file.
+     * @param savedInstanceState
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +35,9 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     *
+     */
     public static class SettingsFragment extends PreferenceFragmentCompat {
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {

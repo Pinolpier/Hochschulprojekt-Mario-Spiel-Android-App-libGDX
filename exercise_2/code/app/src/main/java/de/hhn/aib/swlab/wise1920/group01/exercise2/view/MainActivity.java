@@ -16,19 +16,25 @@ import de.hhn.aib.swlab.wise1920.group01.exercise2.controller.AuthService;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.LoginProcessedInterface;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.RegistrationProcessedInterface;
 
+/**
+ * This class represents the Login/Registrationscreen where the user can login with his username and
+ * password or register a new account.
+ */
 public class MainActivity extends AppCompatActivity {
 
     private EditText textInputUsername;
     private EditText textInputPassword;
     private AuthService auth;
 
+    /**
+     * This method is called when the app is started and creates the Login/Registration View
+     * for the user
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-//        testWebserviceImplementation();
-
         textInputUsername = findViewById(R.id.editText_User);
         textInputPassword = findViewById(R.id.editText_password);
         Button buttonLogin = findViewById(R.id.button_login);
@@ -65,6 +71,13 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * This method checks if the username and password input is correct by accessing the information
+     * from the server and either starts the Mapsactivity to bring the user to the mapview on success
+     * or shows that either the put in username or passowrd was incorrect on failure.
+     * @param username      username input from user
+     * @param password      password input from user
+     */
     private void login(String username, String password) {
         Log.d("MainActivity: ", "Login method started!");
         auth.login(username, password, new LoginProcessedInterface() {
@@ -103,33 +116,4 @@ public class MainActivity extends AppCompatActivity {
         }
         return true;
     }
-
-//    public void testWebserviceImplementation() {
-//        final SyncService sync = new SyncService(this);
-//        sync.register("group01_dummy9", "group01_dummy9_password", null, new RegistrationProcessedInterface() {
-//
-//            @Override
-//            public void onSuccess(String username, String password) {
-//                sync.login(username, password, new LoginProcessedInterface() {
-//                    @Override
-//                    public void onSuccess() {
-//                        sync.sendLocation(0.0, 0.0);
-//                        sync.changePrivacyRadius(9999990);
-//                        sync.changeDescription("This is user9 description.");
-//                        Log.wtf("TestWebserviceImplementation: ", Arrays.toString(sync.getUsersAround(999999999)));
-//                    }
-//
-//                    @Override
-//                    public void onFailure() {
-//                        Log.wtf("Main Activity: ", "Login onFailure has been called");
-//                    }
-//                });
-//            }
-//
-//            @Override
-//            public void onFailure() {
-//                Log.wtf("Main Activity: ", "Register onFailure has been called");
-//            }
-//        });
-//    }
 }
