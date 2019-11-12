@@ -37,7 +37,7 @@ public class SyncService {
     private SharedPreferences prefs;
     private SharedPreferences.OnSharedPreferenceChangeListener listener;
 
-    public SyncService(final Context context, String jwt, String id, String username, String description, String password, Double privacy) {
+    SyncService(final Context context, String jwt, String id, String username, String description, String password, Double privacy) {
         this.context = context;
         user = new User(username, password);
         user.setJwtAuthorization(jwt);
@@ -50,8 +50,7 @@ public class SyncService {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         api = retrofit.create(UserAPI.class);
-        //TODO syncInterval aus den Settings bekommen und dementsprechend setzten!
-        setSyncInterval(60000L); //Standardwert Sync alle 5 Minuten bis Verknüpfung mit Settings
+        setSyncInterval(getInterval()); //Standardwert Sync alle 5 Minuten bis Verknüpfung mit Settings
 
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
         listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
@@ -202,7 +201,7 @@ public class SyncService {
                 if (response.code() == 403) {
                     Toast.makeText(context, R.string.updateFailedInvalidJwtTokenToastMessage, Toast.LENGTH_LONG).show();
                     Log.wtf("Sync Service", "Invalid JWT token has been used while updating user!");
-                    //TODO Login Activity anzeigen, da ungueltiger JWT Token
+                    getNewJWT();
                     return;
                 }
                 if (response.code() == 304) {
@@ -223,14 +222,19 @@ public class SyncService {
     }
 
     /**
-     * updates the users position and sends it to the webservice. Internally {code sendLocation(Position position)} is used..
+     * updates the users position and sends it to the webservice. Internally {code changeLocation(Position position)} is used..
      *
      * @param latitude  the new position's latitude
      * @param longitude the new position's longitude
      * @return if updating was successful {code true} will be returned. Otherwise {code false} will be returned.
      */
-    public boolean sendLocation(Double latitude, Double longitude) {
-        return sendLocation(new Position(latitude, longitude));
+    public boolean changeLocation(Double latitude, Double longitude) {
+        if (user == null || user.getId() == null || user.getJwtAuthorization() == null) {
+            Log.wtf("Sync Service", "Something went wrong, either user or ID or JWT is null: " + user);
+            return false;
+        }
+        user.setPosition(new Position(latitude, longitude));
+        return true;
     }
 
     /**
@@ -238,18 +242,17 @@ public class SyncService {
      * @param position the new position
      * @return if updating was successful {code true} will be returned. Otherwise {code false} will be returned.
      */
-    public boolean sendLocation(Position position) {
+    private boolean sendLocation(Position position) {
         if (user == null || user.getId() == null || user.getJwtAuthorization() == null) {
             Log.wtf("Sync Service", "Something went wrong, either user or ID or JWT is null: " + user);
             return false;
         }
-        user.setPosition(position);
         Call<ResponseBody> call = api.setLocation(user.getJwtAuthorization(), user.getId(), position);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (!response.isSuccessful() && response.code() != 403) {
-                    Log.wtf("Sync Service", "An unexpected HTTP Response Code indicating an error has been returned by the webservice while sendLocation: Response Code is " + response.code());
+                    Log.wtf("Sync Service", "An unexpected HTTP Response Code indicating an error has been returned by the webservice while changeLocation: Response Code is " + response.code());
                     return;
                 }
                 if (response.isSuccessful() && response.code() != 200) {
@@ -259,7 +262,7 @@ public class SyncService {
                 if (response.code() == 403) {
                     Toast.makeText(context, R.string.sendLocationFailedInvalidJwtTokenToastMessage, Toast.LENGTH_LONG).show();
                     Log.wtf("Sync Service", "Invalid JWT token has been used while sending location!");
-                    //TODO Login Activity anzeigen, da ungueltiger JWT Token
+                    getNewJWT();
                     return;
                 }
                 if (response.code() == 200) {
@@ -269,7 +272,7 @@ public class SyncService {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.wtf("Sync Service: ", "A serious error with the webservice occurred during sendLocation, error:" + t.getMessage());
+                Log.wtf("Sync Service: ", "A serious error with the webservice occurred during changeLocation, error:" + t.getMessage());
             }
         });
         return true;
@@ -311,7 +314,7 @@ public class SyncService {
                 if (response.code() == 403) {
                     Toast.makeText(context, R.string.getUsersFailedInvalidJwtTokenToastMessage, Toast.LENGTH_LONG).show();
                     Log.wtf("Sync Service", "Invalid JWT token has been used while getting users around!");
-                    //TODO Login Activity anzeigen, da ungueltiger JWT Token
+                    getNewJWT();
                     usersAroundReceivedInterface.onFailure();
                     return;
                 }
@@ -319,6 +322,7 @@ public class SyncService {
                     Log.d("Sync Service", "Received locations successfully!");
                     List<MapObjectDummy> usersAround = response.body();
 //                    Log.d("Sync Service", "Size of the \"List<MapObjectDummy> usersAround = response.body();\": " + usersAround.size());
+                    assert usersAround != null;
                     for (MapObjectDummy i : usersAround) {
                         usersAroundList.add(new MapObject(i.getPosition().getLatitude(), i.getPosition().getLongitude(), i.getName(), i.getDescription()));
                     }
@@ -364,7 +368,7 @@ public class SyncService {
                 if (response.code() == 403) {
                     Toast.makeText(context, R.string.getUsersFailedInvalidJwtTokenToastMessage, Toast.LENGTH_LONG).show();
                     Log.wtf("Sync Service", "Invalid JWT token has been used while receiving location history!");
-                    //TODO Login Activity anzeigen, da ungueltiger JWT Token
+                    getNewJWT();
                     locationHistoryReceivedInterface.onFailure();
                     return;
                 }
@@ -383,6 +387,53 @@ public class SyncService {
             public void onFailure(Call<List<TimestampedPosition>> call, Throwable t) {
                 Log.wtf("Sync Service: ", "A serious error with the webservice occurred during getLocationHistory, error:" + t.getMessage());
                 locationHistoryReceivedInterface.onFailure();
+            }
+        });
+    }
+
+    private void getNewJWT() {
+        final User sendUser = new User(user.getUsername(), user.getPassword());
+        Call<User> call = api.login(sendUser);
+        call.enqueue(new Callback<User>() {
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (!response.isSuccessful() && response.code() != 403) {
+                    Log.wtf("Sync Service: ", "An unexpected HTTP Response Code indicating an error has been returned by the webservice: Response Code is " + response.code());
+                }
+                if (response.code() == 403) {
+                    Toast.makeText(context, R.string.loginFailedToastMessage, Toast.LENGTH_LONG).show();
+                    Log.d("Sync Service: ", "Login unsuccessful. Got HTTP return 403 forbidden.");
+                }
+                if (response.isSuccessful() && response.code() != 200) {
+                    Log.wtf("Sync Service: ", "An unexpected HTTP Response Code indicating successful login has been returned by the webservice: Response Code is " + response.code());
+                }
+                if (response.code() == 200) {
+                    Toast.makeText(context, R.string.loginSuccessfulToastMessage, Toast.LENGTH_SHORT).show();
+                    User respondedUser = response.body();
+                    sendUser.setId(respondedUser.getId());
+                    if (!respondedUser.getUsername().equals(sendUser.getUsername())) {
+                        Log.wtf("Sync Service: ", "The username of the responded user after login is not the username that has been used for login!");
+                    }
+                    sendUser.setUsername(respondedUser.getUsername());
+                    sendUser.setDescription(respondedUser.getDescription());
+                    sendUser.setPrivacyRadius(respondedUser.getPrivacyRadius());
+                    List<String> jwts = response.headers().values("Authorization");
+                    if (jwts.size() != 1) {
+                        Log.wtf("Sync Service: ", "Multiple values have been returned in the header with key 'Authorization' - can't identify the jwt token!");
+                    } else {
+                        sendUser.setJwtAuthorization(jwts.get(0));
+                    }
+                    sendUser.setPosition(user.getPosition());
+                    user = sendUser;
+                    update();
+                    sendLocation(user.getPosition());
+
+                    return;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                Log.wtf("Sync Service: ", "A serious error with the webservice occurred during login, error:" + t.getMessage());
             }
         });
     }

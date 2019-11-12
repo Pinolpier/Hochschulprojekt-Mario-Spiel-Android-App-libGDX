@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
 //                sync.login(username, password, new LoginProcessedInterface() {
 //                    @Override
 //                    public void onSuccess() {
-//                        sync.sendLocation(0.0, 0.0);
+//                        sync.changeLocation(0.0, 0.0);
 //                        sync.changePrivacyRadius(9999990);
 //                        sync.changeDescription("This is user9 description.");
 //                        Log.wtf("TestWebserviceImplementation: ", Arrays.toString(sync.getUsersAround(999999999)));

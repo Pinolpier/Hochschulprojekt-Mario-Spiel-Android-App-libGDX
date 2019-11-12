@@ -375,7 +375,7 @@ public class MapFunctionality {
                     super.onLocationResult(locationResult);
                     latitude = locationResult.getLastLocation().getLatitude();
                     longitude = locationResult.getLastLocation().getLongitude();
-                    sync.sendLocation(latitude,longitude);
+                    sync.changeLocation(latitude, longitude);
                     setCurrentPosition();
                 }
             }, getMainLooper());
