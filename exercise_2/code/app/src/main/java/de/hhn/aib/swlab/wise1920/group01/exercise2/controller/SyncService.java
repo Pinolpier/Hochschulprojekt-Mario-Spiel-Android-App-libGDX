@@ -50,8 +50,7 @@ public class SyncService {
      * @param password      users password
      * @param privacy       users privacy
      */
-    public SyncService(final Context context, String jwt, String id, String username, String description, String password, Double privacy) {
-    SyncService(final Context context, String jwt, String id, String username, String description, String password, Double privacy) {
+     SyncService(final Context context, String jwt, String id, String username, String description, String password, Double privacy) {
         this.context = context;
         user = new User(username, password);
         user.setJwtAuthorization(jwt);

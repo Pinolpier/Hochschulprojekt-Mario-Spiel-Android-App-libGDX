@@ -12,7 +12,7 @@
             app:useSimpleSummaryProvider="true"
             />
         <ListPreference
-            app:defaultValue="1800"
+            app:defaultValue="1800000"
             app:title="@string/interval"
             app:entries="@array/interval_entries"
             app:entryValues="@array/interval_values"
