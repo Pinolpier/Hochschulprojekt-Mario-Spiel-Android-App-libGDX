@@ -148,8 +148,6 @@ public class MapFunctionality<privaet> {
             }
         };
         prefs.registerOnSharedPreferenceChangeListener(listener);
-
-        Log.e("timeFrame", "" + getLocHistoryTimeframe());
     }
 
     private void getUsersAround() {
