@@ -404,6 +404,9 @@ public class SyncService {
         });
     }
 
+    /**
+     * used internally to get a new JWT.
+     */
     private void getNewJWT() {
         final User sendUser = new User(user.getUsername(), user.getPassword());
         Call<User> call = api.login(sendUser);
