@@ -34,9 +34,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup">
-        <activity android:name=".view.SettingsActivity">
+        <activity
+            android:name=".view.SettingsActivity"
+            android:label="@string/preferences_header"
+            android:parentActivityName=".view.MapsActivity">
+
         </activity>
-        <activity android:name=".view.MapsActivity">
+        <activity
+            android:name=".view.MapsActivity"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action
                     android:name="android.intent.action.VIEW"
