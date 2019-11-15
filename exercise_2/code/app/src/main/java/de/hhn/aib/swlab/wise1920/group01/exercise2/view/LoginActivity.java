@@ -39,7 +39,6 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         context = this;
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-
         textInputUsername = findViewById(R.id.editText_User);
         textInputPassword = findViewById(R.id.editText_password);
         Button buttonLogin = findViewById(R.id.button_login);
