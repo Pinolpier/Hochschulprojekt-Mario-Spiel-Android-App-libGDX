@@ -6,7 +6,7 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.simplefastpoint.LabelledGeoPoint;
 
 public class MapObject extends LabelledGeoPoint {
-    String description;
+    private String description;
 
     /**
      * @param aLatitude   latitude of the object

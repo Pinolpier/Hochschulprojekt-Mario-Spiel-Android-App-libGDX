@@ -58,14 +58,14 @@ import static android.os.Looper.getMainLooper;
 public class MapFunctionality {
     private FusedLocationProviderClient fusedLocationClient;
     private LocationRequest locationRequest;
-    private MapView map;
-    private SyncService sync;
-    private FuelPricesSearchService fuelService;
-    private SearchService searchService;
+    private final MapView map;
+    private final SyncService sync;
+    private final FuelPricesSearchService fuelService;
+    private final SearchService searchService;
     private ArrayList<Marker> searchMarkerArrayList, timeStampedMarkerList,fuelMarkerList, poiMarkerList,usersAroundMarker;
     private final Context context;
     private double latitude, longitude;
-    private MapController mapController;
+    private final MapController mapController;
     private CountDownTimer timer;
     private long syncInterval = 60000;
     private Boolean fuelSearch = false;
@@ -96,7 +96,7 @@ public class MapFunctionality {
         track = new ArrayList<>();
 
         mapController = (MapController) map.getController();
-        mapController.setZoom(17);
+        mapController.setZoom(15);
         GeoPoint startPoint = new GeoPoint(49.122831, 9.210871); //Koordinaten der Hochschule Heilbronn
         mapController.setCenter(startPoint);
         marker = new Marker(map);
@@ -254,7 +254,7 @@ public class MapFunctionality {
     /**
      * Shows all Points of Interests (pois) around the current location on the map with a blue marker
      */
-    public void getPoi(){
+    private void getPoi(){
         if(poiSearch) {
             deleteSearchMarkers(poiMarkerList);
             PoiSearchService poiSearchService = new PoiSearchService(context);
@@ -392,7 +392,7 @@ public class MapFunctionality {
     /**
      * Asks user for locationpermissions to give access and make app eligible of detecting location of users phone
      */
-    public void callPermissions()
+    private void callPermissions()
     {
         String[] permissions = {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
         Permissions.check(context, permissions, "Location permissions are required to get User Location",
@@ -413,7 +413,7 @@ public class MapFunctionality {
     /**
      * Determines current location of the user and saves position in local variable "latitude" and "longitude"
      */
-    public void requestLocationUpdates()
+    private void requestLocationUpdates()
     {
         if(ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PermissionChecker.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PermissionChecker.PERMISSION_GRANTED) {
@@ -442,7 +442,7 @@ public class MapFunctionality {
     /**
      * Set current position marker on the current location
      */
-    public void setCurrentPosition()
+    private void setCurrentPosition()
     {
         GeoPoint gPt = new GeoPoint(latitude,longitude);
         marker.setPosition(gPt);

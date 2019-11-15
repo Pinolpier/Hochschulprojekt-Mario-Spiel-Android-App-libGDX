@@ -18,6 +18,8 @@ import org.osmdroid.tileprovider.tilesource.TileSourcePolicy;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.views.MapView;
 
+import java.util.Objects;
+
 import de.hhn.aib.swlab.wise1920.group01.exercise2.R;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.controller.MapFunctionality;
 
@@ -26,7 +28,7 @@ import de.hhn.aib.swlab.wise1920.group01.exercise2.controller.MapFunctionality;
  */
 public class MapsActivity extends AppCompatActivity {
 
-    MapView map;
+    private MapView map;
     private SearchView searchView;
     private MapFunctionality controller;
 
@@ -43,7 +45,7 @@ public class MapsActivity extends AppCompatActivity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         map = findViewById(R.id.map);
-        controller = new MapFunctionality(map, getIntent().getExtras(), this);
+        controller = new MapFunctionality(map, Objects.requireNonNull(getIntent().getExtras()), this);
         //Mapcache
         map.setTileSource(new XYTileSource("Mapnik",
                 0, 19, 256, ".png", new String[] {
@@ -91,7 +93,7 @@ public class MapsActivity extends AppCompatActivity {
     }
 
     /**
-     * This method configures each item of the settings menu and starts the SettinvsActivity when the user
+     * This method configures each item of the settings menu and starts the SettingsActivity when the user
      * touches the item called "settings"
      * @param item      items of the menu
      * @return          true

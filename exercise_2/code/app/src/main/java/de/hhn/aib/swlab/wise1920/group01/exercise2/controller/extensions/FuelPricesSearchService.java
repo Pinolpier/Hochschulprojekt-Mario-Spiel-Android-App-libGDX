@@ -60,7 +60,8 @@ public class FuelPricesSearchService {
         call.enqueue(new Callback<FuelDummy>() {
             @Override
             public void onResponse(Call<FuelDummy> call, Response<FuelDummy> response) {
-                ArrayList<MapObject> searchResultList = new ArrayList();
+                ArrayList searchResultList = new ArrayList<MapObject>();
+                assert response.body() != null;
                 List<GasStationDummy> searchResults = response.body().getStationsAround();
                 if (searchResults != null) {
                     for (GasStationDummy i : searchResults) {

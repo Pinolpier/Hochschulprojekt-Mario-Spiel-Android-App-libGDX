@@ -38,11 +38,11 @@ public class SearchService {
     /**
      * This method builds a query to get the MapObjects that are fitting for the searchterm from the user and puts them
      * in a HashMap
-     * @param searchTerm
+     * @param searchTerm Type of content requested by user
      * @param searchResultsReceivedInterface
      */
     public void search(String searchTerm, final SearchResultsReceivedInterface searchResultsReceivedInterface) {
-        HashMap<String, String> map = new HashMap<String, String>();
+        HashMap<String, String> map = new HashMap<>();
         map.put("q", searchTerm);
         map.put("format", "json");
         map.put("namedetails","1");

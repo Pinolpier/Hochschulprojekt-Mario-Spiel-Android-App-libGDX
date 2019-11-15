@@ -68,7 +68,7 @@ public class PoiSearchService {
         call.enqueue(new Callback<PoiElementsDummy>() {
             @Override
             public void onResponse(Call<PoiElementsDummy> call, Response<PoiElementsDummy> response) {
-                ArrayList<MapObject> searchResultList = new ArrayList();
+                ArrayList searchResultList = new ArrayList<MapObject>();
                 if(response.body()!=null){
                 if(response.body().getPoiDummyArray()!=null) {
                     searchResults = response.body().getPoiDummyArray();

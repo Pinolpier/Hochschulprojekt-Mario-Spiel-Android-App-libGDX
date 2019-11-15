@@ -104,7 +104,7 @@ public class SyncService {
         return syncInterval;
     }
 
-    public void setSyncInterval(long syncInterval) {
+    private void setSyncInterval(long syncInterval) {
         this.syncInterval = syncInterval;
         if (timer != null) {
             timer.cancel();
@@ -294,7 +294,6 @@ public class SyncService {
      * used to receive all users around the users location within a specified radius. Internally {code getUsersAround(Position position, int radius)} is used.
      *
      * @param radius the radius in which all users available will be returned.
-     * @return an array containing all information to display the users around on the map.
      */
     public void getUsersAround(int radius, UsersAroundReceivedInterface usersAroundReceivedInterface) {
         getUsersAround(user.getPosition(), radius, usersAroundReceivedInterface);
@@ -305,7 +304,6 @@ public class SyncService {
      *
      * @param position the location around which all available users should be returned.
      * @param radius   the radius in which all users available will be returned.
-     * @return an array containing all information to display the users around on the map.
      */
     public void getUsersAround(Position position, int radius, final UsersAroundReceivedInterface usersAroundReceivedInterface) {
         final ArrayList<MapObject> usersAroundList = new ArrayList<>();
@@ -356,7 +354,6 @@ public class SyncService {
      * Used to get all past locations of the logged in user since the param
      *
      * @param since The earliest time from when on the location history should be returned. May be {@code null} in that case the 1st January 2010 will 00:00:00.0000 GMT will be used
-     * @return All locations where the user has been since the param. Order from oldest (index 0) to the newest positions.
      */
     public void getLocationHistory(Long since, final LocationHistoryReceivedInterface locationHistoryReceivedInterface) {
         final ArrayList<TimestampedPosition> locationHistoryList = new ArrayList<>();
