@@ -262,7 +262,7 @@ public class MapFunctionality {
                         if (poiArrayList.size() >= 1) {
                             for (int counter = 0; counter < poiArrayList.size(); counter++) {
                                 Marker poiMarker = new Marker(map);
-                                poiMarker.setIcon(context.getDrawable(R.drawable.ic_pin_drop_blue_24dp));
+                                poiMarker.setIcon(context.getDrawable(R.drawable.ic_star_gold_24dp));
                                 poiMarker.setPosition(poiArrayList.get(counter));
                                 poiMarker.setAnchor(0.5f, 0.5f);
                                 poiMarker.setTitle(poiArrayList.get(counter).getLabel());

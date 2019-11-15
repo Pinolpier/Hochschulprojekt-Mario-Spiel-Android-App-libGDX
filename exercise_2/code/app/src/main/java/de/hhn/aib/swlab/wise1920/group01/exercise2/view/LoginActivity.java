@@ -111,7 +111,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFailure() {
-                Log.wtf("Main Activity: ", "Login onFailure has been called");
+                Log.wtf("LoginActivity: ", "Login onFailure has been called");
             }
         });
     }
