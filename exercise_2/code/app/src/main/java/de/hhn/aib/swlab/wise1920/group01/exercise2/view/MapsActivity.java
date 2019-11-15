@@ -74,6 +74,13 @@ public class MapsActivity extends AppCompatActivity {
                 return false;
             }
         });
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                controller.onCloeSearchView();
+                return false;
+            }
+        });
     }
 
     @Override

@@ -499,6 +499,10 @@ public class MapFunctionality {
         }
     }
 
+    public void onCloeSearchView() {
+        deleteSearchMarkers(searchMarkerArrayList);
+    }
+
     public void onDestroy(){
         onDestroyBoolean = false;
     }

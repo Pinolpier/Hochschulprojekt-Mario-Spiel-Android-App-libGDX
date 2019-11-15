@@ -37,6 +37,11 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Intent intent = new Intent(LoginActivity.this, SettingsActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("killInstant", true);
+        intent.putExtras(bundle);
+        startActivity(intent);
         setContentView(R.layout.activity_login);
         context = this;
 
