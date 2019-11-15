@@ -1,3 +1,45 @@
 <resources>
-    <string name="app_name">group01exercise2</string>
+    <string name="app_name">Karte des Rumtreibers</string>
+    <string name="register_button">Register</string>
+    <string name="login_button">Login</string>
+    <string name="password_text">Password</string>
+    <string name="user_text">User</string>
+    
+    <!-- Preferences -->
+    <string name="preferences_header">Einstellungen</string>
+    <string name="radius">Radius</string>
+    <string name="interval">Intervall</string>
+    <string name="show_poi">POIs anzeigen</string>
+    <string name="show_fuelprice">Tankpreise anzeigen</string>
+    <string name="show_locationhistory">Standortverlauf anzeigen</string>
+    <string name="change_password">Passwort ändern</string>
+    <string name="settings_account">Accouteinstellungen</string>
+    <string name="radius_desc_summary">Lege den Radius für die Sichtbarkeit auf der Karte fest</string>
+    <string name="interval_desc_summary">Lege das Aktualisierungsintervall fest</string>
+    <string name="locationhistory_desc_summary">Lege das Zeitfenster für den Standortverlauf fest</string>
+    <string name="locationhistory_duration">Zeitfenster</string>
+    <string name="locationhistory">Standortverlauf</string>
+    <string name="userdescription">Eigene Beschreibung</string>
+
+    <!-- Sync Service -->
+    <string name="usernameNotAvailableToastMessage">Der Username ist schon vergeben, die Registrierung konnte nicht abgeschlossen werden, bitte einen anderen Namen wählen und erneut versuchen oder aber Einloggen!</string>
+    <string name="registrationSuccessfulToastMessage">Registrierung beim Webservice war erfolgreich. Login wird gestartet.</string>
+    <string name="loginFailedToastMessage">Der Login ist fehlgeschlagen! Bitte Username und Passwort überprüfen. Vor dem ersten Login muss man sich registrieren.</string>
+    <string name="loginSuccessfulToastMessage">Login war erfolgreich!</string>
+    <string name="updateFailedInvalidJwtTokenToastMessage">Konnte die Benutzerinformation(en) nicht aktualisieren. Interner Fehler, bitte neu einloggen.</string>
+    <string name="updateSuccessfulToastMessage">Benutzerinformationen erfolgreich geupdatet</string>
+    <string name="sendLocationFailedInvalidJwtTokenToastMessage">Konnte die Position nicht senden. Interner Fehler, bitte neu einloggen.</string>
+    <string name="getUsersFailedInvalidJwtTokenToastMessage">Konnte keine Standorte abrufen. Interner Fehler, bitte neu einloggen.</string>
+    <string name="sendLocationFailed">ACHTUNG: Die Location konnte nicht an den Server gesendet werden!</string>
+    <string name="emptyCredentialsToastMessage">Leerer Username oder Password sind nicht gültig. Bitte einen Wert eingeben!</string>
+
+    <!--Map Functionality-->
+    <string name="onFailureFuelSearch">Fehler beim abfragen der Tankpreise</string>
+    <string name="noUsersAround">Keine Nutzer in der Umgebung gefunden!</string>
+    <string name="usersAroundFailure">Fehler beim Versuch die Nutzer in der Umgebung zu suchen</string>
+    <string name="noPoisFound">Keine Poi`s in diesem Bereich gefunden!</string>
+    <string name="noLocationHistory">Es konnte keine LocationHistory gefunden werden!</string>
+    <string name="locationHistoryFailure">Fehler beim Laden der Location History!</string>
+    <string name="noSearchResults">Dieser Suchbegriff konnte nicht gefunden werden!</string>
+    <string name="searchFunctionFailure">Suche konnte nicht durchgeführt werden!</string>
 </resources>
