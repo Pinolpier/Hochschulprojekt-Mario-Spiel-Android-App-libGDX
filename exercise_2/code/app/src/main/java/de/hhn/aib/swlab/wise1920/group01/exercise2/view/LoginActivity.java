@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
 import de.hhn.aib.swlab.wise1920.group01.exercise2.R;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.controller.AuthService;
@@ -37,13 +38,9 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Intent intent = new Intent(LoginActivity.this, SettingsActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putBoolean("killInstant", true);
-        intent.putExtras(bundle);
-        startActivity(intent);
         setContentView(R.layout.activity_login);
         context = this;
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
         textInputUsername = findViewById(R.id.editText_User);
         textInputPassword = findViewById(R.id.editText_password);
