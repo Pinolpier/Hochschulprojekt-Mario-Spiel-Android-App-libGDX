@@ -22,7 +22,7 @@ import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.RegistrationProces
  * This class represents the Login/Registrationscreen where the user can login with his username and
  * password or register a new account.
  */
-public class MainActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
     private EditText textInputUsername;
     private EditText textInputPassword;
@@ -37,9 +37,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login);
         context = this;
-//        testWebserviceImplementation();
 
         textInputUsername = findViewById(R.id.editText_User);
         textInputPassword = findViewById(R.id.editText_password);
@@ -48,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("MainActivity: ", "Login button clicked!");
+                Log.d("LoginActivity: ", "Login button clicked!");
                 String username = textInputUsername.getText().toString();
                 String password = textInputPassword.getText().toString();
                 login(username, password);
@@ -58,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         buttonRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("MainActivity: ", "Register button clicked!");
+                Log.d("LoginActivity: ", "Register button clicked!");
                 String username = textInputUsername.getText().toString();
                 String password = textInputPassword.getText().toString();
                 if (username.equals(null) || password.equals(null) || username.equals("") || password.equals("")) {
@@ -73,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
 
                         @Override
                         public void onFailure() {
-                            Log.wtf("Main Activity: ", "Registration onFailure has benn called!");
+                            Log.wtf("LoginActivity: ", "Registration onFailure has benn called!");
                         }
                     });
                 }
@@ -89,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
      * @param password      password input from user
      */
     private void login(String username, String password) {
-        Log.d("MainActivity: ", "Login method started!");
+        Log.d("LoginActivity: ", "Login method started!");
         if (username.equals(null) || password.equals(null) || username.equals("") || password.equals("")) {
             Toast.makeText(this, R.string.emptyCredentialsToastMessage, Toast.LENGTH_LONG).show();
             return;
@@ -97,8 +96,8 @@ public class MainActivity extends AppCompatActivity {
         auth.login(username, password, new LoginProcessedInterface() {
             @Override
             public void onSuccess() {
-                Log.d("MainActivity: ", "Login on Success");
-                Intent intent = new Intent(MainActivity.this, MapsActivity.class);
+                Log.d("LoginActivity: ", "Login on Success");
+                Intent intent = new Intent(LoginActivity.this, MapsActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("jwt", auth.getJWT());
                 bundle.putString("id", auth.getUserID());

@@ -80,7 +80,6 @@ public class SyncService {
                         break;
                     case "text_newpassword":
                         if (!sharedPreferences.getString(key, "").isEmpty()) {
-                            Log.d("cngPassword", sharedPreferences.getString(key, ""));
                             changePassword(sharedPreferences.getString(key, ""));
                         } else {
                             Toast.makeText(context, "Passwort darf nicht leer sein, bitte ein gültiges Passwort eingeben", Toast.LENGTH_LONG).show();

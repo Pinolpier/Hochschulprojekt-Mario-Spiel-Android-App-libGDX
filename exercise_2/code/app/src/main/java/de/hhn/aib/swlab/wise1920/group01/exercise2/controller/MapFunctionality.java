@@ -17,7 +17,6 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
-
 import com.nabinbhandari.android.permissions.PermissionHandler;
 import com.nabinbhandari.android.permissions.Permissions;
 
@@ -167,8 +166,6 @@ public class MapFunctionality {
         switchPoi(prefs.getBoolean("switch_poi",false));
         switchFuelprice(prefs.getBoolean("switch_fuelprice",false));
         switchLocHistory(prefs.getBoolean("switch_locationhistory",false));
-
-        Log.e("timeFrame", "" + getLocHistoryTimeframe());
     }
 
     /**
