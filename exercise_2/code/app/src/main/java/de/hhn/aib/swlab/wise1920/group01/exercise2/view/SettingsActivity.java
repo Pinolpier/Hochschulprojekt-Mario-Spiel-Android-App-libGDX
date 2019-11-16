@@ -22,11 +22,6 @@ public class SettingsActivity extends AppCompatActivity {
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if (getIntent().getExtras() != null) {
-            if (getIntent().getExtras().getBoolean("killInstant")) {
-                finish();
-            }
-        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         getSupportFragmentManager()
