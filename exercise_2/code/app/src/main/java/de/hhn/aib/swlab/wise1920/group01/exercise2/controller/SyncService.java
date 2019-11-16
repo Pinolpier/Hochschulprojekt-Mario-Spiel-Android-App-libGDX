@@ -450,7 +450,7 @@ public class SyncService {
     }
 
     private long getInterval() {
-        return Long.parseLong(prefs.getString("list_interval", "-1"));
+        return Long.parseLong(prefs.getString("list_interval", "1800000"));
     }
 
     private double getRadius() {
