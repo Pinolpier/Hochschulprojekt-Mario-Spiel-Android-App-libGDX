@@ -65,6 +65,10 @@ public class SyncService {
         api = retrofit.create(UserAPI.class);
 
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
+         setPasswordField(password);
+         setDescField(description);
+         setSyncInterval(getInterval());
+         changePrivacyRadius(getRadius());
         listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
             @Override
             public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -92,12 +96,8 @@ public class SyncService {
                 }
             }
         };
-        prefs.registerOnSharedPreferenceChangeListener(listener);
-        setPasswordField(password);
-        setDescField(description);
-        setSyncInterval(getInterval());
-        changePrivacyRadius(getRadius());
-    }
+         prefs.registerOnSharedPreferenceChangeListener(listener);
+     }
 
     public long getSyncInterval() {
         return syncInterval;

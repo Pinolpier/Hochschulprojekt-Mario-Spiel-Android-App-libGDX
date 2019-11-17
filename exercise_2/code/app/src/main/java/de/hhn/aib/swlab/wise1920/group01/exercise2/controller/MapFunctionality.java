@@ -133,6 +133,10 @@ public class MapFunctionality {
         },1000));
 
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        switchPoi(prefs.getBoolean("switch_poi", false));
+        switchFuelprice(prefs.getBoolean("switch_fuelprice", false));
+        switchLocHistory(prefs.getBoolean("switch_locationhistory", false));
+
         listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
             @Override
             public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -162,10 +166,6 @@ public class MapFunctionality {
             }
         };
         prefs.registerOnSharedPreferenceChangeListener(listener);
-
-        switchPoi(prefs.getBoolean("switch_poi",false));
-        switchFuelprice(prefs.getBoolean("switch_fuelprice",false));
-        switchLocHistory(prefs.getBoolean("switch_locationhistory",false));
     }
 
     /**
