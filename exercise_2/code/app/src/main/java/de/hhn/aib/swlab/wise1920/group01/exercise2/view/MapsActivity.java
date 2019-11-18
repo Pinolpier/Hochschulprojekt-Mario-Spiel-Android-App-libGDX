@@ -88,7 +88,6 @@ public class MapsActivity extends AppCompatActivity {
     protected void onDestroy() {
         controller.onDestroy();
         super.onDestroy();
-        clearPasswordField();
     }
 
     /**
@@ -129,5 +128,11 @@ public class MapsActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString("text_newpassword", "");
         editor.apply();
+    }
+
+    @Override
+    public void onBackPressed() {
+        clearPasswordField();
+        super.onBackPressed();
     }
 }
