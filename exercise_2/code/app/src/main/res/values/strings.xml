@@ -38,6 +38,7 @@
     <string name="noUsersAround">Keine Nutzer in der Umgebung gefunden!</string>
     <string name="usersAroundFailure">Fehler beim Versuch die Nutzer in der Umgebung zu suchen</string>
     <string name="noPoisFound">Keine Poi`s in diesem Bereich gefunden!</string>
+    <string name="poiOnFailure">Fehler beim Laden der Poi`s</string>
     <string name="noLocationHistory">Es konnte keine LocationHistory gefunden werden!</string>
     <string name="locationHistoryFailure">Fehler beim Laden der Location History!</string>
     <string name="noSearchResults">Dieser Suchbegriff konnte nicht gefunden werden!</string>
