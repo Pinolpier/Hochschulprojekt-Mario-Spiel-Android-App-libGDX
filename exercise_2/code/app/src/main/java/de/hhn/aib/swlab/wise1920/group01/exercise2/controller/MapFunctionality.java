@@ -278,7 +278,7 @@ public class MapFunctionality {
 
                 @Override
                 public void onFailure() {
-                    Toast.makeText(context, R.string.noPoisFound, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.poiOnFailure, Toast.LENGTH_SHORT).show();
                 }
             });
         }

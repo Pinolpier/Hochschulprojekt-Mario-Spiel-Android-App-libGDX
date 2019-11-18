@@ -137,6 +137,7 @@ public class PoiSearchService {
     private PoiDummy findByRef(ArrayList<PoiDummy> poiDummies){
 
         for(int x=0;x<searchResults.size();x++){
+            if(poiDummies!=null)
                 if (searchResults.get(x).getId()==poiDummies.get(0).getRef()){
                     long id = searchResults.get(x).getNodesArrayList().get(0);
                     for (int index = 0;index<searchResults.size();index++){
