@@ -14,11 +14,20 @@ lintDebug:
   script:
     - cd exercise_1/code
     - ./gradlew -Pci --console=plain :app:lintDebug -PbuildDir=lint
+    - cd exercise_2/code
+    - ./gradlew -Pci --console=plain :app:lintDebug -PbuildDir=lint
+    - cd exercise_3/code
+    - ./gradlew -Pci --console=plain :app:lintDebug -PbuildDir=lint
+    
 
 assembleDebug:
   stage: build
   script:
     - cd exercise_1/code
+    - ./gradlew assembleDebug
+    - cd exercise_2/code
+    - ./gradlew assembleDebug
+    - cd exercise_3/code
     - ./gradlew assembleDebug
   artifacts:
     paths:
@@ -28,4 +37,8 @@ debugTests:
   stage: test
   script:
     - cd exercise_1/code
+    - ./gradlew -Pci --console=plain :app:testDebug
+    - cd exercise_2/code
+    - ./gradlew -Pci --console=plain :app:testDebug
+    - cd exercise_3/code
     - ./gradlew -Pci --console=plain :app:testDebug
