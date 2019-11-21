@@ -1,11 +1,29 @@
 image: miadmin_android29:latest
 
-variables:
-  ANDROID_COMPILE_SDK: "23"
-  ANDROID_BUILD_TOOLS: "23.0.2"
-  ANDROID_SDK_TOOLS:   "4333796"
 
 build:
     script:
      - cd exercise_1/code
      - ./gradlew build
+
+stages:
+  - build
+  - test
+
+lintDebug:
+  stage: build
+  script:
+    - ./gradlew -Pci --console=plain :app:lintDebug -PbuildDir=lint
+
+assembleDebug:
+  stage: build
+  script:
+    - ./gradlew assembleDebug
+  artifacts:
+    paths:
+    - app/build/outputs/
+
+debugTests:
+  stage: test
+  script:
+    - ./gradlew -Pci --console=plain :app:testDebug
