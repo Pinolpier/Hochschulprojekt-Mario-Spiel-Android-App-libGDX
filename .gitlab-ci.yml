@@ -1,6 +1,5 @@
 image: miadmin_android29:latest
 
-
 build:
     script:
      - cd exercise_1/code
@@ -13,11 +12,13 @@ stages:
 lintDebug:
   stage: build
   script:
+    - cd exercise_1/code
     - ./gradlew -Pci --console=plain :app:lintDebug -PbuildDir=lint
 
 assembleDebug:
   stage: build
   script:
+    - cd exercise_1/code
     - ./gradlew assembleDebug
   artifacts:
     paths:
@@ -26,4 +27,5 @@ assembleDebug:
 debugTests:
   stage: test
   script:
+    - cd exercise_1/code
     - ./gradlew -Pci --console=plain :app:testDebug
