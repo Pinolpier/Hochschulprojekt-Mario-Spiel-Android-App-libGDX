@@ -202,6 +202,7 @@ public class SyncService {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (!response.isSuccessful() && response.code() != 304 && response.code() != 403) {
+                    Toast.makeText(context, R.string.errorOfTypeWtfToastMessage, Toast.LENGTH_LONG).show();
                     Log.wtf("Sync Service", "An unexpected HTTP Response Code indicating an error has been returned by the webservice while update: Response Code is " + response.code());
                     return;
                 }
@@ -227,6 +228,7 @@ public class SyncService {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Toast.makeText(context, R.string.connectionOnFailureToastMessage, Toast.LENGTH_LONG).show();
                 Log.wtf("Sync Service: ", "A serious error with the webservice occurred during update, error:" + t.getMessage());
             }
         });
@@ -283,6 +285,7 @@ public class SyncService {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Toast.makeText(context, R.string.connectionOnFailureToastMessage, Toast.LENGTH_LONG).show();
                 Log.wtf("Sync Service: ", "A serious error with the webservice occurred during changeLocation, error:" + t.getMessage());
             }
         });
@@ -343,6 +346,7 @@ public class SyncService {
 
             @Override
             public void onFailure(Call<List<MapObjectDummy>> call, Throwable t) {
+                Toast.makeText(context, R.string.connectionOnFailureToastMessage, Toast.LENGTH_LONG).show();
                 Log.wtf("Sync Service: ", "A serious error with the webservice occurred during getUsersAround, error:" + t.getMessage());
                 usersAroundReceivedInterface.onFailure();
             }
@@ -444,6 +448,7 @@ public class SyncService {
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
+                Toast.makeText(context, R.string.connectionOnFailureToastMessage, Toast.LENGTH_LONG).show();
                 Log.wtf("Sync Service: ", "A serious error with the webservice occurred during login, error:" + t.getMessage());
             }
         });

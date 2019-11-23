@@ -8,12 +8,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import de.hhn.aib.swlab.wise1920.group01.exercise2.R;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.MapObject;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.extensions.FuelAPI;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.extensions.FuelDummy;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.extensions.FuelPricesReceivedInterface;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.extensions.GasStationDummy;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -78,7 +78,7 @@ public class FuelPricesSearchService {
             @Override
             public void onFailure(Call<FuelDummy> call, Throwable t) {
                 Log.wtf("FuelSearchPriceService: ", "Fatal Error in FuelSearchPriceService.search()!" + t.getMessage());
-                Toast.makeText(context, "Fehler" + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, R.string.connectionOnFailureToastMessage, Toast.LENGTH_SHORT).show();
                 fuelPricesReceivedInterface.onFailure();
             }
         });

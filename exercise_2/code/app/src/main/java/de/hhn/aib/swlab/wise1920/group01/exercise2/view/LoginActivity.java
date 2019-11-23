@@ -59,7 +59,7 @@ public class LoginActivity extends AppCompatActivity {
                 Log.d("LoginActivity: ", "Register button clicked!");
                 String username = textInputUsername.getText().toString();
                 String password = textInputPassword.getText().toString();
-                if (username.equals(null) || password.equals(null) || username.equals("") || password.equals("")) {
+                if (username == null || password == null || username.equals("") || password.equals("")) {
                     Toast.makeText(context, R.string.emptyCredentialsToastMessage, Toast.LENGTH_LONG).show();
                 } else {
                     auth.register(username, password, null, new RegistrationProcessedInterface() {
@@ -88,7 +88,7 @@ public class LoginActivity extends AppCompatActivity {
      */
     private void login(String username, String password) {
         Log.d("LoginActivity: ", "Login method started!");
-        if (username.equals(null) || password.equals(null) || username.equals("") || password.equals("")) {
+        if (username == null || password == null || username.equals("") || password.equals("")) {
             Toast.makeText(this, R.string.emptyCredentialsToastMessage, Toast.LENGTH_LONG).show();
             return;
         }

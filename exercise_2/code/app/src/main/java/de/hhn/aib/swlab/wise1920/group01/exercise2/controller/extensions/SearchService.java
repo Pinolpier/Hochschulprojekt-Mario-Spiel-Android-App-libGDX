@@ -10,7 +10,6 @@ import de.hhn.aib.swlab.wise1920.group01.exercise2.model.MapObject;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.extensions.SearchAPI;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.extensions.SearchResultDummy;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.extensions.SearchResultsReceivedInterface;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

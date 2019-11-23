@@ -3,7 +3,9 @@ package de.hhn.aib.swlab.wise1920.group01.exercise2.controller.extensions;
 import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
+
 import org.osmdroid.util.BoundingBox;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,7 +65,7 @@ public class PoiSearchService {
                 "out body;\n" +
                 ">;\n" +
                 "out skel qt;";
-        Log.d("PoiSearchService: ","getPois gestartet!");
+        Log.d("PoiSearchService: ", "getPois started!");
         Call<PoiElementsDummy> call = api.getSearchResult(data);
         call.enqueue(new Callback<PoiElementsDummy>() {
             @Override
@@ -124,7 +126,7 @@ public class PoiSearchService {
             }}
             @Override
             public void onFailure(Call<PoiElementsDummy> call, Throwable t) {
-                Toast.makeText(context,R.string.noPoisFound, Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, R.string.connectionOnFailureToastMessage, Toast.LENGTH_LONG).show();
             }
         });
     }
