@@ -99,7 +99,7 @@ public class MapFunctionality {
         GeoPoint startPoint = new GeoPoint(49.122831, 9.210871); //Koordinaten der Hochschule Heilbronn
         mapController.setCenter(startPoint);
         marker = new Marker(map);
-        marker.setSnippet("My current Location");
+        marker.setTitle("My current Location");
         marker.setIcon(context.getDrawable((R.drawable.ic_location_on_red_24dp)));
 
         timer = new CountDownTimer(Long.MAX_VALUE, syncInterval) {
@@ -443,6 +443,7 @@ public class MapFunctionality {
         GeoPoint gPt = new GeoPoint(latitude,longitude);
         marker.setPosition(gPt);
         marker.setAnchor(0.5f,0.5f);
+        marker.setSnippet(sync.getDescription());
         map.getOverlays().add(marker);
         map.invalidate();
     }
