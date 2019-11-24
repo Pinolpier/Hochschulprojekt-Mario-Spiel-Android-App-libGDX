@@ -8,7 +8,7 @@ import java.util.List;
 
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.MapObject;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.extensions.SearchAPI;
-import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.extensions.SearchResultDummy;
+import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.extensions.SearchResultDTO;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.extensions.SearchResultsReceivedInterface;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -45,19 +45,19 @@ public class SearchService {
         map.put("q", searchTerm);
         map.put("format", "json");
         map.put("namedetails","1");
-        Call<List<SearchResultDummy>> call = api.getSearchResult(map);
-        call.enqueue(new Callback<List<SearchResultDummy>>() {
+        Call<List<SearchResultDTO>> call = api.getSearchResult(map);
+        call.enqueue(new Callback<List<SearchResultDTO>>() {
             @Override
-            public void onResponse(Call<List<SearchResultDummy>> call, Response<List<SearchResultDummy>> response) {
+            public void onResponse(Call<List<SearchResultDTO>> call, Response<List<SearchResultDTO>> response) {
                 ArrayList<MapObject> searchResultList = new ArrayList<>();
-                List<SearchResultDummy> searchResults = response.body();
-                for (SearchResultDummy i : searchResults) {
+                List<SearchResultDTO> searchResults = response.body();
+                for (SearchResultDTO i : searchResults) {
                     searchResultList.add(new MapObject(i.getLatitude(), i.getLongitude(),null, i.getDescription()));
                 }
                 searchResultsReceivedInterface.onSuccess(searchResultList);
             }
             @Override
-            public void onFailure(Call<List<SearchResultDummy>> call, Throwable t) {
+            public void onFailure(Call<List<SearchResultDTO>> call, Throwable t) {
                 Log.wtf("SearchService: ", "Fatal Error in SearchService.search()!");
                 searchResultsReceivedInterface.onFailure();
             }

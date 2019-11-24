@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 
-public class PoiDummy {
+public class PoiDTO {
     @SerializedName("lat")
     @Expose
     Double lat;
@@ -32,15 +32,14 @@ public class PoiDummy {
 
     @SerializedName("members")
     @Expose
-    ArrayList<PoiDummy> poiMembers;
+    ArrayList<PoiDTO> poiMembers;
 
     @SerializedName("ref")
     @Expose
     Long ref;
 
 
-
-    public PoiDummy(Double lat, Double lon, PoiTagsDummy poiTagsDummy, String type, long id, ArrayList<Long> nodesArrayList,ArrayList<PoiDummy> poiMembers,long ref) {
+    public PoiDTO(Double lat, Double lon, PoiTagsDummy poiTagsDummy, String type, long id, ArrayList<Long> nodesArrayList, ArrayList<PoiDTO> poiMembers, long ref) {
         this.lat = lat;
         this.lon = lon;
         this.poiTagsDummy = poiTagsDummy;
@@ -51,7 +50,7 @@ public class PoiDummy {
         this.ref = ref;
     }
 
-    public ArrayList<PoiDummy> getPoiMembers() {
+    public ArrayList<PoiDTO> getPoiMembers() {
         return poiMembers;
     }
 

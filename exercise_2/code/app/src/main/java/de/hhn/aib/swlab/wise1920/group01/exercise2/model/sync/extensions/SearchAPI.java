@@ -9,5 +9,5 @@ import retrofit2.http.QueryMap;
 
 public interface SearchAPI {
     @GET("search")
-    Call<List<SearchResultDummy>> getSearchResult(@QueryMap Map<String, String> parameters);
+    Call<List<SearchResultDTO>> getSearchResult(@QueryMap Map<String, String> parameters);
 }

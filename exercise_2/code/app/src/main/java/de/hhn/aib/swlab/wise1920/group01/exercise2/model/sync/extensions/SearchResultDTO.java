@@ -3,7 +3,7 @@ package de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.extensions;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class SearchResultDummy {
+public class SearchResultDTO {
     @SerializedName("display_name")
     @Expose
     String description;
@@ -16,7 +16,7 @@ public class SearchResultDummy {
     @Expose
     Double longitude;
 
-    public SearchResultDummy(String description, Double latitude, Double longitude) {
+    public SearchResultDTO(String description, Double latitude, Double longitude) {
         this.description = description;
         this.latitude = latitude;
         this.longitude = longitude;

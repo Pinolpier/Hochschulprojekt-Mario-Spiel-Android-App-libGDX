@@ -11,7 +11,7 @@ import java.util.List;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.R;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.MapObject;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.extensions.FuelAPI;
-import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.extensions.FuelDummy;
+import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.extensions.FuelDTO;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.extensions.FuelPricesReceivedInterface;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.extensions.GasStationDummy;
 import retrofit2.Call;
@@ -56,10 +56,10 @@ public class FuelPricesSearchService {
         map.put("rad", ""+radius);
         map.put("type", "all");
         map.put("apikey", apikey);
-        Call<FuelDummy> call = api.getSearchResult(map);
-        call.enqueue(new Callback<FuelDummy>() {
+        Call<FuelDTO> call = api.getSearchResult(map);
+        call.enqueue(new Callback<FuelDTO>() {
             @Override
-            public void onResponse(Call<FuelDummy> call, Response<FuelDummy> response) {
+            public void onResponse(Call<FuelDTO> call, Response<FuelDTO> response) {
                 ArrayList searchResultList = new ArrayList<MapObject>();
                 assert response.body() != null;
                 List<GasStationDummy> searchResults = response.body().getStationsAround();
@@ -76,7 +76,7 @@ public class FuelPricesSearchService {
             }
 
             @Override
-            public void onFailure(Call<FuelDummy> call, Throwable t) {
+            public void onFailure(Call<FuelDTO> call, Throwable t) {
                 Log.wtf("FuelSearchPriceService: ", "Fatal Error in FuelSearchPriceService.search()!" + t.getMessage());
                 Toast.makeText(context, R.string.connectionOnFailureToastMessage, Toast.LENGTH_SHORT).show();
                 fuelPricesReceivedInterface.onFailure();

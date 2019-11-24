@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class FuelDummy {
+public class FuelDTO {
     @SerializedName("ok")
     @Expose
     String statusCode;
@@ -18,13 +18,13 @@ public class FuelDummy {
     @Expose
     List<GasStationDummy> stationsAround;
 
-    public FuelDummy(String statusCode, String errorMessage, List<GasStationDummy> stationsAround) {
+    public FuelDTO(String statusCode, String errorMessage, List<GasStationDummy> stationsAround) {
         this.statusCode = statusCode;
         this.errorMessage = errorMessage;
         this.stationsAround = stationsAround;
     }
 
-    public FuelDummy(String statusCode, List<GasStationDummy> stationsAround) {
+    public FuelDTO(String statusCode, List<GasStationDummy> stationsAround) {
         this.statusCode = statusCode;
         this.stationsAround = stationsAround;
     }

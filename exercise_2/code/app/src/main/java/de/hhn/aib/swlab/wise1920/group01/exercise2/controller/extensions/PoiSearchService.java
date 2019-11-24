@@ -12,7 +12,7 @@ import java.util.List;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.R;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.MapObject;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.extensions.PoiAPI;
-import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.extensions.PoiDummy;
+import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.extensions.PoiDTO;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.extensions.PoiElementsDummy;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.extensions.PoiTagsDummy;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.extensions.PoisReceivedInterface;
@@ -30,7 +30,7 @@ public class PoiSearchService {
     private Retrofit retrofit;
     private Context context;
     private PoiAPI api;
-    private List<PoiDummy> searchResults;
+    private List<PoiDTO> searchResults;
 
     /**
      * Constructor for PoiSearchService
@@ -72,15 +72,15 @@ public class PoiSearchService {
             public void onResponse(Call<PoiElementsDummy> call, Response<PoiElementsDummy> response) {
                 ArrayList searchResultList = new ArrayList<MapObject>();
                 if(response.body()!=null){
-                if(response.body().getPoiDummyArray()!=null) {
-                    searchResults = response.body().getPoiDummyArray();
+                    if (response.body().getPoiDTOArray() != null) {
+                        searchResults = response.body().getPoiDTOArray();
                     if (searchResults != null) {
                         for (int x = 0; x < searchResults.size(); x++) {
                             String label = "";
                             double lat;
                             double lng;
                             if (searchResults.get(x).getType().equals("relation")) {
-                                PoiDummy dummy = findByRef(searchResults.get(x).getPoiMembers());
+                                PoiDTO dummy = findByRef(searchResults.get(x).getPoiMembers());
                                 PoiTagsDummy tagsDummy = searchResults.get(x).getPoiTagsDummy();
                                 lat = dummy.getLat();
                                 lng = dummy.getLon();
@@ -89,7 +89,7 @@ public class PoiSearchService {
                                 searchResults.remove(x);
                             }
                         }
-                        for (PoiDummy a : searchResults) {
+                        for (PoiDTO a : searchResults) {
                             String label = "";
                             double lat;
                             double lng;
@@ -101,7 +101,7 @@ public class PoiSearchService {
 
                                 ArrayList<Long> secondList = a.getNodesArrayList();
                                 long id = secondList.get(0);
-                                PoiDummy dummy = findById(searchResults, id);
+                                PoiDTO dummy = findById(searchResults, id);
                                 lat = dummy.getLat();
                                 lng = dummy.getLon();
                                 searchResultList.add(new MapObject(lat, lng, label, null));
@@ -136,7 +136,7 @@ public class PoiSearchService {
      * @param poiDummies    list of PoiDummies of type "way"
      * @return              poi thats representable for all IDs of "relation" point
      */
-    private PoiDummy findByRef(ArrayList<PoiDummy> poiDummies){
+    private PoiDTO findByRef(ArrayList<PoiDTO> poiDummies) {
 
         for(int x=0;x<searchResults.size();x++){
             if(poiDummies!=null)
@@ -161,8 +161,8 @@ public class PoiSearchService {
      * @param id                ID of node that should be searched
      * @return                  poi that is representable for all pois that get shown in area of "Way"
      */
-    private PoiDummy findById(List<PoiDummy> dummyArrayList ,long id){
-        for (PoiDummy dummy : dummyArrayList){
+    private PoiDTO findById(List<PoiDTO> dummyArrayList, long id) {
+        for (PoiDTO dummy : dummyArrayList) {
             if(dummy.getId()==id){
                 return dummy;
             }
