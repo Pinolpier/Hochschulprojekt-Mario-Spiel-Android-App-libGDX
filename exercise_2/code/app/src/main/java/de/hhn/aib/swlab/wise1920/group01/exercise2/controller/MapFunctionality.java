@@ -253,12 +253,12 @@ public class MapFunctionality {
      */
     private void getPoi(){
         if(poiSearch) {
-            deleteSearchMarkers(poiMarkerList);
             PoiSearchService poiSearchService = new PoiSearchService(context);
             poiSearchService.getPois(map.getBoundingBox(), new PoisReceivedInterface() {
                 @Override
                 public void onSuccess(ArrayList<MapObject> poiArrayList) {
                     if (onDestroyBoolean) {
+                        deleteSearchMarkers(poiMarkerList);
                         if (poiArrayList.size() >= 1) {
                             for (int counter = 0; counter < poiArrayList.size(); counter++) {
                                 Marker poiMarker = new Marker(map);
@@ -374,7 +374,6 @@ public class MapFunctionality {
             }
             markers.clear();
         }
-
     }
 
     /**
