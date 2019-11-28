@@ -78,7 +78,7 @@ public class FuelPricesSearchService {
             @Override
             public void onFailure(Call<FuelDTO> call, Throwable t) {
                 Log.wtf("FuelSearchPriceService: ", "Fatal Error in FuelSearchPriceService.search()!" + t.getMessage());
-                Toast.makeText(context, R.string.connectionOnFailureToastMessage, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, R.string.connectionOnFailureToastMessage, Toast.LENGTH_SHORT).show();
                 fuelPricesReceivedInterface.onFailure();
             }
         });

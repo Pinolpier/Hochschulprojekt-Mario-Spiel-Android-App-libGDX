@@ -58,7 +58,7 @@ public class SearchService {
             }
             @Override
             public void onFailure(Call<List<SearchResultDTO>> call, Throwable t) {
-                Log.wtf("SearchService: ", "Fatal Error in SearchService.search()!");
+                Log.wtf("SearchService: ", "Fatal Error in SearchService.search(): "+t.getMessage());
                 searchResultsReceivedInterface.onFailure();
             }
         });

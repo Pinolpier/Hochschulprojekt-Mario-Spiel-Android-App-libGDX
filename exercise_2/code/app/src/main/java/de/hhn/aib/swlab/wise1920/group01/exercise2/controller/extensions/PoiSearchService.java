@@ -126,7 +126,10 @@ public class PoiSearchService {
             }}
             @Override
             public void onFailure(Call<PoiElementsDummy> call, Throwable t) {
-                Toast.makeText(context, R.string.connectionOnFailureToastMessage, Toast.LENGTH_LONG).show();
+                Log.wtf("PoiSearchService: ","on Failure at getPois with: "+t.getMessage());
+                //Toast.makeText(context, R.string.connectionOnFailureToastMessage, Toast.LENGTH_LONG).show();
+                poisReceivedInterface.onFailure();
+
             }
         });
     }

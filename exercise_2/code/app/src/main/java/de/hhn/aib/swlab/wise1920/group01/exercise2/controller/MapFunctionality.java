@@ -172,7 +172,6 @@ public class MapFunctionality {
      * Shows all users around your current location on the map with a green marker
      */
     private void getUsersAround() {
-        deleteSearchMarkers(usersAroundMarker);
         sync.getUsersAround(Integer.parseInt(prefs.getString("list_radius","-1")), new UsersAroundReceivedInterface() {
             @Override
             public void onSuccess(ArrayList<MapObject> usersAround) {
@@ -204,8 +203,6 @@ public class MapFunctionality {
      * Shows all timestamps from own locationhistory on the map with orange markers and connects them with orange lines (sort by time)
      */
     private void getLocationHistory() {
-        deleteSearchMarkers(timeStampedMarkerList);
-        deleteHistoryLines();
         if (historyBoolean) {
             Calendar calendar = Calendar.getInstance();
             Long time = calendar.getTimeInMillis() -getLocHistoryTimeframe();
@@ -289,7 +286,6 @@ public class MapFunctionality {
      * @param position      current position of the user
      */
     private void getFuelPrices(Position position) {
-        deleteSearchMarkers(fuelMarkerList);
         if(fuelSearch){
         fuelService.getFuelPrices(position.getLatitude(), position.getLongitude(), new FuelPricesReceivedInterface() {
             @Override
@@ -325,7 +321,6 @@ public class MapFunctionality {
      * @param searchTerm        input of the user in searchview
      */
     public void search(String searchTerm) {
-        deleteSearchMarkers(searchMarkerArrayList);
         searchService.search(searchTerm, new SearchResultsReceivedInterface() {
             @Override
             public void onSuccess(ArrayList<MapObject> searchResultsList) {
@@ -347,7 +342,6 @@ public class MapFunctionality {
                         Toast.makeText(context, R.string.noSearchResults, Toast.LENGTH_SHORT).show();
                 }
             }
-
 
             @Override
             public void onFailure() {
