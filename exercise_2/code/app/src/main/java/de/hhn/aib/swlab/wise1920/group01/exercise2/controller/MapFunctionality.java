@@ -325,6 +325,7 @@ public class MapFunctionality {
             @Override
             public void onSuccess(ArrayList<MapObject> searchResultsList) {
                 if (onDestroyBoolean) {
+                    deleteSearchMarkers(searchMarkerArrayList);
                     if (searchResultsList.size() >= 1) {
                         for (int counter = 0; counter < searchResultsList.size(); counter++) {
                             Marker searchMarker = new Marker(map);
