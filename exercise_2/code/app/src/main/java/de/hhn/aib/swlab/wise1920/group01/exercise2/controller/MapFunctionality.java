@@ -99,7 +99,7 @@ public class MapFunctionality {
         GeoPoint startPoint = new GeoPoint(49.122831, 9.210871); //Koordinaten der Hochschule Heilbronn
         mapController.setCenter(startPoint);
         marker = new Marker(map);
-        marker.setSnippet("My current Location");
+        marker.setTitle("My current Location");
         marker.setIcon(context.getDrawable((R.drawable.ic_location_on_red_24dp)));
 
         timer = new CountDownTimer(Long.MAX_VALUE, syncInterval) {
@@ -133,6 +133,10 @@ public class MapFunctionality {
         },1000));
 
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        switchPoi(prefs.getBoolean("switch_poi", false));
+        switchFuelprice(prefs.getBoolean("switch_fuelprice", false));
+        switchLocHistory(prefs.getBoolean("switch_locationhistory", false));
+
         listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
             @Override
             public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -162,17 +166,12 @@ public class MapFunctionality {
             }
         };
         prefs.registerOnSharedPreferenceChangeListener(listener);
-
-        switchPoi(prefs.getBoolean("switch_poi",false));
-        switchFuelprice(prefs.getBoolean("switch_fuelprice",false));
-        switchLocHistory(prefs.getBoolean("switch_locationhistory",false));
     }
 
     /**
      * Shows all users around your current location on the map with a green marker
      */
     private void getUsersAround() {
-        deleteSearchMarkers(usersAroundMarker);
         sync.getUsersAround(Integer.parseInt(prefs.getString("list_radius","-1")), new UsersAroundReceivedInterface() {
             @Override
             public void onSuccess(ArrayList<MapObject> usersAround) {
@@ -204,8 +203,6 @@ public class MapFunctionality {
      * Shows all timestamps from own locationhistory on the map with orange markers and connects them with orange lines (sort by time)
      */
     private void getLocationHistory() {
-        deleteSearchMarkers(timeStampedMarkerList);
-        deleteHistoryLines();
         if (historyBoolean) {
             Calendar calendar = Calendar.getInstance();
             Long time = calendar.getTimeInMillis() -getLocHistoryTimeframe();
@@ -253,12 +250,12 @@ public class MapFunctionality {
      */
     private void getPoi(){
         if(poiSearch) {
-            deleteSearchMarkers(poiMarkerList);
             PoiSearchService poiSearchService = new PoiSearchService(context);
             poiSearchService.getPois(map.getBoundingBox(), new PoisReceivedInterface() {
                 @Override
                 public void onSuccess(ArrayList<MapObject> poiArrayList) {
                     if (onDestroyBoolean) {
+                        deleteSearchMarkers(poiMarkerList);
                         if (poiArrayList.size() >= 1) {
                             for (int counter = 0; counter < poiArrayList.size(); counter++) {
                                 Marker poiMarker = new Marker(map);
@@ -278,7 +275,7 @@ public class MapFunctionality {
 
                 @Override
                 public void onFailure() {
-                    Toast.makeText(context, R.string.noPoisFound, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.poiOnFailure, Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -289,7 +286,6 @@ public class MapFunctionality {
      * @param position      current position of the user
      */
     private void getFuelPrices(Position position) {
-        deleteSearchMarkers(fuelMarkerList);
         if(fuelSearch){
         fuelService.getFuelPrices(position.getLatitude(), position.getLongitude(), new FuelPricesReceivedInterface() {
             @Override
@@ -325,7 +321,6 @@ public class MapFunctionality {
      * @param searchTerm        input of the user in searchview
      */
     public void search(String searchTerm) {
-        deleteSearchMarkers(searchMarkerArrayList);
         searchService.search(searchTerm, new SearchResultsReceivedInterface() {
             @Override
             public void onSuccess(ArrayList<MapObject> searchResultsList) {
@@ -347,7 +342,6 @@ public class MapFunctionality {
                         Toast.makeText(context, R.string.noSearchResults, Toast.LENGTH_SHORT).show();
                 }
             }
-
 
             @Override
             public void onFailure() {
@@ -374,7 +368,6 @@ public class MapFunctionality {
             }
             markers.clear();
         }
-
     }
 
     /**
@@ -444,6 +437,7 @@ public class MapFunctionality {
         GeoPoint gPt = new GeoPoint(latitude,longitude);
         marker.setPosition(gPt);
         marker.setAnchor(0.5f,0.5f);
+        marker.setSnippet(sync.getDescription());
         map.getOverlays().add(marker);
         map.invalidate();
     }

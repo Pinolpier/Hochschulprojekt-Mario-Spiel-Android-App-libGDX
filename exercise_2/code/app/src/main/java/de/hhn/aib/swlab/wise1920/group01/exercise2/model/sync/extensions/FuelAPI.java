@@ -8,5 +8,5 @@ import retrofit2.http.QueryMap;
 
 public interface FuelAPI {
     @GET("json/list.php")
-    Call<FuelDummy> getSearchResult(@QueryMap Map<String, String> parameters);
+    Call<FuelDTO> getSearchResult(@QueryMap Map<String, String> parameters);
 }

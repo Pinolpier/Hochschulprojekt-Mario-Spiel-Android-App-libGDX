@@ -9,17 +9,17 @@ import java.util.List;
 public class PoiElementsDummy {
     @SerializedName("elements")
     @Expose
-    List<PoiDummy> poiDummyArray;
+    List<PoiDTO> poiDTOArray;
 
-    public PoiElementsDummy(List<PoiDummy> poiDummyArray) {
-        this.poiDummyArray = poiDummyArray;
+    public PoiElementsDummy(List<PoiDTO> poiDTOArray) {
+        this.poiDTOArray = poiDTOArray;
     }
 
-    public List<PoiDummy> getPoiDummyArray() {
-        return poiDummyArray;
+    public List<PoiDTO> getPoiDTOArray() {
+        return poiDTOArray;
     }
 
-    public void setPoiDummyArray(List<PoiDummy> poiDummyArray) {
-        this.poiDummyArray = poiDummyArray;
+    public void setPoiDTOArray(List<PoiDTO> poiDTOArray) {
+        this.poiDTOArray = poiDTOArray;
     }
 }

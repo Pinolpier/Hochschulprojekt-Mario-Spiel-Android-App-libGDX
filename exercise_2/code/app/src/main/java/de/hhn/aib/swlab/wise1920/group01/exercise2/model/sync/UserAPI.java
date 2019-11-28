@@ -30,10 +30,10 @@ public interface UserAPI {
                                    @Body Position position);
 
     @GET("location/{radius}/{lat}/{long}")
-    Call<List<MapObjectDummy>> getEverythingAround(@Header("Authorization") String jwt,
-                                                   @Path("radius") Integer radius,
-                                                   @Path("lat") Double latitude,
-                                                   @Path("long") Double longitude);
+    Call<List<MapObjectDTO>> getEverythingAround(@Header("Authorization") String jwt,
+                                                 @Path("radius") Integer radius,
+                                                 @Path("lat") Double latitude,
+                                                 @Path("long") Double longitude);
 
     @GET("user/{userID}/location")
     Call<List<TimestampedPosition>> getLocationHistory(@Header("Authorization") String jwt,

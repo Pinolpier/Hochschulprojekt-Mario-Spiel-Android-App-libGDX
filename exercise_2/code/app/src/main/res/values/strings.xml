@@ -32,14 +32,17 @@
     <string name="getUsersFailedInvalidJwtTokenToastMessage">Konnte keine Standorte abrufen. Interner Fehler, bitte neu einloggen.</string>
     <string name="sendLocationFailed">ACHTUNG: Die Location konnte nicht an den Server gesendet werden!</string>
     <string name="emptyCredentialsToastMessage">Leerer Username oder Password sind nicht gültig. Bitte einen Wert eingeben!</string>
+    <string name="errorOfTypeWtfToastMessage">Nicht definierter Fehler: Vielleicht hilft ein Neustart der App, sonst deinstallieren und neu installieren.</string>
+    <string name="connectionOnFailureToastMessage">Verbindung zum Webserice konnte nicht hergestellt werden. Internetverbindung überprüfen!</string>
 
     <!--Map Functionality-->
-    <string name="onFailureFuelSearch">Fehler beim abfragen der Tankpreise</string>
+    <string name="onFailureFuelSearch">Fehler beim abfragen der Tankpreise. Bitte die suche nochmal neu starten.</string>
     <string name="noUsersAround">Keine Nutzer in der Umgebung gefunden!</string>
-    <string name="usersAroundFailure">Fehler beim Versuch die Nutzer in der Umgebung zu suchen</string>
-    <string name="noPoisFound">Keine Poi`s in diesem Bereich gefunden!</string>
+    <string name="usersAroundFailure">Fehler beim Versuch die Nutzer in der Umgebung zu suchen. Bitte warten, die Suche wird bald erneut gestartet.</string>
+    <string name="noPoisFound">Keine Poi`s in diesem Bereich gefunden! Bitte Radius vergößern oder an anderer Stelle suchen.</string>
+    <string name="poiOnFailure">Fehler beim Laden der Poi`s</string>
     <string name="noLocationHistory">Es konnte keine LocationHistory gefunden werden!</string>
-    <string name="locationHistoryFailure">Fehler beim Laden der Location History!</string>
+    <string name="locationHistoryFailure">Fehler beim Laden der Location History! Bitte die suche nochmal manuell starten</string>
     <string name="noSearchResults">Dieser Suchbegriff konnte nicht gefunden werden!</string>
-    <string name="searchFunctionFailure">Suche konnte nicht durchgeführt werden!</string>
+    <string name="searchFunctionFailure">Suche konnte nicht durchgeführt werden! Bitte erneut versuchen!</string>
 </resources>

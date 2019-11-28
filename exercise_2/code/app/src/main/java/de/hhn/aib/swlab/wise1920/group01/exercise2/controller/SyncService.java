@@ -14,7 +14,7 @@ import java.util.List;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.R;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.MapObject;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.LocationHistoryReceivedInterface;
-import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.MapObjectDummy;
+import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.MapObjectDTO;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.Position;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.TimestampedPosition;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.User;
@@ -65,6 +65,10 @@ public class SyncService {
         api = retrofit.create(UserAPI.class);
 
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
+         setPasswordField(password);
+         setDescField(description);
+         setSyncInterval(getInterval());
+         changePrivacyRadius(getRadius());
         listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
             @Override
             public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -92,12 +96,8 @@ public class SyncService {
                 }
             }
         };
-        prefs.registerOnSharedPreferenceChangeListener(listener);
-        setPasswordField(password);
-        setDescField(description);
-        setSyncInterval(getInterval());
-        changePrivacyRadius(getRadius());
-    }
+         prefs.registerOnSharedPreferenceChangeListener(listener);
+     }
 
     public long getSyncInterval() {
         return syncInterval;
@@ -202,6 +202,7 @@ public class SyncService {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (!response.isSuccessful() && response.code() != 304 && response.code() != 403) {
+                    Toast.makeText(context, R.string.errorOfTypeWtfToastMessage, Toast.LENGTH_LONG).show();
                     Log.wtf("Sync Service", "An unexpected HTTP Response Code indicating an error has been returned by the webservice while update: Response Code is " + response.code());
                     return;
                 }
@@ -227,6 +228,7 @@ public class SyncService {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Toast.makeText(context, R.string.connectionOnFailureToastMessage, Toast.LENGTH_LONG).show();
                 Log.wtf("Sync Service: ", "A serious error with the webservice occurred during update, error:" + t.getMessage());
             }
         });
@@ -283,6 +285,7 @@ public class SyncService {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Toast.makeText(context, R.string.connectionOnFailureToastMessage, Toast.LENGTH_LONG).show();
                 Log.wtf("Sync Service: ", "A serious error with the webservice occurred during changeLocation, error:" + t.getMessage());
             }
         });
@@ -306,10 +309,10 @@ public class SyncService {
      */
     public void getUsersAround(Position position, int radius, final UsersAroundReceivedInterface usersAroundReceivedInterface) {
         final ArrayList<MapObject> usersAroundList = new ArrayList<>();
-        Call<List<MapObjectDummy>> call = api.getEverythingAround(user.getJwtAuthorization(), radius, position.getLatitude(), position.getLongitude());
-        call.enqueue(new Callback<List<MapObjectDummy>>() {
+        Call<List<MapObjectDTO>> call = api.getEverythingAround(user.getJwtAuthorization(), radius, position.getLatitude(), position.getLongitude());
+        call.enqueue(new Callback<List<MapObjectDTO>>() {
             @Override
-            public void onResponse(Call<List<MapObjectDummy>> call, Response<List<MapObjectDummy>> response) {
+            public void onResponse(Call<List<MapObjectDTO>> call, Response<List<MapObjectDTO>> response) {
                 if (!response.isSuccessful() && response.code() != 403) {
                     Log.wtf("Sync Service", "An unexpected HTTP Response Code indicating an error has been returned by the webservice while getUsersAround: Response Code is " + response.code());
                     usersAroundReceivedInterface.onFailure();
@@ -329,10 +332,10 @@ public class SyncService {
                 }
                 if (response.code() == 200) {
                     Log.d("Sync Service", "Received locations successfully!");
-                    List<MapObjectDummy> usersAround = response.body();
-//                    Log.d("Sync Service", "Size of the \"List<MapObjectDummy> usersAround = response.body();\": " + usersAround.size());
+                    List<MapObjectDTO> usersAround = response.body();
+//                    Log.d("Sync Service", "Size of the \"List<MapObjectDTO> usersAround = response.body();\": " + usersAround.size());
                     assert usersAround != null;
-                    for (MapObjectDummy i : usersAround) {
+                    for (MapObjectDTO i : usersAround) {
                         usersAroundList.add(new MapObject(i.getPosition().getLatitude(), i.getPosition().getLongitude(), i.getName(), i.getDescription()));
                     }
 //                    Log.d("Sync Service: ", "Size of the \"final ArrayList<MapObject> usersAroundList = new ArrayList<>();\": " + usersAroundList.size());
@@ -342,7 +345,8 @@ public class SyncService {
             }
 
             @Override
-            public void onFailure(Call<List<MapObjectDummy>> call, Throwable t) {
+            public void onFailure(Call<List<MapObjectDTO>> call, Throwable t) {
+                Toast.makeText(context, R.string.connectionOnFailureToastMessage, Toast.LENGTH_LONG).show();
                 Log.wtf("Sync Service: ", "A serious error with the webservice occurred during getUsersAround, error:" + t.getMessage());
                 usersAroundReceivedInterface.onFailure();
             }
@@ -444,13 +448,14 @@ public class SyncService {
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
+                Toast.makeText(context, R.string.connectionOnFailureToastMessage, Toast.LENGTH_LONG).show();
                 Log.wtf("Sync Service: ", "A serious error with the webservice occurred during login, error:" + t.getMessage());
             }
         });
     }
 
     private long getInterval() {
-        return Long.parseLong(prefs.getString("list_interval", "-1"));
+        return Long.parseLong(prefs.getString("list_interval", "1800000"));
     }
 
     private double getRadius() {

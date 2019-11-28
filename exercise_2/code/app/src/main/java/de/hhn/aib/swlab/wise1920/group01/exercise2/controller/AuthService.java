@@ -11,14 +11,12 @@ import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.LoginProcessedInte
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.RegistrationProcessedInterface;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.User;
 import de.hhn.aib.swlab.wise1920.group01.exercise2.model.sync.UserAPI;
-
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-
-import okhttp3.ResponseBody;
 
 /**
  * This class is responsible for sser login/registration process
@@ -84,6 +82,7 @@ public class AuthService {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Toast.makeText(context, R.string.connectionOnFailureToastMessage, Toast.LENGTH_LONG).show();
                 Log.wtf("Sync Service: ", "A serious error with the webservice occurred during registration, error:" + t.getMessage());
                 registrationProcessedInterface.onFailure();
             }
@@ -139,6 +138,7 @@ public class AuthService {
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
+                Toast.makeText(context, R.string.connectionOnFailureToastMessage, Toast.LENGTH_LONG).show();
                 Log.wtf("Sync Service: ", "A serious error with the webservice occurred during login, error:" + t.getMessage());
                 loginProcessedInterface.onFailure();
             }

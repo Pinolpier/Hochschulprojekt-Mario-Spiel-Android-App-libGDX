@@ -2,6 +2,7 @@ package de.hhn.aib.swlab.wise1920.group01.exercise2.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
@@ -120,5 +121,18 @@ public class MapsActivity extends AppCompatActivity {
      */
     public void setCenter(View v){
         controller.setCenter();
+    }
+
+    private void clearPasswordField() {
+        SharedPreferences prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("text_newpassword", "");
+        editor.apply();
+    }
+
+    @Override
+    public void onBackPressed() {
+        clearPasswordField();
+        super.onBackPressed();
     }
 }
