@@ -32,7 +32,7 @@
     <string name="getUsersFailedInvalidJwtTokenToastMessage">Konnte keine Standorte abrufen. Interner Fehler, bitte neu einloggen.</string>
     <string name="sendLocationFailed">ACHTUNG: Die Location konnte nicht an den Server gesendet werden!</string>
     <string name="emptyCredentialsToastMessage">Leerer Username oder Password sind nicht gültig. Bitte einen Wert eingeben!</string>
-    <string name="errorOfTypeWtfToastMessage">Nicht definierter Fehler: Vielleicht hilft ein Neustart der App, sonst deinstallieren und neu installieren.</string>
+    <string name="errorOfTypeWtfToastMessage">Nicht definierter Fehler: Sollte der Fehler wiederholt auftreten,bitte App neu starten, sonst deinstallieren und neu installieren.</string>
     <string name="connectionOnFailureToastMessage">Verbindung zum Webserice konnte nicht hergestellt werden. Internetverbindung überprüfen!</string>
 
     <!--Map Functionality-->
