@@ -1,2 +1,1 @@
-include ':app'
-rootProject.name='group01exercise3'
+include 'android', 'core'
