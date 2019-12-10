@@ -1,5 +1,5 @@
 image: miadmin_android29:latest
-  build:
+build:
     script:
      - cd exercise_1/code
     lintDebug:
