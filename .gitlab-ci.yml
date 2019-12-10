@@ -1,6 +1,6 @@
 image: miadmin_android29:latest
 
-
+Job1:
 build:
     script:
      - cd exercise_2/code
@@ -22,7 +22,8 @@ debugTests:
   script:
     - cd exercise_2/code
     - ./gradlew -Pci --console=plain :app:testDebug
-  
+
+Job2: 
 build:
     script:
      - cd exercise_3/code
