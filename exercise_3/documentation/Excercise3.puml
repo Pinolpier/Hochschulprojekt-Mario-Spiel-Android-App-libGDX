@@ -1,0 +1,14 @@
+@startuml
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Container.puml
+
+title C4 diagram for "Aufgabe 3"
+
+Person(user, "User", "A Player of our Game")
+System(labyrinth_Game, "labyrinth_Game", "Provides Functionality for User: Search for Games, Join Games and Playing")
+System_Ext(server, "Server", "HHN Server that handles Login process and sends location data")
+Rel(user, labyrinth_Game, "Uses")
+Rel(labyrinth_Game, server, "Create Game or Search for Game")
+Rel(server, labyrinth_Game, "Sends available games")
+Rel(labyrinth_Game,server,"Send new Position after moving")
+Rel(server,labyrinth_Game,"sends new Position of Enemy")
+@enduml
