@@ -1,6 +1,27 @@
 image: miadmin_android29:latest
 
+build:
+    script:
+     - cd exercise_2/code
+lintDebug:
+  stage: build
+  script:
+    - cd exercise_2/code
+    - ./gradlew -Pci --console=plain :app:lintDebug -PbuildDir=lint
 
+assembleDebug:
+  stage: build
+  script:
+    - cd exercise_2/code
+    - ./gradlew assembleDebug
+  artifacts:
+    paths:
+debugTests:
+  stage: test
+  script:
+    - cd exercise_2/code
+    - ./gradlew -Pci --console=plain :app:testDebug
+  
 build:
     script:
      - cd exercise_3/code
@@ -8,7 +29,7 @@ lintDebug:
   stage: build
   script:
     - cd exercise_3/code
-    - ./gradlew -Pci --console=plain :app:lintDebug -PbuildDir=lint
+    - ./gradlew -Pci --console=plain :android:lintDebug -PbuildDir=lint
 
 assembleDebug:
   stage: build
@@ -21,4 +42,4 @@ debugTests:
   stage: test
   script:
     - cd exercise_3/code
-    - ./gradlew -Pci --console=plain :app:testDebug
+    - ./gradlew -Pci --console=plain :android:testDebug
