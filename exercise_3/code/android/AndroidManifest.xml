@@ -1,23 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.mygdx.game" >
+    package="com.mygdx.game">
 
     <application
         android:allowBackup="true"
+        android:appCategory="game"
         android:icon="@drawable/ic_launcher"
         android:isGame="true"
-        android:appCategory="game"
         android:label="@string/app_name"
-        android:theme="@style/GdxTheme" >
-        <activity
-            android:name="com.mygdx.game.AndroidLauncher"
-            android:label="@string/app_name" 
-            android:screenOrientation="landscape"
-            android:configChanges="keyboard|keyboardHidden|navigation|orientation|screenSize|screenLayout">
+        android:theme="@style/GdxTheme">
+        <activity android:name=".TitlescreenActivity" android:theme="@style/Theme.AppCompat.Light">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".HomeActivity" android:theme="@style/Theme.AppCompat.Light"/>
+        <activity
+            android:name=".AndroidLauncher"
+            android:configChanges="keyboard|keyboardHidden|navigation|orientation|screenSize|screenLayout"
+            android:label="@string/app_name"
+            android:screenOrientation="landscape">
         </activity>
     </application>
 
