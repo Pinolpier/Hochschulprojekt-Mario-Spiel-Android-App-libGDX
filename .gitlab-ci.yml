@@ -1,21 +1,23 @@
 image: miadmin_android29:latest
+
+
 build:
     script:
      - cd exercise_1/code
-    lintDebug:
+lintDebug:
   stage: build
   script:
     - cd exercise_1/code
     - ./gradlew -Pci --console=plain :app:lintDebug -PbuildDir=lint
 
-  assembleDebug:
+assembleDebug:
   stage: build
   script:
     - cd exercise_1/code
     - ./gradlew assembleDebug
   artifacts:
     paths:
-  debugTests:
+debugTests:
   stage: test
   script:
     - cd exercise_1/code
