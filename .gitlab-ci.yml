@@ -30,7 +30,6 @@ build:
   stage: build
   script:
     - cd exercise_3/code
-    - ./gradlew -Pci --console=plain :app:lintDebug -PbuildDir=lint
     - ./gradlew -Pci --console=plain :android:lintDebug -PbuildDir=lint
 
 assembleDebug:
@@ -38,6 +37,5 @@ assembleDebug:
   stage: test
   script:
     - cd exercise_3/code
-    - ./gradlew -Pci --console=plain :app:testDebug
     - ./gradlew -Pci --console=plain :android:testDebug
 
