@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">my-gdx-game</string>
-
+    <string name="app_name">pyramidlabyrinth</string>
+    <string name="creategame_button">Create Game</string>
+    <string name="joingame_button">Join Game</string>
+    <string name="exit_button">Exit</string>
+    <string name="loadingbar">Loading...</string>
+    <string name="contentdescription_loadingscreenimage">super mario bros logo</string>
 </resources>
