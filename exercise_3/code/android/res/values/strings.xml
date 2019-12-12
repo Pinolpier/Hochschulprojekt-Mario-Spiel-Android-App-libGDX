@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">pyramidlabyrinth</string>
+    <string name="app_name">Super Mario Android</string>
     <string name="creategame_button">Create Game</string>
     <string name="joingame_button">Join Game</string>
     <string name="exit_button">Exit</string>
