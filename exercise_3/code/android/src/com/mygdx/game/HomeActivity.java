@@ -26,8 +26,8 @@ public class HomeActivity extends Activity {
 
     public void startGame(View v)
     {
-        Intent homeIntent = new Intent(HomeActivity.this, AndroidLauncher.class);
-        startActivity(homeIntent);
-        finish();
+        //Intent homeIntent = new Intent(HomeActivity.this, AndroidLauncher.class);
+        //startActivity(homeIntent);
+        //finish();
     }
 }
