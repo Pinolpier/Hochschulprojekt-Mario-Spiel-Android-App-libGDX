@@ -130,9 +130,9 @@ public class PlayScreen implements Screen {
         if(player.currentState != Mario.State.DEAD) {
             if(Gdx.input.justTouched())
                 player.jump();
-            if(Gdx.input.getRotation()>30)
+            if(Math.toDegrees(Gdx.input.getGyroscopeZ())<-10)
                 player.b2body.applyLinearImpulse(new Vector2(0.1f, 0), player.b2body.getWorldCenter(), true);
-            if(Gdx.input.getRotation()<10)
+            if(Math.toDegrees(Gdx.input.getGyroscopeZ())>20)
                 player.b2body.applyLinearImpulse(new Vector2(-0.1f, 0), player.b2body.getWorldCenter(), true);
             if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player.b2body.getLinearVelocity().x <= 2)
                 player.b2body.applyLinearImpulse(new Vector2(0.1f, 0), player.b2body.getWorldCenter(), true);
