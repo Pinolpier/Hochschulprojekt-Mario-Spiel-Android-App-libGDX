@@ -26,6 +26,7 @@
         android:layout_height="55dp"
         android:layout_marginBottom="4dp"
         android:background="@drawable/mariopipe"
+        android:onClick="joinGame"
         android:text="@string/joingame_button"
         android:textStyle="italic"
         app:layout_constraintBottom_toTopOf="@+id/button2"

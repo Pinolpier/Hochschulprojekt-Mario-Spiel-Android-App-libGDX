@@ -30,4 +30,11 @@ public class HomeActivity extends Activity {
         startActivity(homeIntent);
         finish();
     }
+
+    public void joinGame(View v)
+    {
+        Intent homeIntent = new Intent(this, GamelobbyscreenActivity.class);
+        startActivity(homeIntent);
+        finish();
+    }
 }
