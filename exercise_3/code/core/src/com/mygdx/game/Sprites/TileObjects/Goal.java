@@ -9,7 +9,7 @@ import com.mygdx.game.Sprites.Mario;
 
 public class Goal extends InteractiveTileObject{
     private static TiledMapTileSet tileSet;
-    private final int GOAL = 29;
+    private final int GOAL = 46;
 
     public Goal(PlayScreen screen, MapObject object) {
         super(screen, object);
