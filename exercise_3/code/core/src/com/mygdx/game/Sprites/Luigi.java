@@ -180,42 +180,6 @@ public class Luigi extends Sprite {
         }
     }
 
-
-    public void defineBigMario(){
-        Vector2 currentPosition = b2body.getPosition();
-        world.destroyBody(b2body);
-
-        BodyDef bdef = new BodyDef();
-        bdef.position.set(currentPosition.add(0, 10 / MarioBros.PPM));
-        bdef.type = BodyDef.BodyType.DynamicBody;
-        b2body = world.createBody(bdef);
-
-        FixtureDef fdef = new FixtureDef();
-        CircleShape shape = new CircleShape();
-        shape.setRadius(6 / MarioBros.PPM);
-        fdef.filter.categoryBits = MarioBros.MARIO_BIT;
-        fdef.filter.maskBits = MarioBros.GROUND_BIT |
-                MarioBros.COIN_BIT |
-                MarioBros.BRICK_BIT |
-                MarioBros.ENEMY_BIT |
-                MarioBros.OBJECT_BIT |
-                MarioBros.ENEMY_HEAD_BIT |
-                MarioBros.ITEM_BIT;
-
-        fdef.shape = shape;
-        b2body.createFixture(fdef).setUserData(this);
-        shape.setPosition(new Vector2(0, -14 / MarioBros.PPM));
-        b2body.createFixture(fdef).setUserData(this);
-
-        EdgeShape head = new EdgeShape();
-        head.set(new Vector2(-2 / MarioBros.PPM, 6 / MarioBros.PPM), new Vector2(2 / MarioBros.PPM, 6 / MarioBros.PPM));
-        fdef.filter.categoryBits = MarioBros.MARIO_HEAD_BIT;
-        fdef.shape = head;
-        fdef.isSensor = true;
-
-        b2body.createFixture(fdef).setUserData(this);
-    }
-
     public void defineLuigi(){
         BodyDef bdef = new BodyDef();
         bdef.position.set(32 / MarioBros.PPM, 32 / MarioBros.PPM);
