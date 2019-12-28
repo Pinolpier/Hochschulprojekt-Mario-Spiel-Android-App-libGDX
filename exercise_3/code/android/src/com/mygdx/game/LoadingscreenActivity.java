@@ -40,7 +40,7 @@ public class LoadingscreenActivity extends Activity {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        Intent homeIntent = new Intent(LoadingscreenActivity.this, HomeActivity.class);
+                        Intent homeIntent = new Intent(LoadingscreenActivity.this, LoginActivity.class);
                         startActivity(homeIntent);
                         finish();
                     }
