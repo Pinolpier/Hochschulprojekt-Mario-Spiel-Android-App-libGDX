@@ -7,4 +7,12 @@
     <string name="exit_button">Exit</string>
     <string name="loadingbar">Loading...</string>
     <string name="contentdescription_loadingscreenimage">super mario bros logo</string>
+
+    <!-- UserService -->
+    <string name="usernameNotAvailableToastMessage">Der Username ist schon vergeben, die Registrierung konnte nicht abgeschlossen werden, bitte einen anderen Namen wählen und erneut versuchen oder aber Einloggen!</string>
+    <string name="registrationSuccessfulToastMessage">Registrierung beim Webservice war erfolgreich. Login wird gestartet.</string>
+    <string name="connectionOnFailureToastMessage">Verbindung zum Webserice konnte nicht hergestellt werden. Internetverbindung überprüfen!</string>
+    <string name="loginFailedToastMessage">Der Login ist fehlgeschlagen! Bitte Username und Passwort überprüfen. Vor dem ersten Login muss man sich registrieren.</string>
+    <string name="loginSuccessfulToastMessage">Login war erfolgreich!</string>
+
 </resources>
