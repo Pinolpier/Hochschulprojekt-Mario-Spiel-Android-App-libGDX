@@ -7,4 +7,8 @@
     <string name="exit_button">Exit</string>
     <string name="loadingbar">Loading...</string>
     <string name="contentdescription_loadingscreenimage">super mario bros logo</string>
+    <string name="login_button">Login</string>
+    <string name="register_button">Register</string>
+    <string name="textview_username">username</string>
+    <string name="textview_password">password</string>
 </resources>
