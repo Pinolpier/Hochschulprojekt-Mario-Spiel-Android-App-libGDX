@@ -4,6 +4,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -20,8 +21,8 @@ import com.mygdx.game.Screens.PlayScreen;
 import com.mygdx.game.Sprites.Enemies.Enemy;
 import com.mygdx.game.Sprites.Enemies.Turtle;
 
-
-public class Luigi extends Player {
+public class Player extends Sprite {
+    public enum State { FALLING, JUMPING, STANDING, RUNNING, GROWING, DEAD };
 
     public State currentState;
     public State previousState;
@@ -48,54 +49,7 @@ public class Luigi extends Player {
     private PlayScreen screen;
 
 
-    public Luigi(PlayScreen screen){
-        this.screen = screen;
-        this.world = screen.getWorld();
-        currentState = State.STANDING;
-        previousState = State.STANDING;
-        stateTimer = 0;
-        runningRight = true;
-
-        Array<TextureRegion> frames = new Array<TextureRegion>();
-
-        for(int i = 1; i < 4; i++)
-            frames.add(new TextureRegion(screen.getAtlas().findRegion("little_mario"), i * 16, 0, 16, 16));
-        marioRun = new Animation(0.1f, frames);
-
-        frames.clear();
-
-        for(int i = 1; i < 4; i++)
-            frames.add(new TextureRegion(screen.getAtlas().findRegion("big_mario"), i * 16, 0, 16, 32));
-        bigMarioRun = new Animation(0.1f, frames);
-
-        frames.clear();
-
-        //get set animation frames from growing mario
-        frames.add(new TextureRegion(screen.getAtlas().findRegion("big_mario"), 240, 0, 16, 32));
-        frames.add(new TextureRegion(screen.getAtlas().findRegion("big_mario"), 0, 0, 16, 32));
-        frames.add(new TextureRegion(screen.getAtlas().findRegion("big_mario"), 240, 0, 16, 32));
-        frames.add(new TextureRegion(screen.getAtlas().findRegion("big_mario"), 0, 0, 16, 32));
-        growMario = new Animation(0.2f, frames);
-
-
-        //get jump animation frames and add them to marioJump Animation
-        marioJump = new TextureRegion(screen.getAtlas().findRegion("little_mario"), 80, 0, 16, 16);
-        bigMarioJump = new TextureRegion(screen.getAtlas().findRegion("big_mario"), 80, 0, 16, 32);
-
-        //create texture region for mario standing
-        marioStand = new TextureRegion(screen.getAtlas().findRegion("little_mario"), 0, 0, 16, 16);
-        bigMarioStand = new TextureRegion(screen.getAtlas().findRegion("big_mario"), 0, 0, 16, 32);
-
-        //create dead mario texture region
-        marioDead = new TextureRegion(screen.getAtlas().findRegion("little_mario"), 96, 0, 16, 16);
-
-        //define mario in Box2d
-        defineMario();
-
-        //set initial values for marios location, width and height. And initial frame as marioStand.
-        setBounds(0, 0, 16 / MarioBros.PPM, 16 / MarioBros.PPM);
-        setRegion(marioStand);
-
+    public Player(){
 
     }
 

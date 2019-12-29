@@ -10,7 +10,7 @@ import com.mygdx.game.Sprites.Enemies.Enemy;
 import com.mygdx.game.Sprites.Items.Item;
 import com.mygdx.game.Sprites.Mario;
 import com.mygdx.game.Sprites.TileObjects.InteractiveTileObject;
-import com.mygdx.game.Sprites.TileObjects.Player;
+import com.mygdx.game.Sprites.Player;
 
 public class WorldContactListener implements ContactListener {
     @Override
@@ -24,15 +24,15 @@ public class WorldContactListener implements ContactListener {
             case MarioBros.MARIO_HEAD_BIT | MarioBros.BRICK_BIT:
             case MarioBros.MARIO_HEAD_BIT | MarioBros.COIN_BIT:
                 if(fixA.getFilterData().categoryBits == MarioBros.MARIO_HEAD_BIT)
-                    ((InteractiveTileObject) fixB.getUserData()).onHeadHit((Mario) fixA.getUserData());
+                    ((InteractiveTileObject) fixB.getUserData()).onHeadHit((Player) fixA.getUserData());
                 else
-                    ((InteractiveTileObject) fixA.getUserData()).onHeadHit((Mario) fixB.getUserData());
+                    ((InteractiveTileObject) fixA.getUserData()).onHeadHit((Player) fixB.getUserData());
                 break;
             case MarioBros.ENEMY_HEAD_BIT | MarioBros.MARIO_BIT:
                 if(fixA.getFilterData().categoryBits == MarioBros.ENEMY_HEAD_BIT)
-                    ((Enemy)fixA.getUserData()).hitOnHead((Mario) fixB.getUserData());
+                    ((Enemy)fixA.getUserData()).hitOnHead((Player) fixB.getUserData());
                 else
-                    ((Enemy)fixB.getUserData()).hitOnHead((Mario) fixA.getUserData());
+                    ((Enemy)fixB.getUserData()).hitOnHead((Player) fixA.getUserData());
                 break;
             case MarioBros.ENEMY_BIT | MarioBros.OBJECT_BIT:
                 if(fixA.getFilterData().categoryBits == MarioBros.ENEMY_BIT)
@@ -58,9 +58,9 @@ public class WorldContactListener implements ContactListener {
                 break;
             case MarioBros.ITEM_BIT | MarioBros.MARIO_BIT:
                 if(fixA.getFilterData().categoryBits == MarioBros.ITEM_BIT)
-                    ((Item)fixA.getUserData()).use((Mario) fixB.getUserData());
+                    ((Item)fixA.getUserData()).use((Player) fixB.getUserData());
                 else
-                    ((Item)fixB.getUserData()).use((Mario) fixA.getUserData());
+                    ((Item)fixB.getUserData()).use((Player) fixA.getUserData());
                 break;
         }
     }

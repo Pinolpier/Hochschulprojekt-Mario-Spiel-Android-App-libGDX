@@ -7,6 +7,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.mygdx.game.MarioBros;
 import com.mygdx.game.Screens.PlayScreen;
 import com.mygdx.game.Sprites.Mario;
+import com.mygdx.game.Sprites.Player;
 
 public class Goal extends InteractiveTileObject{
 
@@ -17,7 +18,7 @@ public class Goal extends InteractiveTileObject{
     }
 
     @Override
-    public void onHeadHit(Mario mario) {
+    public void onHeadHit(Player mario) {
 
     }
 

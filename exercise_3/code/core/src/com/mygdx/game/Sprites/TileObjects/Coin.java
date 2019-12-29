@@ -10,6 +10,7 @@ import com.mygdx.game.Screens.PlayScreen;
 import com.mygdx.game.Sprites.Items.ItemDef;
 import com.mygdx.game.Sprites.Items.Mushroom;
 import com.mygdx.game.Sprites.Mario;
+import com.mygdx.game.Sprites.Player;
 
 public class Coin extends InteractiveTileObject {
     private static TiledMapTileSet tileSet;
@@ -23,7 +24,7 @@ public class Coin extends InteractiveTileObject {
     }
 
     @Override
-    public void onHeadHit(Mario mario) {
+    public void onHeadHit(Player mario) {
         if(getCell().getTile().getId() == BLANK_COIN)
             MarioBros.manager.get("audio/sounds/bump.wav", Sound.class).play();
         else {
