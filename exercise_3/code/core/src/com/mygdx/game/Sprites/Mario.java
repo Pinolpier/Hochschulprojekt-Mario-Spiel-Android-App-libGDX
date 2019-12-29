@@ -20,11 +20,11 @@ import com.mygdx.game.MarioBros;
 import com.mygdx.game.Screens.PlayScreen;
 import com.mygdx.game.Sprites.Enemies.Enemy;
 import com.mygdx.game.Sprites.Enemies.Turtle;
-import com.mygdx.game.Sprites.Other.FireBall;
+import com.mygdx.game.Sprites.TileObjects.Player;
 
 
-public class Mario extends Sprite {
-    public enum State { FALLING, JUMPING, STANDING, RUNNING, GROWING, DEAD };
+public class Mario extends Player {
+
     public State currentState;
     public State previousState;
 
@@ -49,7 +49,6 @@ public class Mario extends Sprite {
     private boolean marioIsDead;
     private PlayScreen screen;
 
-    private Array<FireBall> fireballs;
 
     public Mario(PlayScreen screen){
         this.screen = screen;
@@ -99,7 +98,6 @@ public class Mario extends Sprite {
         setBounds(0, 0, 16 / MarioBros.PPM, 16 / MarioBros.PPM);
         setRegion(marioStand);
 
-        fireballs = new Array<FireBall>();
 
     }
 
@@ -124,12 +122,6 @@ public class Mario extends Sprite {
             defineBigMario();
         if(timeToRedefineMario)
             redefineMario();
-
-        for(FireBall ball : fireballs) {
-            ball.update(dt);
-            if(ball.isDestroyed())
-                fireballs.removeValue(ball, true);
-        }
 
     }
 
@@ -180,23 +172,22 @@ public class Mario extends Sprite {
         stateTimer = currentState == previousState ? stateTimer + dt : 0;
         //update previous state
         previousState = currentState;
-        //return our final adjusted frame
         return region;
 
     }
 
     public State getState(){
-        //Test to Box2D for velocity on the X and Y-Axis
-        //if mario is going positive in Y-Axis he is jumping... or if he just jumped and is falling remain in jump state
         if(marioIsDead)
             return State.DEAD;
         else if(runGrowAnimation)
             return State.GROWING;
         else if((b2body.getLinearVelocity().y > 0 && currentState == State.JUMPING) || (b2body.getLinearVelocity().y < 0 && previousState == State.JUMPING))
             return State.JUMPING;
-        //if negative in Y-Axis mario is falling
-        else if(b2body.getLinearVelocity().y < 0)
+
+        else if(b2body.getLinearVelocity().y < 0) {
             return State.DEAD;
+
+        }
         //if mario is positive or negative in the X axis he is running
         else if(b2body.getLinearVelocity().x != 0)
             return State.RUNNING;
@@ -369,13 +360,7 @@ public class Mario extends Sprite {
         b2body.createFixture(fdef).setUserData(this);
     }
 
-    public void fire(){
-        fireballs.add(new FireBall(screen, b2body.getPosition().x, b2body.getPosition().y, runningRight ? true : false));
-    }
-
     public void draw(Batch batch){
         super.draw(batch);
-        for(FireBall ball : fireballs)
-            ball.draw(batch);
     }
 }

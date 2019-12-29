@@ -33,4 +33,5 @@
             android:theme="@style/GdxTheme" />
     </application>
 
+
 </manifest>

@@ -46,7 +46,7 @@ public class GameMessage {
             ex.printStackTrace();
             return null;
         }
-        return
+        return null;
     }
 
     public String getType() {

@@ -22,6 +22,7 @@ import com.mygdx.game.Sprites.Enemies.Enemy;
 import com.mygdx.game.Sprites.Items.Item;
 import com.mygdx.game.Sprites.Items.ItemDef;
 import com.mygdx.game.Sprites.Items.Mushroom;
+import com.mygdx.game.Sprites.Luigi;
 import com.mygdx.game.Sprites.Mario;
 import com.mygdx.game.Tools.B2WorldCreator;
 import com.mygdx.game.Tools.WorldContactListener;
@@ -51,6 +52,7 @@ public class PlayScreen implements Screen {
 
     //sprites
     private Mario player;
+    private Luigi player2;
 
     private Music music;
 
@@ -86,8 +88,9 @@ public class PlayScreen implements Screen {
 
         creator = new B2WorldCreator(this);
 
-        //create mario in our game world
         player = new Mario(this);
+        player2 = new Luigi(this);
+
 
         world.setContactListener(new WorldContactListener());
 
@@ -138,9 +141,21 @@ public class PlayScreen implements Screen {
                 player.b2body.applyLinearImpulse(new Vector2(0.1f, 0), player.b2body.getWorldCenter(), true);
             if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.b2body.getLinearVelocity().x >= -2)
                 player.b2body.applyLinearImpulse(new Vector2(-0.1f, 0), player.b2body.getWorldCenter(), true);
-            if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE))
-                player.fire();
         }
+        if(player2.currentState != Luigi.State.DEAD) {
+            if(Gdx.input.justTouched())
+                player2.jump();
+            if(Gdx.input.getPitch()<-10)
+                player2.b2body.applyLinearImpulse(new Vector2(0.1f, 0), player2.b2body.getWorldCenter(), true);
+            if(Gdx.input.getPitch()>20)
+                player2.b2body.applyLinearImpulse(new Vector2(-0.1f, 0), player2.b2body.getWorldCenter(), true);
+            if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player2.b2body.getLinearVelocity().x <= 2)
+                player2.b2body.applyLinearImpulse(new Vector2(0.1f, 0), player2.b2body.getWorldCenter(), true);
+            if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && player2.b2body.getLinearVelocity().x >= -2)
+                player2.b2body.applyLinearImpulse(new Vector2(-0.1f, 0), player2.b2body.getWorldCenter(), true);
+        }
+
+
 
     }
 
@@ -153,9 +168,13 @@ public class PlayScreen implements Screen {
         world.step(1 / 60f, 6, 2);
 
         player.update(dt);
+        player2.update(dt);
         for(Enemy enemy : creator.getEnemies()) {
             enemy.update(dt);
             if(enemy.getX() < player.getX() + 224 / MarioBros.PPM) {
+                enemy.b2body.setActive(true);
+            }
+            else if(enemy.getX() < player2.getX() + 224 / MarioBros.PPM){
                 enemy.b2body.setActive(true);
             }
         }
@@ -196,6 +215,7 @@ public class PlayScreen implements Screen {
         game.batch.setProjectionMatrix(gamecam.combined);
         game.batch.begin();
         player.draw(game.batch);
+        player2.draw(game.batch);
         for (Enemy enemy : creator.getEnemies())
             enemy.draw(game.batch);
         for (Item item : items)
