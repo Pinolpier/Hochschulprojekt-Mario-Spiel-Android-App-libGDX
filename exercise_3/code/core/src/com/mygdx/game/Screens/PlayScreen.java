@@ -58,6 +58,9 @@ public class PlayScreen implements Screen {
     private LinkedBlockingQueue<ItemDef> itemsToSpawn;
 
 
+    //variables needed for backend communication
+    //private WebSocketService webSocketService;
+
     public PlayScreen(MarioBros game){
         atlas = new TextureAtlas("Mario_and_Enemies.pack");
 
@@ -141,7 +144,6 @@ public class PlayScreen implements Screen {
             if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE))
                 player.fire();
         }
-
     }
 
     public void update(float dt){
@@ -214,10 +216,7 @@ public class PlayScreen implements Screen {
     }
 
     public boolean gameOver(){
-        if(player.currentState == Mario.State.DEAD && player.getStateTimer() > 3){
-            return true;
-        }
-        return false;
+        return player.currentState == Mario.State.DEAD && player.getStateTimer() > 3;
     }
 
     @Override

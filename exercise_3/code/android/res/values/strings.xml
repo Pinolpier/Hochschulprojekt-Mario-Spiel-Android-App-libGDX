@@ -18,5 +18,7 @@
     <string name="connectionOnFailureToastMessage">Verbindung zum Webserice konnte nicht hergestellt werden. Internetverbindung überprüfen!</string>
     <string name="loginFailedToastMessage">Der Login ist fehlgeschlagen! Bitte Username und Passwort überprüfen. Vor dem ersten Login muss man sich registrieren.</string>
     <string name="loginSuccessfulToastMessage">Login war erfolgreich!</string>
+    <string name="registrationFailedToastMessage">Die Registrierung ist fehlgeschlagen.</string>
+    <string name="emptyCredentialsToastMessage">Leerer Username oder Password sind nicht gültig. Bitte einen Wert eingeben!</string>
 
 </resources>

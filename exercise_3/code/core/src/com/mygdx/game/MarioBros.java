@@ -31,6 +31,8 @@ public class MarioBros extends Game {
 
     public static AssetManager manager;
 
+    //reference that needs to be kept to the android module.
+
     @Override
     public void create () {
         batch = new SpriteBatch();
