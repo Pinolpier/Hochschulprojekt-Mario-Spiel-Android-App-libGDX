@@ -46,7 +46,10 @@ public class HomeActivity extends Activity implements MessageListener {
 
     public void startGame(View v) {
         Intent homeIntent = new Intent(this, AndroidLauncher.class);
-        homeIntent.putExtras(getIntent().getExtras());
+        Bundle extras = getIntent().getExtras();
+        String gameID = extras.getString("username");
+        extras.putString("gameID", gameID);
+        homeIntent.putExtras(extras);
         startActivity(homeIntent);
         finish();
     }
@@ -75,6 +78,7 @@ public class HomeActivity extends Activity implements MessageListener {
     @Override
     public void onMessageReceived(String message) {
         try {
+            //TODO find out why HomeActivity receives messages, probably remove this class as listener for messages
             GameMessage msg = gson.fromJson(message, GameMessage.class);
         } catch (JsonSyntaxException ex) {
             Log.w(this.getClass().getSimpleName(), "Couldn't cast message from backend, ignoring...\nMessage was: \"" + message + "\" printing stack trace...");

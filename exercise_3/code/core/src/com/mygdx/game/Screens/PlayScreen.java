@@ -28,6 +28,8 @@ import com.mygdx.game.Tools.WorldContactListener;
 
 import java.util.concurrent.LinkedBlockingQueue;
 
+import server.dtos.GameMessage;
+
 public class PlayScreen implements Screen {
     //Reference to our Game, used to set Screens
     private MarioBros game;
@@ -259,4 +261,8 @@ public class PlayScreen implements Screen {
     }
 
     public Hud getHud(){ return hud; }
+
+    public void receiveMessage(GameMessage gameMessage) {
+
+    }
 }

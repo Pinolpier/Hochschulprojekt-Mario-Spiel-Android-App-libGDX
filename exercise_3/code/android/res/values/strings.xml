@@ -21,4 +21,6 @@
     <string name="registrationFailedToastMessage">Die Registrierung ist fehlgeschlagen.</string>
     <string name="emptyCredentialsToastMessage">Leerer Username oder Password sind nicht gültig. Bitte einen Wert eingeben!</string>
 
+    <!-- Backend -->
+    <string name="noJoinApprovalMessage">Konnte dem Spiel nicht beitreten, vermutlich ist es voll. Bitte ein anderes Spiel wählen. ID war: </string>
 </resources>

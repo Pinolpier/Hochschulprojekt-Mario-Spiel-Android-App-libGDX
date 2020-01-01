@@ -7,7 +7,8 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.game.Screens.PlayScreen;
 
-import server.GameMessage;
+import server.BackendCommunicator;
+import server.dtos.GameMessage;
 
 public class MarioBros extends Game {
     //Virtual Screen size and Box2D Scale(Pixels Per Meter)
@@ -33,7 +34,14 @@ public class MarioBros extends Game {
 
     public static AssetManager manager;
 
+    private PlayScreen playScreen;
+
     //reference that needs to be kept to the android module.
+    private BackendCommunicator backendCommunicator;
+
+    public MarioBros(BackendCommunicator backendCommunicator) {
+        this.backendCommunicator = backendCommunicator;
+    }
 
     @Override
     public void create () {
@@ -51,7 +59,8 @@ public class MarioBros extends Game {
 
         manager.finishLoading();
 
-        setScreen(new PlayScreen(this));
+        playScreen = new PlayScreen(this);
+        setScreen(playScreen);
     }
 
 
@@ -68,6 +77,10 @@ public class MarioBros extends Game {
     }
 
     public void receiveMessage(GameMessage gameMessage) {
+        playScreen.receiveMessage(gameMessage);
+    }
 
+    public void sendMessage(GameMessage gameMessage) {
+        backendCommunicator.sendMessage(gameMessage);
     }
 }
