@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.3.1" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="240" height="13" tilewidth="16" tileheight="16" infinite="0" nextlayerid="11" nextobjectid="157">
+<map version="1.2" tiledversion="1.3.1" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="240" height="13" tilewidth="16" tileheight="16" infinite="0" nextlayerid="12" nextobjectid="160">
  <tileset firstgid="1" name="tileset_gutter" tilewidth="16" tileheight="16" spacing="2" margin="1" tilecount="924" columns="33">
   <image source="tileset_gutter.png" width="594" height="504"/>
   <tile id="0">
@@ -113,17 +113,14 @@
  </tileset>
  <layer id="1" name="Background Color" width="240" height="13">
   <data encoding="base64" compression="zlib">
-   eAHt2rEJAEAMAkD5VbL/ANnuZ0gpXGEf5NK5L1nRAQMMMMAAAwwwwAADDDDAAAMMMMAAAwwwwAADDDDAAAMMMMAAAwwwwAADDDBwNjCxv7I/Y6DVgP9lt9Wuu9llgIFmAx+ioeZZ
+   eAHt2kENADAIA8AG/4Zwt1ng2eRIMNAeP3aStTJggAEGGGCAAQYYYIABBhhggAEGGGCAAQYYYIABBhhggAEGGGCAAQYYYIABBs4G8sf/lQwY6DTgfjt7c296Y4ABBroNPBJD5hM=
   </data>
  </layer>
  <layer id="2" name="Graphic Layer" width="240" height="13">
   <data encoding="base64" compression="zlib">
-   eAHtmMluFEEMhpvcgAQEnHKd3IAEKWwSb8aDEM68BMuzccH/0F8wlqurt9GkoVqx7PLuGv/qmVx0XffjpOvs75Z01iMmGXuUr5wdW+N/7qzdRbuLQ+/ARY/BHrK3eFVd8Gsue1lcD77Cr38+meHG6LPR3L7JsTTPnPrUXtK/6pJnqzO0/n/v7/m9+Xs8Z//mxHj82urtsfmzx5/OPJKl14Ms/EqH/qvJ34y+G2W9+L0o7TY5hvJkuUs6ao7BJLVL/asG+dT/Fmdo/ee7me3Phx6/3NmYHcryHFIHfsGgreUeezpL1qP6kr2P5Pj+pU/ZkD0HH8LmWvj0+TOZmkOYzOJKOvJtdYbWf76b2ecNfrmztXYoqzVXB36FT0i5eNDpjCx8gl+wCles5HPzn9vT1uK4lxL383ifJXc0NdbX9f1Ilk35RJKj/V8772xGUW0u8FvzO6Yd/ApzYx71Kl/R1PfvMedstev7+j/c0c6WHKrNuzX8+nmET53BKtzr+P3rdd7P52tyw8+xdwDcwmv9bAm/tVkyu/Cb6Zuu3ctd2wEw63mtxxJ+T23voVqOQ9v5/jynjvAbf4ed9DrP5+Suxdy3/w0+MNKzpm8tF/Y15lMO8nkufWbzd12SYx5/HpJLNYnZuV69jL3E5ev9vVyKifqT/j7m/j6nh8hjnXgu4ffM+nlk9Ngoxkw5s8NTYqLvUvzGfEvP+v79xag223PD7guH36cml2pH35LfsfVDMxyzN/aeHuIZfewfP3F80HE+NKdexmPt2H+GX713Lx3pHPOMPbOXY/0zvzXwG+fO6qCr4RK/2mzY7fq6J4bda6NnBQx7X/J7PqV/H7emXJuhVutQM/i9p4dMF/v3PpKHYmWj/7H7Qb7IfXzsIZ59bOxftgy/eu+K9N0TmTzMwLnEH9qenhqdGekdVPIbo5+C37dW650jzZDNTV3837sewRI+Je79yKPayqV3NHbqvzb9tVGGYXx9HnIRn8Xh7/sv9VvTk4u63p8ehmbA3+chF/FrzxD3XfVEUU99+o92nek/2nS3xKt/Piv8mXfsZ0B8rJOdqUF99f/GiHv0feMLZl85/H4MM+Bb4i/N/9Loymgpfi1F1+jvO+Del94LecSX5tp6PHex9TnuWv+/AMq1STA=
+   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
   </data>
  </layer>
- <objectgroup id="10" name="Goal">
-  <object id="156" x="240" y="0" width="16" height="190"/>
- </objectgroup>
  <objectgroup id="3" name="Ground">
   <object id="5" x="0" y="192" width="1104" height="18"/>
   <object id="11" x="1136" y="192" width="256" height="16"/>
@@ -237,5 +234,8 @@
   <object id="150" x="400" y="176" width="16" height="16"/>
   <object id="151" x="864" y="176" width="16" height="16"/>
   <object id="152" x="2352" y="176" width="16" height="16"/>
+ </objectgroup>
+ <objectgroup id="9" name="Goal">
+  <object id="157" x="192" y="144" width="16" height="16"/>
  </objectgroup>
 </map>

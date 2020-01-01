@@ -286,7 +286,8 @@ public class Mario extends Sprite {
                 MarioBros.ENEMY_BIT |
                 MarioBros.OBJECT_BIT |
                 MarioBros.ENEMY_HEAD_BIT |
-                MarioBros.ITEM_BIT;
+                MarioBros.ITEM_BIT |
+                MarioBros.GOAL_BIT;
 
         fdef.shape = shape;
         b2body.createFixture(fdef).setUserData(this);
@@ -322,7 +323,8 @@ public class Mario extends Sprite {
                 MarioBros.ENEMY_BIT |
                 MarioBros.OBJECT_BIT |
                 MarioBros.ENEMY_HEAD_BIT |
-                MarioBros.ITEM_BIT;
+                MarioBros.ITEM_BIT |
+                MarioBros.GOAL_BIT;
 
         fdef.shape = shape;
         b2body.createFixture(fdef).setUserData(this);
@@ -355,7 +357,8 @@ public class Mario extends Sprite {
                 MarioBros.ENEMY_BIT |
                 MarioBros.OBJECT_BIT |
                 MarioBros.ENEMY_HEAD_BIT |
-                MarioBros.ITEM_BIT;
+                MarioBros.ITEM_BIT |
+                MarioBros.GOAL_BIT;
 
         fdef.shape = shape;
         b2body.createFixture(fdef).setUserData(this);
