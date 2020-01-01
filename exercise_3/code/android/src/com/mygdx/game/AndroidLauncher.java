@@ -5,7 +5,11 @@ import android.os.Bundle;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 
-public class AndroidLauncher extends AndroidApplication {
+import server.BackendCommunicator;
+import server.GameMessage;
+import server.MessageListener;
+
+public class AndroidLauncher extends AndroidApplication implements BackendCommunicator, MessageListener {
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -13,6 +17,17 @@ public class AndroidLauncher extends AndroidApplication {
 		config.useGLSurfaceView20API18=true;
 		config.useGyroscope=true;
 		config.useCompass=true;
-		initialize(new MarioBros(), config);
-	}
+        MarioBros game = new MarioBros();
+        initialize(game, config);
+    }
+
+    @Override
+    public void sendMessage(GameMessage message) {
+
+    }
+
+    @Override
+    public void onMessageReceived(String message) {
+
+    }
 }

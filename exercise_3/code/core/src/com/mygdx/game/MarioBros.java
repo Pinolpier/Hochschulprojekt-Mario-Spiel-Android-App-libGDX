@@ -7,6 +7,8 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.game.Screens.PlayScreen;
 
+import server.GameMessage;
+
 public class MarioBros extends Game {
     //Virtual Screen size and Box2D Scale(Pixels Per Meter)
     public static final int V_WIDTH = 400;
@@ -63,5 +65,9 @@ public class MarioBros extends Game {
     @Override
     public void render () {
         super.render();
+    }
+
+    public void receiveMessage(GameMessage gameMessage) {
+
     }
 }
