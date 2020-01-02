@@ -8,6 +8,8 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -61,10 +63,17 @@ public class GamelobbyscreenActivity extends Activity implements MessageListener
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new GamelobbyscreenAdapter(this, allGames);
         recyclerView.setAdapter(adapter);
+
+        Button button = findViewById(R.id.reloadbutton);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requestAllGames();
+            }
+        });
     }
 
     private void requestAllGames() {
-        //TODO CHHENRI: Einen Button einfügen, der die Liste aktualisiert. Dieser muss diese Methode hier aufrufen
         GameMessage gameMessage = new GameMessage("GetGames", getIntent().getExtras().getString("auth"), GameMessage.Status.OK, null, null);
         webSocketService.sendMessage(gson.toJson(gameMessage));
     }
@@ -76,7 +85,11 @@ public class GamelobbyscreenActivity extends Activity implements MessageListener
             if (gameMessage != null && "GameList".equals(gameMessage.getType()) && gameMessage.getStatus() == GameMessage.Status.OK) {
                 allGames.clear();
                 allGames = gameMessage.getStringList(); //Eine Liste aller Spiele, die auf dem Server existieren und denen der Spieler beitreten kann!
-                //TODO CHHENRI: Die Anzeige updaten mit den neuen Inhalten von allGames
+                allGames.add("First item");
+                allGames.add("Second item");
+                allGames.add("Third item");
+                adapter = new GamelobbyscreenAdapter(this, allGames);
+                recyclerView.setAdapter(adapter);
             } else {
                 Log.i(this.getClass().getSimpleName(), "Message was not of Type LoginAnswer - ignoring...");
             }
