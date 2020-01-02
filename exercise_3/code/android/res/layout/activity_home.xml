@@ -8,7 +8,7 @@
     tools:context=".HomeActivity">
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/button_exit"
         android:layout_width="210dp"
         android:layout_height="55dp"
         android:layout_marginBottom="10dp"
@@ -21,7 +21,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/button_joingame"
         android:layout_width="210dp"
         android:layout_height="55dp"
         android:layout_marginBottom="4dp"
@@ -29,12 +29,12 @@
         android:onClick="joinGame"
         android:text="@string/joingame_button"
         android:textStyle="italic"
-        app:layout_constraintBottom_toTopOf="@+id/button2"
+        app:layout_constraintBottom_toTopOf="@+id/button_exit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/button_creategame"
         android:layout_width="210dp"
         android:layout_height="55dp"
         android:layout_marginBottom="4dp"
@@ -42,12 +42,12 @@
         android:onClick="startGame"
         android:text="@string/creategame_button"
         android:textStyle="italic"
-        app:layout_constraintBottom_toTopOf="@+id/button3"
+        app:layout_constraintBottom_toTopOf="@+id/button_joingame"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Switch
-        android:id="@+id/switch1"
+        android:id="@+id/switch_soundonoff"
         android:layout_width="45dp"
         android:layout_height="35dp"
         android:layout_marginTop="15dp"
@@ -60,13 +60,13 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/imageViewMarioBrosLogo"
         android:layout_width="424dp"
         android:layout_height="185dp"
         android:layout_marginBottom="15dp"
         android:contentDescription="@string/contentdescription_loadingscreenimage"
         android:src="@drawable/mariobroslogo"
-        app:layout_constraintBottom_toTopOf="@+id/button"
+        app:layout_constraintBottom_toTopOf="@+id/button_creategame"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

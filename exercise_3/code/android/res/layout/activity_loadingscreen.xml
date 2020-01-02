@@ -8,7 +8,7 @@
     android:background="@color/red">
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/imageViewMarioBrosLogoLoadingscreen"
         android:layout_width="355dp"
         android:layout_height="241dp"
         android:layout_marginBottom="40dp"
@@ -32,10 +32,10 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+        app:layout_constraintTop_toBottomOf="@+id/imageViewMarioBrosLogoLoadingscreen" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/textViewLoadingbar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="35dp"

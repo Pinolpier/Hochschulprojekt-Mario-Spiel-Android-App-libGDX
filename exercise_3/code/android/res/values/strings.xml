@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="app_name">Super Mario Android</string>
-    <string name="creategame_button">Create Game</string>
-    <string name="joingame_button">Join Game</string>
-    <string name="exit_button">Exit</string>
     <string name="loadingbar">Loading...</string>
     <string name="contentdescription_loadingscreenimage">super mario bros logo</string>
     <string name="login_button">Login</string>
     <string name="register_button">Register</string>
     <string name="textview_username">username</string>
     <string name="textview_password">password</string>
+    <string name="creategame_button">Create Game</string>
+    <string name="joingame_button">Join Game</string>
+    <string name="exit_button">Exit</string>
+    <string name="textview_availablegamelobbys">Available Gamelobbys (Click to Join)</string>
+    <string name="contentdescription_gamelobbyscreenicon">super mario icon for lobbyscreen</string>
+    <string name="textview_gamename">Game Name</string>
+    <string name="textview_gamedescription">Game Description</string>
 
     <!-- UserService -->
     <string name="usernameNotAvailableToastMessage">Der Username ist schon vergeben, die Registrierung konnte nicht abgeschlossen werden, bitte einen anderen Namen wählen und erneut versuchen oder aber Einloggen!</string>
