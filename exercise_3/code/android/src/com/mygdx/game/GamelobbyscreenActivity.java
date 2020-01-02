@@ -24,8 +24,7 @@ public class GamelobbyscreenActivity extends Activity {
         items.add("Fifth CardView item");
         items.add("Sixth CardView item");
         items.add("Seventh CardView item");
-        items.add("Eigthj CardView item");
-
+        items.add("Eigtht CardView item");
 
 
         recyclerView = findViewById(R.id.recyclerView);

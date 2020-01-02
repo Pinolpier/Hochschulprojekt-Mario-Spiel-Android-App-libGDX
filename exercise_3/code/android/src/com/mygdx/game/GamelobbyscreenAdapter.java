@@ -50,7 +50,7 @@ public class GamelobbyscreenAdapter extends RecyclerView.Adapter<Gamelobbyscreen
             super(itemView);
             textGamename = itemView.findViewById(R.id.textviewGamename);
             textDescription = itemView.findViewById(R.id.textviewDescription);
-            imageView = itemView.findViewById(R.id.imageView3);
+            imageView = itemView.findViewById(R.id.imageViewMarioIconGamelobby);
             imageView.setImageResource(R.drawable.mario_icon);
 
             itemView.setOnClickListener(new View.OnClickListener() {
