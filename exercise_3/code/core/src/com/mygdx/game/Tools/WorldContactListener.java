@@ -6,10 +6,10 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.mygdx.game.MarioBros;
+import com.mygdx.game.Player.Player;
 import com.mygdx.game.Sprites.Enemies.Enemy;
 import com.mygdx.game.Sprites.Items.Item;
-import com.mygdx.game.Sprites.Mario;
-import com.mygdx.game.Sprites.Other.FireBall;
+import com.mygdx.game.Player.Mario;
 import com.mygdx.game.Sprites.TileObjects.InteractiveTileObject;
 
 public class WorldContactListener implements ContactListener {
@@ -24,15 +24,15 @@ public class WorldContactListener implements ContactListener {
             case MarioBros.MARIO_HEAD_BIT | MarioBros.BRICK_BIT:
             case MarioBros.MARIO_HEAD_BIT | MarioBros.COIN_BIT:
                 if(fixA.getFilterData().categoryBits == MarioBros.MARIO_HEAD_BIT)
-                    ((InteractiveTileObject) fixB.getUserData()).onHeadHit((Mario) fixA.getUserData());
+                    ((InteractiveTileObject) fixB.getUserData()).onHeadHit((Player) fixA.getUserData());
                 else
-                    ((InteractiveTileObject) fixA.getUserData()).onHeadHit((Mario) fixB.getUserData());
+                    ((InteractiveTileObject) fixA.getUserData()).onHeadHit((Player) fixB.getUserData());
                 break;
             case MarioBros.ENEMY_HEAD_BIT | MarioBros.MARIO_BIT:
                 if(fixA.getFilterData().categoryBits == MarioBros.ENEMY_HEAD_BIT)
-                    ((Enemy)fixA.getUserData()).hitOnHead((Mario) fixB.getUserData());
+                    ((Enemy)fixA.getUserData()).hitOnHead((Player) fixB.getUserData());
                 else
-                    ((Enemy)fixB.getUserData()).hitOnHead((Mario) fixA.getUserData());
+                    ((Enemy)fixB.getUserData()).hitOnHead((Player) fixA.getUserData());
                 break;
             case MarioBros.ENEMY_BIT | MarioBros.OBJECT_BIT:
                 if(fixA.getFilterData().categoryBits == MarioBros.ENEMY_BIT)
@@ -42,9 +42,9 @@ public class WorldContactListener implements ContactListener {
                 break;
             case MarioBros.MARIO_BIT | MarioBros.ENEMY_BIT:
                 if(fixA.getFilterData().categoryBits == MarioBros.MARIO_BIT)
-                    ((Mario) fixA.getUserData()).hit((Enemy)fixB.getUserData());
+                    ((Player) fixA.getUserData()).hit((Enemy)fixB.getUserData());
                 else
-                    ((Mario) fixB.getUserData()).hit((Enemy)fixA.getUserData());
+                    ((Player) fixB.getUserData()).hit((Enemy)fixA.getUserData());
                 break;
             case MarioBros.ENEMY_BIT:
                 ((Enemy)fixA.getUserData()).hitByEnemy((Enemy)fixB.getUserData());
@@ -58,16 +58,11 @@ public class WorldContactListener implements ContactListener {
                 break;
             case MarioBros.ITEM_BIT | MarioBros.MARIO_BIT:
                 if(fixA.getFilterData().categoryBits == MarioBros.ITEM_BIT)
-                    ((Item)fixA.getUserData()).use((Mario) fixB.getUserData());
+                    ((Item)fixA.getUserData()).use((Player) fixB.getUserData());
                 else
-                    ((Item)fixB.getUserData()).use((Mario) fixA.getUserData());
+                    ((Item)fixB.getUserData()).use((Player) fixA.getUserData());
                 break;
-            case MarioBros.FIREBALL_BIT | MarioBros.OBJECT_BIT:
-                if(fixA.getFilterData().categoryBits == MarioBros.FIREBALL_BIT)
-                    ((FireBall)fixA.getUserData()).setToDestroy();
-                else
-                    ((FireBall)fixB.getUserData()).setToDestroy();
-                break;
+
         }
     }
 

@@ -11,8 +11,9 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.MarioBros;
+import com.mygdx.game.Player.Player;
 import com.mygdx.game.Screens.PlayScreen;
-import com.mygdx.game.Sprites.Mario;
+import com.mygdx.game.Player.Mario;
 
 public class Goomba extends com.mygdx.game.Sprites.Enemies.Enemy
 {
@@ -97,7 +98,7 @@ public class Goomba extends com.mygdx.game.Sprites.Enemies.Enemy
 
 
     @Override
-    public void hitOnHead(Mario mario) {
+    public void hitOnHead(Player mario) {
         setToDestroy = true;
         MarioBros.manager.get("audio/sounds/stomp.wav", Sound.class).play();
     }
