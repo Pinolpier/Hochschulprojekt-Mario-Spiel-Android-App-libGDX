@@ -6,16 +6,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import java.util.ArrayList;
 import android.os.IBinder;
 import android.util.Log;
 
-public class GamelobbyscreenActivity extends Activity {
-    private RecyclerView recyclerView;
-    GamelobbyscreenAdapter adapter;
-    ArrayList<String> items;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
@@ -30,6 +26,9 @@ public class GamelobbyscreenActivity extends Activity implements MessageListener
     private ArrayList<String> allGames;
     private WebSocketService webSocketService;
     private Gson gson;
+    private RecyclerView recyclerView;
+    private GamelobbyscreenAdapter adapter;
+
     private ServiceConnection connection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -50,21 +49,6 @@ public class GamelobbyscreenActivity extends Activity implements MessageListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gamelobbyscreen);
 
-        items = new ArrayList<>();
-        items.add("First CardView item");
-        items.add("Second CardView item");
-        items.add("Third CardView item");
-        items.add("Fourth CardView item");
-        items.add("Fifth CardView item");
-        items.add("Sixth CardView item");
-        items.add("Seventh CardView item");
-        items.add("Eigtht CardView item");
-
-
-        recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new GamelobbyscreenAdapter(this,items);
-        recyclerView.setAdapter(adapter);
         allGames = new ArrayList<>();
         gson = new Gson();
         Intent serviceIntent = new Intent(this, WebSocketService.class);
@@ -72,6 +56,11 @@ public class GamelobbyscreenActivity extends Activity implements MessageListener
         bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE);
         Log.e(this.getClass().getSimpleName(), "Bind Service should have been happend!");
         requestAllGames();
+
+        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new GamelobbyscreenAdapter(this, allGames);
+        recyclerView.setAdapter(adapter);
     }
 
     private void requestAllGames() {
