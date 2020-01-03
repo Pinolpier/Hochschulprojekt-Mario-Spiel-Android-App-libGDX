@@ -54,17 +54,12 @@ public class HomeActivity extends Activity implements MessageListener {
         finish();
     }
 
-    public void joinGame(View v) {
-        Intent lobbyIntent = new Intent(this, LoadingscreenActivity.class);
-        lobbyIntent.putExtras(getIntent().getExtras());
-        startActivity(lobbyIntent);
-    }
-
     private ServiceConnection connection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             WebSocketService.WebSocketServiceBinder binder = (WebSocketService.WebSocketServiceBinder) service;
             webSocketService = binder.getService();
+            Log.e("Home Activity: ", "Ist wsService null?" + (webSocketService == null));
             serviceBound = true;
             webSocketService.registerListener(HomeActivity.this); //Setze diese Klasse als Listener fuer neue Nachrichten
         }
@@ -74,6 +69,12 @@ public class HomeActivity extends Activity implements MessageListener {
             serviceBound = false;
         }
     };
+
+    public void joinGame(View v) {
+        Intent lobbyIntent = new Intent(this, GamelobbyscreenActivity.class);
+        lobbyIntent.putExtras(getIntent().getExtras());
+        startActivity(lobbyIntent);
+    }
 
     @Override
     public void onMessageReceived(String message) {

@@ -31,8 +31,11 @@ public class AndroidLauncher extends AndroidApplication implements BackendCommun
         public void onServiceConnected(ComponentName name, IBinder service) {
             WebSocketService.WebSocketServiceBinder binder = (WebSocketService.WebSocketServiceBinder) service;
             webSocketService = binder.getService();
+            Log.e("Android Launcher: ", "Ist wsService null?" + (webSocketService == null));
             serviceBound = true;
+            Log.e("Ist der scheiß Service", " verbunden und hat webSocketService einen Wert? serviceBound: " + serviceBound + " websocketService == null " + (webSocketService == null));
             webSocketService.registerListener(AndroidLauncher.this); //Setze diese Klasse als Listener fuer neue Nachrichten
+            sendMessage(new GameMessage("JOIN_GAME", auth, GameMessage.Status.OK, gameID, null));
         }
 
         @Override
@@ -63,7 +66,6 @@ public class AndroidLauncher extends AndroidApplication implements BackendCommun
                 webSocketService.sendMessage(gson.toJson(message));
             }
         });
-        sendMessage(new GameMessage("JOIN_GAME", auth, GameMessage.Status.OK, gameID, null));
     }
 
     @Override

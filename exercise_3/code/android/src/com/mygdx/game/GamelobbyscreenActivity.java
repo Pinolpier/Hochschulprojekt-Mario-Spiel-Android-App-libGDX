@@ -38,6 +38,7 @@ public class GamelobbyscreenActivity extends Activity implements MessageListener
             webSocketService = binder.getService();
             serviceBound = true;
             webSocketService.registerListener(GamelobbyscreenActivity.this); //Setze diese Klasse als Listener fuer neue Nachrichten
+            requestAllGames();
         }
 
         @Override
@@ -53,16 +54,14 @@ public class GamelobbyscreenActivity extends Activity implements MessageListener
 
         allGames = new ArrayList<>();
         gson = new Gson();
+
         Intent serviceIntent = new Intent(this, WebSocketService.class);
         serviceIntent.putExtras(getIntent().getExtras());
         bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE);
         Log.e(this.getClass().getSimpleName(), "Bind Service should have been happend!");
-        requestAllGames();
 
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new GamelobbyscreenAdapter(this, allGames);
-        recyclerView.setAdapter(adapter);
 
         Button button = findViewById(R.id.reloadbutton);
         button.setOnClickListener(new View.OnClickListener() {

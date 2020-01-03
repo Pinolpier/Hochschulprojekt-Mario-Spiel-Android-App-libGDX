@@ -44,11 +44,11 @@ public class WebSocketService extends Service implements MessageListener {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
+        Log.e("Service", "onBind called, does the webSocket already exist?: " + (webSocket == null));
         if(webSocket==null){
             //Erzeuge neue Websocket Verbindung mit Backend
             Request request = new Request.Builder().url(URL).build();
             webSocket = client.newWebSocket(request,new SocketListener());
-            Log.d("Service", "onBind called");
             Bundle extras = intent.getExtras();
             this.auth = extras.getString("auth");
             this.username = extras.getString("username");
@@ -56,6 +56,7 @@ public class WebSocketService extends Service implements MessageListener {
             registerListener(this);
             login();
         }
+        Log.e("Ist der Binder null? ", Boolean.toString(binder == null));
         return binder;
     }
 
