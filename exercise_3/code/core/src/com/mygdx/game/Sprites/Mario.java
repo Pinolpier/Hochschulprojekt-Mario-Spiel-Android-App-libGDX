@@ -17,6 +17,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.MarioBros;
+import com.mygdx.game.Scenes.Hud;
 import com.mygdx.game.Screens.PlayScreen;
 import com.mygdx.game.Sprites.Enemies.Enemy;
 import com.mygdx.game.Sprites.Enemies.Turtle;
@@ -110,6 +111,10 @@ public class Mario extends Sprite {
         // of "die music" and jumping
         // there is probably better ways to do that but it works for now.
         if (screen.getHud().isTimeUp() && !isDead()) {
+            die();
+        }
+        if (screen.getHud().getScore() >= 10000 && !isDead()) {
+            Hud.addScore(-10000);
             die();
         }
 
