@@ -24,6 +24,23 @@ public class HomeActivity extends Activity implements MessageListener {
     boolean serviceBound = false;
     private Gson gson;
 
+    private ServiceConnection connection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            WebSocketService.WebSocketServiceBinder binder = (WebSocketService.WebSocketServiceBinder) service;
+            webSocketService = binder.getService();
+            Log.e("Home Activity: ", "Ist wsService null?: " + (webSocketService == null));
+            serviceBound = true;
+            webSocketService.registerListener(HomeActivity.this); //Setze diese Klasse als Listener fuer neue Nachrichten
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            Log.d(this.getClass().getSimpleName(), "onServiceDisconnected has been called! The service is now disconnected from HomeActivity");
+            serviceBound = false;
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,14 +51,31 @@ public class HomeActivity extends Activity implements MessageListener {
         setContentView(R.layout.activity_home);
         Intent serviceIntent = new Intent(this, WebSocketService.class);
         serviceIntent.putExtras(getIntent().getExtras());
-        bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE);
+        startService(serviceIntent);
         Log.e(this.getClass().getSimpleName(), "Bind Service should have been happend!");
     }
 
-    public void exitApp(View v) {
-        webSocketService.close(null, null);
-        finish();
-        System.exit(0);
+    protected void onPause() {
+        super.onPause();
+        if (webSocketService != null) {
+            webSocketService.deregisterListener(this);
+            if (serviceBound) {
+                webSocketService.unbindService(connection);
+            }
+            webSocketService = null;
+        }
+    }
+
+    protected void onResume() {
+        super.onResume();
+        if (webSocketService == null) {
+            Intent serviceIntent = new Intent(this, WebSocketService.class);
+            serviceIntent.putExtras(getIntent().getExtras());
+            bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE);
+            Log.e(this.getClass().getSimpleName(), "Bind Service should have been happend!");
+        } else {
+            Log.wtf("GamelobbyscreenActivity", "onResume has been called but webSocketService was not null");
+        }
     }
 
     public void startGame(View v) {
@@ -54,21 +88,11 @@ public class HomeActivity extends Activity implements MessageListener {
         finish();
     }
 
-    private ServiceConnection connection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            WebSocketService.WebSocketServiceBinder binder = (WebSocketService.WebSocketServiceBinder) service;
-            webSocketService = binder.getService();
-            Log.e("Home Activity: ", "Ist wsService null?" + (webSocketService == null));
-            serviceBound = true;
-            webSocketService.registerListener(HomeActivity.this); //Setze diese Klasse als Listener fuer neue Nachrichten
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            serviceBound = false;
-        }
-    };
+    public void exitApp(View v) {
+        stopService(new Intent(this, WebSocketService.class));
+        finish();
+        System.exit(0);
+    }
 
     public void joinGame(View v) {
         Intent lobbyIntent = new Intent(this, GamelobbyscreenActivity.class);

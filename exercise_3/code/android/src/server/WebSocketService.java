@@ -44,7 +44,7 @@ public class WebSocketService extends Service implements MessageListener {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        Log.e("Service", "onBind called, does the webSocket already exist?: " + (webSocket == null));
+        Log.e("Service", "onBind called, does the webSocket already exist?: " + (webSocket != null));
         if(webSocket==null){
             //Erzeuge neue Websocket Verbindung mit Backend
             Request request = new Request.Builder().url(URL).build();
@@ -61,11 +61,43 @@ public class WebSocketService extends Service implements MessageListener {
     }
 
     @Override
+    public boolean onUnbind(Intent intent) {
+        Log.e(this.getClass().getSimpleName(), "Unbind has been called from " + intent.getClass().toString() + " is this intended?");
+        return super.onUnbind(intent);
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.e("WebSocketService", "onStart has been called");
+        if (webSocket == null) {
+            //Erzeuge neue Websocket Verbindung mit Backend
+            Request request = new Request.Builder().url(URL).build();
+            webSocket = client.newWebSocket(request, new SocketListener());
+            Bundle extras = intent.getExtras();
+            this.auth = extras.getString("auth");
+            this.username = extras.getString("username");
+            this.password = extras.getString("password");
+            registerListener(this);
+            login();
+        }
+        Log.e("Ist der Binder null? ", Boolean.toString(binder == null));
+        super.onStartCommand(intent, flags, startId);
+        return START_REDELIVER_INTENT;
+    }
+
+    @Override
     public void onCreate(){
         listeners = new ArrayList<>();
         client = new OkHttpClient();
         gson = new Gson();
         Log.d("Service", "OnCreate Executed");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        close(null, null);
+        Log.d(this.getClass().getSimpleName(), "onDestroy has been called. Websocket Connection has been closed. Service stopping after this log...");
     }
 
     /**
@@ -76,6 +108,12 @@ public class WebSocketService extends Service implements MessageListener {
         if (webSocket != null) {
             boolean status = webSocket.send(message); //Sende neue Nachricht ueber Websocket Verbindung
             Log.i(this.getClass().getSimpleName(), "Send message " + message + ", status: " + status);
+        } else {
+            Log.wtf(this.getClass().getSimpleName() + "sendMessage()", "WTF! The object websocket == null is true! Can't send messages...\n...will try to send the message again after reinitializing the websocket object");
+            Request request = new Request.Builder().url(URL).build();
+            webSocket = client.newWebSocket(request, new SocketListener());
+            login();
+            sendMessage(message);
         }
     }
 
@@ -112,6 +150,7 @@ public class WebSocketService extends Service implements MessageListener {
             }
             webSocket.close(i, r);
         }
+        webSocket = null;
     }
 
     private final class SocketListener extends WebSocketListener { //Listener der bei verschiedenen Websocket Ereignissen aufgerufen wird

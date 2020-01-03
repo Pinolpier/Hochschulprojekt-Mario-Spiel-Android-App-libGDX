@@ -26,4 +26,5 @@
 
     <!-- Backend -->
     <string name="noJoinApprovalMessage">Konnte dem Spiel nicht beitreten, vermutlich ist es voll. Bitte ein anderes Spiel wählen. ID war: </string>
+    <string name="webSocketServiceDescription">Used to communicate with the MarioBros Server.</string>
 </resources>

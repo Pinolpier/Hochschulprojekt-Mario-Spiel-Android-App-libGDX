@@ -35,7 +35,10 @@
             android:screenOrientation="landscape"
             android:theme="@style/GdxTheme" />
 
-        <service android:name="server.WebSocketService" />
+        <service
+            android:name="server.WebSocketService"
+            android:description="@string/webSocketServiceDescription"
+            android:exported="false" />
     </application>
 
 </manifest>

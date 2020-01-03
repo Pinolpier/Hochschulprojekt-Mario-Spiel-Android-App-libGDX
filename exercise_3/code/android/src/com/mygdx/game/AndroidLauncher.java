@@ -40,32 +40,63 @@ public class AndroidLauncher extends AndroidApplication implements BackendCommun
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
+            Log.d(this.getClass().getSimpleName(), "onServiceDisconnected has been called! The service is now disconnected from AndroidLauncher");
             serviceBound = false;
         }
     };
 
-	@Override
-	protected void onCreate (Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         config = new AndroidApplicationConfiguration();
-		config.useGLSurfaceView20API18=true;
-		config.useGyroscope=true;
-		config.useCompass=true;
+        config.useGLSurfaceView20API18 = true;
+        config.useGyroscope = true;
+        config.useCompass = true;
         username = getIntent().getExtras().getString("username");
         password = getIntent().getExtras().getString("password");
         auth = getIntent().getExtras().getString("auth");
         gameID = getIntent().getExtras().getString("gameID");
         gson = new Gson();
-        Intent serviceIntent = new Intent(this, WebSocketService.class);
-        serviceIntent.putExtras(getIntent().getExtras());
-        bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE);
-        Log.e(this.getClass().getSimpleName(), "Bind Service should have been happend!");
         game = new MarioBros(new BackendCommunicator() {
             @Override
             public void sendMessage(GameMessage message) {
                 webSocketService.sendMessage(gson.toJson(message));
             }
         });
+    }
+//
+//    protected void onPause() {
+//        super.onPause();
+//        if (webSocketService != null) {
+//            webSocketService.deregisterListener(this);
+//            if (serviceBound) {
+//                webSocketService.unbindService(connection);
+//            }
+//            webSocketService = null;
+//        }
+//    }
+
+    protected void onStop() {
+        super.onStop();
+        if (webSocketService != null) {
+            webSocketService.deregisterListener(this);
+            if (serviceBound) {
+                webSocketService.unbindService(connection);
+            }
+            webSocketService = null;
+        }
+    }
+
+    protected void onResume() {
+        super.onResume();
+        if (webSocketService == null) {
+            Intent serviceIntent = new Intent(this, WebSocketService.class);
+            serviceIntent.putExtras(getIntent().getExtras());
+            bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE);
+            Log.e(this.getClass().getSimpleName(), "Bind Service should have been happend!");
+        } else {
+            Log.wtf("GamelobbyscreenActivity", "onResume has been called but webSocketService was not null");
+        }
     }
 
     @Override
