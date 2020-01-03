@@ -19,6 +19,7 @@ import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.MarioBros;
 import com.mygdx.game.Scenes.Hud;
 import com.mygdx.game.Screens.PlayScreen;
+import com.mygdx.game.Screens.VictoryScreen;
 import com.mygdx.game.Sprites.Enemies.Enemy;
 import com.mygdx.game.Sprites.Enemies.Turtle;
 import com.mygdx.game.Sprites.Other.FireBall;
@@ -116,7 +117,7 @@ public class Mario extends Sprite {
         if (screen.getHud().getScore() >= 10000 && !isDead()) {
             //TODO Game finished, Mario dies and should be replaced
             Hud.addScore(-10000);
-            die();
+            screen.setScreen(new VictoryScreen());
         }
 
         //update our sprite to correspond with the position of our Box2D body
