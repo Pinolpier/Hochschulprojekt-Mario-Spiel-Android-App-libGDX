@@ -114,6 +114,7 @@ public class Mario extends Sprite {
             die();
         }
         if (screen.getHud().getScore() >= 10000 && !isDead()) {
+            //TODO Game finished, Mario dies and should be replaced
             Hud.addScore(-10000);
             die();
         }
