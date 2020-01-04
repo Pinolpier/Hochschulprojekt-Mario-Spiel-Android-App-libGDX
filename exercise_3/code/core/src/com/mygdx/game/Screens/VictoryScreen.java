@@ -15,8 +15,15 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.MarioBros;
 
 public class VictoryScreen implements Screen {
+    private Viewport viewport;
+    private Stage stage;
 
-    public VictoryScreen(){
+    private Game game;
+
+    public VictoryScreen(Game game){
+        this.game = game;
+        viewport = new FitViewport(MarioBros.V_WIDTH, MarioBros.V_HEIGHT, new OrthographicCamera());
+        stage = new Stage(viewport, ((MarioBros) game).batch);
 
         Label.LabelStyle font = new Label.LabelStyle(new BitmapFont(), Color.WHITE);
 
@@ -30,6 +37,8 @@ public class VictoryScreen implements Screen {
         table.add(gameOverLabel).expandX();
         table.row();
         table.add(playAgainLabel).expandX().padTop(10f);
+
+        stage.addActor(table);
     }
 
     @Override
@@ -39,8 +48,13 @@ public class VictoryScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        if(Gdx.input.justTouched()) {
+            game.setScreen(new PlayScreen((MarioBros) game));
+            dispose();
+        }
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        stage.draw();
     }
 
     @Override
@@ -65,5 +79,6 @@ public class VictoryScreen implements Screen {
 
     @Override
     public void dispose() {
+        stage.dispose();
     }
 }

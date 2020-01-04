@@ -26,7 +26,9 @@ import com.mygdx.game.Sprites.Other.FireBall;
 
 
 public class Mario extends Sprite {
-    public enum State { FALLING, JUMPING, STANDING, RUNNING, GROWING, DEAD };
+
+
+    public enum State { FALLING, JUMPING, STANDING, RUNNING, GROWING, DEAD, WIN};
     public State currentState;
     public State previousState;
 
@@ -49,6 +51,7 @@ public class Mario extends Sprite {
     private boolean timeToDefineBigMario;
     private boolean timeToRedefineMario;
     private boolean marioIsDead;
+    private boolean marioReachedGoal;
     private PlayScreen screen;
 
     private Array<FireBall> fireballs;
@@ -117,7 +120,7 @@ public class Mario extends Sprite {
         if (screen.getHud().getScore() >= 10000 && !isDead()) {
             //TODO Game finished, Mario dies and should be replaced
             Hud.addScore(-10000);
-            screen.setScreen(new VictoryScreen());
+            win();
         }
 
         //update our sprite to correspond with the position of our Box2D body
@@ -165,6 +168,7 @@ public class Mario extends Sprite {
                 break;
             case FALLING:
             case STANDING:
+            case WIN:
             default:
                 region = marioIsBig ? bigMarioStand : marioStand;
                 break;
@@ -208,6 +212,8 @@ public class Mario extends Sprite {
         else if(b2body.getLinearVelocity().x != 0)
             return State.RUNNING;
         //if none of these return then he must be standing
+        else if (marioReachedGoal)
+            return State.WIN;
         else
             return State.STANDING;
     }
@@ -237,6 +243,12 @@ public class Mario extends Sprite {
             }
 
             b2body.applyLinearImpulse(new Vector2(0, 4f), b2body.getWorldCenter(), true);
+        }
+    }
+
+    public void win() {
+        if (!isDead()) {
+            marioReachedGoal = true;
         }
     }
 
