@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -22,6 +23,7 @@ import server.dtos.GameMessage;
 public class HomeActivity extends Activity implements MessageListener {
     private WebSocketService webSocketService;
     boolean serviceBound = false;
+    private String username, password, auth, gameID;
     private Gson gson;
 
     private ServiceConnection connection = new ServiceConnection() {
@@ -54,7 +56,7 @@ public class HomeActivity extends Activity implements MessageListener {
         startService(serviceIntent);
         if (webSocketService == null) {
             bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE);
-            Log.e(this.getClass().getSimpleName(), "Bind Service should have been happend!");
+            Log.e(HomeActivity.this.getClass().getSimpleName(), "Bind Service should have been happend!");
         }
     }
 
@@ -67,6 +69,10 @@ public class HomeActivity extends Activity implements MessageListener {
                 webSocketService.unbindService(connection);
             }
             webSocketService = null;
+            Intent serviceIntent = new Intent(this, WebSocketService.class);
+            serviceIntent.putExtras(getIntent().getExtras());
+            stopService(serviceIntent);
+            Log.e(HomeActivity.this.getClass().getSimpleName(), "Service has been unbound in onDestroy and has been Stopped!");
         }
     }
 
@@ -94,13 +100,18 @@ public class HomeActivity extends Activity implements MessageListener {
 //    }
 
     public void startGame(View v) {
-        Intent homeIntent = new Intent(this, AndroidLauncher.class);
-        Bundle extras = getIntent().getExtras();
-        String gameID = extras.getString("username");
-        extras.putString("gameID", gameID);
-        homeIntent.putExtras(extras);
-        startActivity(homeIntent);
-        finish();
+        username = getIntent().getExtras().getString("username");
+        password = getIntent().getExtras().getString("password");
+        auth = getIntent().getExtras().getString("auth");
+        gameID = username;
+        Log.e(HomeActivity.this.getClass().getSimpleName(), "Start Game has been pressed. Will now send join request for game with gameID as own username that is: " + username);
+        if (serviceBound) {
+            webSocketService.sendMessage(gson.toJson(new GameMessage("JOIN_GAME", auth, GameMessage.Status.OK, gameID, null)));
+        } else {
+            Log.e(HomeActivity.this.getClass().getSimpleName(), "Couldn't send Join request because service is not bound. Will show error toast, retry should work soon!");
+            Toast.makeText(HomeActivity.this, R.string.cantSendJoinRequestToastMessage, Toast.LENGTH_LONG).show();
+        }
+        //finish();
     }
 
     public void exitApp(View v) {
@@ -118,8 +129,21 @@ public class HomeActivity extends Activity implements MessageListener {
     @Override
     public void onMessageReceived(String message) {
         try {
-            //TODO find out why HomeActivity receives messages, probably remove this class as listener for messages
             GameMessage msg = gson.fromJson(message, GameMessage.class);
+            if (msg.getType() != null && msg.getType().equals("JoinAnswer")) {
+                if (msg.getStatus() == GameMessage.Status.OK) {
+                    Intent gameIntent = new Intent(this, AndroidLauncher.class);
+                    Bundle extras = getIntent().getExtras();
+                    extras.putString("gameID", gameID);
+                    gameIntent.putExtras(extras);
+                    startActivity(gameIntent);
+                } else {
+                    Log.wtf(HomeActivity.this.getClass().getSimpleName(), "Can't join game with gameID own username! Game should be created! Potentially error occurs because two users are logged in using same username?");
+                    Toast.makeText(HomeActivity.this, R.string.cantJoinOwnGame, Toast.LENGTH_LONG).show();
+                }
+            } else {
+                Log.d(HomeActivity.this.getClass().getSimpleName(), "Message was not of type JoinAnswer - ignoring...");
+            }
         } catch (JsonSyntaxException ex) {
             Log.w(this.getClass().getSimpleName(), "Couldn't cast message from backend, ignoring...\nMessage was: \"" + message + "\" printing stack trace...");
             ex.printStackTrace();

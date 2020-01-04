@@ -10,6 +10,7 @@ import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,6 +31,7 @@ public class GamelobbyscreenActivity extends Activity implements MessageListener
     private Gson gson;
     private RecyclerView recyclerView;
     private GamelobbyscreenAdapter adapter;
+    private String username, password, auth, gameID;
 
     private ServiceConnection connection = new ServiceConnection() {
         @Override
@@ -158,12 +160,34 @@ public class GamelobbyscreenActivity extends Activity implements MessageListener
                         adapter = new GamelobbyscreenAdapter(GamelobbyscreenActivity.this, allGames, new JoingameInterface() {
                             @Override
                             public void joinGame(String gameID) {
-                                System.out.println(gameID);
+                                Log.i(GamelobbyscreenActivity.this.getClass().getSimpleName(), "User clicked " + gameID + " trying to join now!");
+                                username = getIntent().getExtras().getString("username");
+                                password = getIntent().getExtras().getString("password");
+                                auth = getIntent().getExtras().getString("auth");
+                                GamelobbyscreenActivity.this.gameID = gameID;
+                                Log.e(GamelobbyscreenActivity.this.getClass().getSimpleName(), "Join Game has been pressed. Will now send join request for game with gameID: " + gameID);
+                                if (serviceBound) {
+                                    webSocketService.sendMessage(gson.toJson(new GameMessage("JOIN_GAME", auth, GameMessage.Status.OK, gameID, null)));
+                                } else {
+                                    Log.e(GamelobbyscreenActivity.this.getClass().getSimpleName(), "Couldn't send Join request because service is not bound. Will show error toast, retry should work soon!");
+                                    Toast.makeText(GamelobbyscreenActivity.this, R.string.cantSendJoinRequestToastMessage, Toast.LENGTH_LONG).show();
+                                }
                             }
                         });
                         recyclerView.setAdapter(adapter);
                     }
                 });
+            } else if (gameMessage != null && "JoinAnswer".equals(gameMessage.getType())) {
+                if (gameMessage.getStatus() == GameMessage.Status.OK) {
+                    Intent gameIntent = new Intent(this, AndroidLauncher.class);
+                    Bundle extras = getIntent().getExtras();
+                    extras.putString("gameID", gameID);
+                    gameIntent.putExtras(extras);
+                    startActivity(gameIntent);
+                } else {
+                    Log.wtf(GamelobbyscreenActivity.this.getClass().getSimpleName(), "Can't join game with gameID " + gameID);
+                    Toast.makeText(GamelobbyscreenActivity.this, R.string.cantJoinGame, Toast.LENGTH_LONG).show();
+                }
             } else {
                 Log.i(this.getClass().getSimpleName(), "Message was not of Type GameList - ignoring...");
             }

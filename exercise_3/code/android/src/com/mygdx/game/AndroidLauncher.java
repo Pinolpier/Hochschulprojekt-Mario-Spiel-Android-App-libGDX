@@ -27,6 +27,7 @@ public class AndroidLauncher extends AndroidApplication implements BackendCommun
     private Gson gson;
     private WebSocketService webSocketService;
     private String username, password, auth, gameID;
+    private boolean gameHasBeenCreated = false;
     private ServiceConnection connection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -35,7 +36,6 @@ public class AndroidLauncher extends AndroidApplication implements BackendCommun
             Log.e(AndroidLauncher.this.getClass().getSimpleName(), "onServiceConnected called. Ist wsService null?" + (webSocketService == null));
             serviceBound = true;
             webSocketService.registerListener(AndroidLauncher.this); //Setze diese Klasse als Listener fuer neue Nachrichten
-            sendMessage(new GameMessage("JOIN_GAME", auth, GameMessage.Status.OK, gameID, null));
         }
 
         @Override
@@ -65,13 +65,14 @@ public class AndroidLauncher extends AndroidApplication implements BackendCommun
             bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE);
             Log.e(this.getClass().getSimpleName(), "Bind Service should have been happend!");
         }
-
         game = new MarioBros(new BackendCommunicator() {
             @Override
             public void sendMessage(GameMessage message) {
                 webSocketService.sendMessage(gson.toJson(message));
             }
         });
+        gameHasBeenCreated = true;
+        initialize(game, config);
     }
 
     @Override
@@ -98,7 +99,7 @@ public class AndroidLauncher extends AndroidApplication implements BackendCommun
 //        }
 //    }
 
-//    protected void onStop() {
+    //    protected void onStop() {
 //        super.onStop();
 //        if (webSocketService != null) {
 //            webSocketService.deregisterListener(this);
@@ -110,7 +111,9 @@ public class AndroidLauncher extends AndroidApplication implements BackendCommun
 //    }
 //
 //    protected void onResume() {
-//        super.onResume();
+//        if (gameHasBeenCreated) {
+//            super.onResume();
+//        }
 //        if (webSocketService == null) {
 //            Intent serviceIntent = new Intent(this, WebSocketService.class);
 //            serviceIntent.putExtras(getIntent().getExtras());
@@ -135,17 +138,10 @@ public class AndroidLauncher extends AndroidApplication implements BackendCommun
     public void onMessageReceived(String message) {
         try {
             GameMessage msg = gson.fromJson(message, GameMessage.class);
-            if (msg.getType() != null && msg.getType().equals("JoinAnswer")) {
-                if (msg.getStatus() == GameMessage.Status.OK) {
-                    Log.d(this.getClass().getSimpleName(), "Got positive answer to join game with gameID " + gameID + " will initialize game now and start.");
-                    initialize(game, config);
-                } else {
-                    Log.e(this.getClass().getSimpleName(), "can't join game. Probably game is full, gameID used for request was: " + gameID);
-                    //TODO show hint (e.g. Toast) that game couldn't be joined and go back to GamelobbyscreenActivity or HomeActivity (maybe show toast there, problem right now is that no context is provided here)
-                    //Toast.makeText(this, R.string.noJoinApprovalMessage + gameID);
-                }
-            } else {
+            if (gameHasBeenCreated) {
                 game.receiveMessage(msg);
+            } else {
+                Log.e(AndroidLauncher.this.getClass().getSimpleName(), "Received message while game was not created! Message clear is: " + message);
             }
         } catch (JsonSyntaxException ex) {
             Log.w(this.getClass().getSimpleName(), "Couldn't cast message from backend, ignoring...\nMessage was: \"" + message + "\" printing stack trace...");
