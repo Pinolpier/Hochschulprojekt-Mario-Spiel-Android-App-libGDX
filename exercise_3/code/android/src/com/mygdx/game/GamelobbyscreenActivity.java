@@ -155,7 +155,12 @@ public class GamelobbyscreenActivity extends Activity implements MessageListener
 
                     @Override
                     public void run() {
-                        adapter = new GamelobbyscreenAdapter(GamelobbyscreenActivity.this, allGames);
+                        adapter = new GamelobbyscreenAdapter(GamelobbyscreenActivity.this, allGames, new JoingameInterface() {
+                            @Override
+                            public void joinGame(String gameID) {
+                                System.out.println(gameID);
+                            }
+                        });
                         recyclerView.setAdapter(adapter);
                     }
                 });
@@ -167,4 +172,5 @@ public class GamelobbyscreenActivity extends Activity implements MessageListener
             ex.printStackTrace();
         }
     }
+
 }

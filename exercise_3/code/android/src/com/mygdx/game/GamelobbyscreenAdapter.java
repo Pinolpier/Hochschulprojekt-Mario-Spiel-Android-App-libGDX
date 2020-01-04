@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,11 +17,15 @@ public class GamelobbyscreenAdapter extends RecyclerView.Adapter<Gamelobbyscreen
 
     private LayoutInflater layoutInflater;
     private List<String> data;
+    private Context context;
+    private JoingameInterface joingameInterface;
 
-    GamelobbyscreenAdapter(Context context, List<String> data)
+    GamelobbyscreenAdapter(Context context, List<String> data,JoingameInterface joinInterface)
     {
         this.layoutInflater = LayoutInflater.from(context);
         this.data = data;
+        this.context = context;
+        this.joingameInterface = joinInterface;
     }
 
     @NonNull
@@ -43,22 +48,26 @@ public class GamelobbyscreenAdapter extends RecyclerView.Adapter<Gamelobbyscreen
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
-        TextView textGamename,textDescription;
+        TextView textGamename;
         ImageView imageView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             textGamename = itemView.findViewById(R.id.textviewGamename);
-            textDescription = itemView.findViewById(R.id.textviewDescription);
             imageView = itemView.findViewById(R.id.imageViewMarioIconGamelobby);
             imageView.setImageResource(R.drawable.mario_icon);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    System.out.println("Item Clicked " + textGamename.getText());
+                    joinGame(textGamename.getText().toString());
                 }
             });
         }
+    }
+
+    public void joinGame(String gameID)
+    {
+        joingameInterface.joinGame(gameID);
     }
 }
