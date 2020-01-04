@@ -181,7 +181,7 @@ public class WebSocketService extends Service implements MessageListener {
 
         @Override
         public void onClosed(@NotNull WebSocket webSocket, int code, @NotNull String reason) {//Aufgerufen, nachdem Websocket Verbindung geschlossen wurde
-            Log.d(WebSocketService.this.getClass().getSimpleName(), "closing: " + reason);
+            Log.d(WebSocketService.this.getClass().getSimpleName(), "closed: " + reason);
         }
 
         @Override

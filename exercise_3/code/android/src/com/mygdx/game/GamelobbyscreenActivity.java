@@ -60,6 +60,13 @@ public class GamelobbyscreenActivity extends Activity implements MessageListener
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        if (webSocketService == null) {
+            Intent serviceIntent = new Intent(this, WebSocketService.class);
+            serviceIntent.putExtras(getIntent().getExtras());
+            bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE);
+            Log.e(this.getClass().getSimpleName(), "Bind Service should have been happend!");
+        }
+
         Button button = findViewById(R.id.reloadbutton);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,8 +76,9 @@ public class GamelobbyscreenActivity extends Activity implements MessageListener
         });
     }
 
-    protected void onPause() {
-        super.onPause();
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
         if (webSocketService != null) {
             webSocketService.deregisterListener(this);
             if (serviceBound) {
@@ -80,17 +88,34 @@ public class GamelobbyscreenActivity extends Activity implements MessageListener
         }
     }
 
-    protected void onResume() {
-        super.onResume();
-        if (webSocketService == null) {
-            Intent serviceIntent = new Intent(this, WebSocketService.class);
-            serviceIntent.putExtras(getIntent().getExtras());
-            bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE);
-            Log.e(this.getClass().getSimpleName(), "Bind Service should have been happend!");
-        } else {
-            Log.wtf("GamelobbyscreenActivity", "onResume has been called but webSocketService was not null");
-        }
+    @Override
+    public void onBackPressed() {
+        webSocketService.deregisterListener(this);
+        startActivity(new Intent(GamelobbyscreenActivity.this, HomeActivity.class).putExtras(getIntent().getExtras()));
     }
+
+    //    protected void onPause() {
+//        super.onPause();
+//        if (webSocketService != null) {
+//            webSocketService.deregisterListener(this);
+//            if (serviceBound) {
+//                webSocketService.unbindService(connection);
+//            }
+//            webSocketService = null;
+//        }
+//    }
+
+//    protected void onResume() {
+//        super.onResume();
+//        if (webSocketService == null) {
+//            Intent serviceIntent = new Intent(this, WebSocketService.class);
+//            serviceIntent.putExtras(getIntent().getExtras());
+//            bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE);
+//            Log.e(this.getClass().getSimpleName(), "Bind Service should have been happend!");
+//        } else {
+//            Log.wtf("GamelobbyscreenActivity", "onResume has been called but webSocketService was not null");
+//        }
+//    }
 
 //    protected void onStop() {
 //        super.onStop();
@@ -125,8 +150,15 @@ public class GamelobbyscreenActivity extends Activity implements MessageListener
                 allGames.add("First item");
                 allGames.add("Second item");
                 allGames.add("Third item");
-                adapter = new GamelobbyscreenAdapter(this, allGames);
-                recyclerView.setAdapter(adapter);
+                Log.e(GamelobbyscreenActivity.this.getClass().getSimpleName(), "Updaten auf dem UI Thread der empfangenen Ergebnisse als nächstes...");
+                runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        adapter = new GamelobbyscreenAdapter(GamelobbyscreenActivity.this, allGames);
+                        recyclerView.setAdapter(adapter);
+                    }
+                });
             } else {
                 Log.i(this.getClass().getSimpleName(), "Message was not of Type GameList - ignoring...");
             }

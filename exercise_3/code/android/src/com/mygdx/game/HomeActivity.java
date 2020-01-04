@@ -52,11 +52,15 @@ public class HomeActivity extends Activity implements MessageListener {
         Intent serviceIntent = new Intent(this, WebSocketService.class);
         serviceIntent.putExtras(getIntent().getExtras());
         startService(serviceIntent);
-        Log.e(this.getClass().getSimpleName(), "Bind Service should have been happend!");
+        if (webSocketService == null) {
+            bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE);
+            Log.e(this.getClass().getSimpleName(), "Bind Service should have been happend!");
+        }
     }
 
-    protected void onPause() {
-        super.onPause();
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
         if (webSocketService != null) {
             webSocketService.deregisterListener(this);
             if (serviceBound) {
@@ -66,17 +70,28 @@ public class HomeActivity extends Activity implements MessageListener {
         }
     }
 
-    protected void onResume() {
-        super.onResume();
-        if (webSocketService == null) {
-            Intent serviceIntent = new Intent(this, WebSocketService.class);
-            serviceIntent.putExtras(getIntent().getExtras());
-            bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE);
-            Log.e(this.getClass().getSimpleName(), "Bind Service should have been happend!");
-        } else {
-            Log.wtf("GamelobbyscreenActivity", "onResume has been called but webSocketService was not null");
-        }
-    }
+//    protected void onPause() {
+//        super.onPause();
+//        if (webSocketService != null) {
+//            webSocketService.deregisterListener(this);
+//            if (serviceBound) {
+//                webSocketService.unbindService(connection);
+//            }
+//            webSocketService = null;
+//        }
+//    }
+
+//    protected void onResume() {
+//        super.onResume();
+//        if (webSocketService == null) {
+//            Intent serviceIntent = new Intent(this, WebSocketService.class);
+//            serviceIntent.putExtras(getIntent().getExtras());
+//            bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE);
+//            Log.e(this.getClass().getSimpleName(), "Bind Service should have been happend!");
+//        } else {
+//            Log.wtf("GamelobbyscreenActivity", "onResume has been called but webSocketService was not null");
+//        }
+//    }
 
     public void startGame(View v) {
         Intent homeIntent = new Intent(this, AndroidLauncher.class);
