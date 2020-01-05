@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">my-gdx-game</string>
+    <string name="app_name">Super Mario Android</string>
+    <string name="creategame_button">Create Game</string>
+    <string name="joingame_button">Join Game</string>
+    <string name="exit_button">Exit</string>
+    <string name="loadingbar">Loading...</string>
+    <string name="contentdescription_loadingscreenimage">super mario bros logo</string>
+    <string name="login_button">Login</string>
+    <string name="register_button">Register</string>
+    <string name="textview_username">username</string>
+    <string name="textview_password">password</string>
+
+    <!-- UserService -->
+    <string name="usernameNotAvailableToastMessage">Der Username ist schon vergeben, die Registrierung konnte nicht abgeschlossen werden, bitte einen anderen Namen wählen und erneut versuchen oder aber Einloggen!</string>
+    <string name="registrationSuccessfulToastMessage">Registrierung beim Webservice war erfolgreich. Login wird gestartet.</string>
+    <string name="connectionOnFailureToastMessage">Verbindung zum Webserice konnte nicht hergestellt werden. Internetverbindung überprüfen!</string>
+    <string name="loginFailedToastMessage">Der Login ist fehlgeschlagen! Bitte Username und Passwort überprüfen. Vor dem ersten Login muss man sich registrieren.</string>
+    <string name="loginSuccessfulToastMessage">Login war erfolgreich!</string>
 
 </resources>
