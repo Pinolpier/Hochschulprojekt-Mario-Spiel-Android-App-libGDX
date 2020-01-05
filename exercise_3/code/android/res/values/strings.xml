@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="app_name">Super Mario Android</string>
-    <string name="creategame_button">Create Game</string>
-    <string name="joingame_button">Join Game</string>
-    <string name="exit_button">Exit</string>
     <string name="loadingbar">Loading...</string>
     <string name="contentdescription_loadingscreenimage">super mario bros logo</string>
     <string name="login_button">Login</string>
     <string name="register_button">Register</string>
     <string name="textview_username">username</string>
     <string name="textview_password">password</string>
+    <string name="creategame_button">Create Game</string>
+    <string name="joingame_button">Join Game</string>
+    <string name="exit_button">Exit</string>
+    <string name="textview_availablegamelobbys">Available Gamelobbys (Click to Join)</string>
+    <string name="contentdescription_gamelobbyscreenicon">super mario icon for lobbyscreen</string>
+    <string name="textview_gamename">Game Name</string>
+    <string name="textview_gamedescription">Game Description</string>
 
     <!-- UserService -->
     <string name="usernameNotAvailableToastMessage">Der Username ist schon vergeben, die Registrierung konnte nicht abgeschlossen werden, bitte einen anderen Namen wählen und erneut versuchen oder aber Einloggen!</string>
@@ -18,5 +21,13 @@
     <string name="connectionOnFailureToastMessage">Verbindung zum Webserice konnte nicht hergestellt werden. Internetverbindung überprüfen!</string>
     <string name="loginFailedToastMessage">Der Login ist fehlgeschlagen! Bitte Username und Passwort überprüfen. Vor dem ersten Login muss man sich registrieren.</string>
     <string name="loginSuccessfulToastMessage">Login war erfolgreich!</string>
+    <string name="registrationFailedToastMessage">Die Registrierung ist fehlgeschlagen.</string>
+    <string name="emptyCredentialsToastMessage">Leerer Username oder Password sind nicht gültig. Bitte einen Wert eingeben!</string>
 
+    <!-- Backend -->
+    <string name="noJoinApprovalMessage">Konnte dem Spiel nicht beitreten, vermutlich ist es voll. Bitte ein anderes Spiel wählen. ID war: </string>
+    <string name="webSocketServiceDescription">Used to communicate with the MarioBros Server.</string>
+    <string name="cantSendJoinRequestToastMessage">Die Serververbindung befindet sich noch im Aufbau, gleich nochmal probieren</string>
+    <string name="cantJoinOwnGame">Spiel konnte nicht erstellt werden! 2 Nutzer mit demselben Username online?</string>
+    <string name="cantJoinGame">Dem Spiel konnte nicht beigetreten werden, vermutlich ist es voll, bitte ein anderes Spiel wählen.</string>
 </resources>

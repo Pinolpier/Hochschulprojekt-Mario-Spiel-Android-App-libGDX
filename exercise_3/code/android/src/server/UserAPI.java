@@ -11,5 +11,5 @@ public interface UserAPI {
     Call<ResponseBody> register(@Body User user);
 
     @POST("user/login")
-    Call<User> login(@Body User user);
+    Call<Void> login(@Body User user);
 }

@@ -29,6 +29,8 @@ import com.mygdx.game.Tools.WorldContactListener;
 
 import java.util.concurrent.LinkedBlockingQueue;
 
+import server.dtos.GameMessage;
+
 public class PlayScreen implements Screen {
     private MarioBros game;
     private TextureAtlas atlas;
@@ -139,7 +141,6 @@ public class PlayScreen implements Screen {
             if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && player2.getB2body().getLinearVelocity().x >= -2)
                 player2.getB2body().applyLinearImpulse(new Vector2(-0.1f, 0), player2.getB2body().getWorldCenter(), true);
         }
-
     }
 
     public void update(float dt){
@@ -225,7 +226,7 @@ public class PlayScreen implements Screen {
     }
 
     public boolean gameWin() {
-        if(player.currentState == Mario.State.WIN)
+        if(player.getCurrentState() == Mario.State.WIN)
             return true;
         return false;
     }
@@ -270,4 +271,8 @@ public class PlayScreen implements Screen {
     }
 
     public Hud getHud(){ return hud; }
+
+    public void receiveMessage(GameMessage gameMessage) {
+
+    }
 }

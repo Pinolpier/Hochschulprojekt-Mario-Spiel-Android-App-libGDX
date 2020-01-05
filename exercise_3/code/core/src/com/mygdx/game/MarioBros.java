@@ -7,9 +7,12 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.game.Screens.PlayScreen;
 
+import server.BackendCommunicator;
+import server.dtos.GameMessage;
 /**
  * Main Game class to start the hole Game
  */
+
 public class MarioBros extends Game {
     public static final int V_WIDTH = 400;
     public static final int V_HEIGHT = 208;
@@ -32,6 +35,15 @@ public class MarioBros extends Game {
     public SpriteBatch batch;
     public static AssetManager manager;
 
+    private PlayScreen playScreen;
+
+    //reference that needs to be kept to the android module.
+    private BackendCommunicator backendCommunicator;
+
+    public MarioBros(BackendCommunicator backendCommunicator) {
+        this.backendCommunicator = backendCommunicator;
+    }
+
     @Override
     public void create () {
         batch = new SpriteBatch();
@@ -48,6 +60,8 @@ public class MarioBros extends Game {
 
         manager.finishLoading();
         setScreen(new PlayScreen(this));
+        playScreen = new PlayScreen(this);
+        setScreen(playScreen);
     }
 
     @Override
@@ -60,5 +74,15 @@ public class MarioBros extends Game {
     @Override
     public void render () {
         super.render();
+    }
+
+    public void receiveMessage(GameMessage gameMessage) {
+        if (playScreen != null) {
+            playScreen.receiveMessage(gameMessage);
+        }
+    }
+
+    public void sendMessage(GameMessage gameMessage) {
+        backendCommunicator.sendMessage(gameMessage);
     }
 }
