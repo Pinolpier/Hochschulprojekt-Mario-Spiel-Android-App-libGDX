@@ -1,7 +1,6 @@
 package com.mygdx.game.Screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
@@ -17,13 +16,13 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.MarioBros;
+import com.mygdx.game.Player.Mario;
 import com.mygdx.game.Player.Player;
 import com.mygdx.game.Scenes.Hud;
 import com.mygdx.game.Sprites.Enemies.Enemy;
 import com.mygdx.game.Sprites.Items.Item;
 import com.mygdx.game.Sprites.Items.ItemDef;
 import com.mygdx.game.Sprites.Items.Mushroom;
-import com.mygdx.game.Player.Mario;
 import com.mygdx.game.Tools.B2WorldCreator;
 import com.mygdx.game.Tools.WorldContactListener;
 
@@ -118,15 +117,11 @@ public class PlayScreen implements Screen {
     public void handleInput(){
         if(player.getCurrentState() != Mario.State.DEAD) {
             if(Gdx.input.justTouched())
-                player.jump();
+                player.jump(); //TODO mlink2 send 0
             if(Gdx.input.getPitch()<-10)
-                player.getB2body().applyLinearImpulse(new Vector2(0.1f, 0), player.getB2body().getWorldCenter(), true);
+                player.getB2body().applyLinearImpulse(new Vector2(0.1f, 0), player.getB2body().getWorldCenter(), true); //TODO mlink2 send 1
             if(Gdx.input.getPitch()>20)
-                player.getB2body().applyLinearImpulse(new Vector2(-0.1f, 0), player.getB2body().getWorldCenter(), true);
-            if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player.getB2body().getLinearVelocity().x <= 2)
-                player.getB2body().applyLinearImpulse(new Vector2(0.1f, 0), player.getB2body().getWorldCenter(), true);
-            if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.getB2body().getLinearVelocity().x >= -2)
-                player.getB2body().applyLinearImpulse(new Vector2(-0.1f, 0), player.getB2body().getWorldCenter(), true);
+                player.getB2body().applyLinearImpulse(new Vector2(-0.1f, 0), player.getB2body().getWorldCenter(), true); //TODO mlink2 send 2
         }
 
         if(player2.getCurrentState() != Mario.State.DEAD) {
@@ -135,10 +130,6 @@ public class PlayScreen implements Screen {
             if(Gdx.input.getPitch()<-10)
                 player2.getB2body().applyLinearImpulse(new Vector2(0.1f, 0), player2.getB2body().getWorldCenter(), true);
             if(Gdx.input.getPitch()>20)
-                player2.getB2body().applyLinearImpulse(new Vector2(-0.1f, 0), player2.getB2body().getWorldCenter(), true);
-            if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player2.getB2body().getLinearVelocity().x <= 2)
-                player2.getB2body().applyLinearImpulse(new Vector2(0.1f, 0), player2.getB2body().getWorldCenter(), true);
-            if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && player2.getB2body().getLinearVelocity().x >= -2)
                 player2.getB2body().applyLinearImpulse(new Vector2(-0.1f, 0), player2.getB2body().getWorldCenter(), true);
         }
     }
@@ -219,16 +210,11 @@ public class PlayScreen implements Screen {
     }
 
     public boolean gameOver(){
-        if(player.getCurrentState() == Mario.State.DEAD && player.getStateTimer() > 3){
-            return true;
-        }
-        return false;
+        return player.getCurrentState() == Mario.State.DEAD && player.getStateTimer() > 3;
     }
 
     public boolean gameWin() {
-        if(player.getCurrentState() == Mario.State.WIN)
-            return true;
-        return false;
+        return player.getCurrentState() == Mario.State.WIN;
     }
 
     @Override
@@ -273,6 +259,18 @@ public class PlayScreen implements Screen {
     public Hud getHud(){ return hud; }
 
     public void receiveMessage(GameMessage gameMessage) {
-
+        //TODO fix me
+        int status = 0;
+        switch (status) {
+            case 0:
+                player2.jump();
+                break;
+            case 1:
+                player2.getB2body().applyLinearImpulse(new Vector2(0.1f, 0), player2.getB2body().getWorldCenter(), true);
+                break;
+            case 2:
+                player2.getB2body().applyLinearImpulse(new Vector2(-0.1f, 0), player2.getB2body().getWorldCenter(), true);
+                break;
+        }
     }
 }
