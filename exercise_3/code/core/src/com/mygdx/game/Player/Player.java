@@ -1,4 +1,4 @@
-package com.mygdx.game.Sprites;
+package com.mygdx.game.Player;
 
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -20,10 +20,9 @@ import com.mygdx.game.MarioBros;
 import com.mygdx.game.Screens.PlayScreen;
 import com.mygdx.game.Sprites.Enemies.Enemy;
 import com.mygdx.game.Sprites.Enemies.Turtle;
-import com.mygdx.game.Sprites.Other.FireBall;
 
 public class Player extends Sprite {
-    public enum State { FALLING, JUMPING, STANDING, RUNNING, GROWING, DEAD };
+    public enum State { FALLING, JUMPING, STANDING, RUNNING, GROWING, DEAD, WIN };
     public Body b2body;
     public World world;
     public State currentState;
