@@ -12,8 +12,6 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.MarioBros;
 
-import sun.rmi.runtime.Log;
-
 public class Hud implements Disposable {
 
     //Scene2D.ui Stage and its own Viewport for HUD
