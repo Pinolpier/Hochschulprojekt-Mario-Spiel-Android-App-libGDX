@@ -13,6 +13,7 @@ import android.widget.Toast;
 import server.LoginProcessedInterface;
 import server.RegistrationProcessedInterface;
 import server.UserService;
+import server.WebSocketService;
 
 public class LoginActivity extends Activity {
     private EditText textInputUsername;
@@ -39,7 +40,7 @@ public class LoginActivity extends Activity {
         buttonlogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("LoginActivity: ", "Login button clicked!");
+                Log.d(LoginActivity.this.getClass().getSimpleName(), "Login button clicked!");
                 String username = textInputUsername.getText().toString();
                 String password = textInputPassword.getText().toString();
                 login(username, password);
@@ -49,7 +50,7 @@ public class LoginActivity extends Activity {
         buttonregister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("LoginActivity: ", "Register button clicked!");
+                Log.d(LoginActivity.this.getClass().getSimpleName(), "Register button clicked!");
                 String username = textInputUsername.getText().toString();
                 String password = textInputPassword.getText().toString();
 
@@ -61,8 +62,8 @@ public class LoginActivity extends Activity {
 
                     @Override
                     public void onFailure() {
-                        //Toast.makeText(context, R.string.registrationFailedToastMessage, Toast.LENGTH_LONG).show();
-                        Log.wtf("Test HomeActivity", "Registration failed.");
+                        Toast.makeText(context, R.string.registrationFailedToastMessage, Toast.LENGTH_LONG).show();
+                        Log.wtf(LoginActivity.this.getClass().getSimpleName(), "Registration failed. RegistrationProcessedInterface.onFailure() has been called.");
                     }
                 });
             }
@@ -70,7 +71,7 @@ public class LoginActivity extends Activity {
     }
 
     private void login(final String username, final String password) {
-        Log.d("LoginActivity: ", "Login method started!");
+        Log.d(LoginActivity.this.getClass().getSimpleName(), "Login method started!");
         if (username == null || password == null || username.equals("") || password.equals("")) {
             Toast.makeText(this, R.string.emptyCredentialsToastMessage, Toast.LENGTH_LONG).show();
             return;
@@ -78,19 +79,24 @@ public class LoginActivity extends Activity {
         userService.login(username, password, new LoginProcessedInterface() {
             @Override
             public void onSuccess(String auth) {
-                Log.d("LoginActivity: ", "Login on Success");
-                Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                Log.d(LoginActivity.this.getClass().getSimpleName(), "LoginProcessedInterface.onSuccess() has been called. Login was successful.");
+                //now that the game really starts start up the service and don't stop it until the Exit button on HomeActivity has been pressed.
+                Intent serviceIntent = new Intent(LoginActivity.this, WebSocketService.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("auth", auth);
                 bundle.putString("username", username);
                 bundle.putString("password", password);
+                serviceIntent.putExtras(bundle);
+                startService(serviceIntent);
+
+                Intent intent = new Intent(context, HomeActivity.class);
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
 
             @Override
             public void onFailure() {
-                Log.wtf("LoginActivity: ", "Login onFailure has been called");
+                Log.wtf(LoginActivity.this.getClass().getSimpleName(), "LoginProcessedInterface.onFailure() has been called. Login failed!");
             }
         });
     }

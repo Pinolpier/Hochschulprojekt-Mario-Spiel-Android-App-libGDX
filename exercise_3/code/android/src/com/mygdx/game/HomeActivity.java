@@ -31,14 +31,14 @@ public class HomeActivity extends Activity implements MessageListener {
         public void onServiceConnected(ComponentName name, IBinder service) {
             WebSocketService.WebSocketServiceBinder binder = (WebSocketService.WebSocketServiceBinder) service;
             webSocketService = binder.getService();
-            Log.e("Home Activity: ", "Ist wsService null?: " + (webSocketService == null));
+            Log.d(HomeActivity.this.getClass().getSimpleName(), ":onServiceConnected()  The service is now connected to HomeActivity and webSocketService is null?: " + (webSocketService == null));
             serviceBound = true;
             webSocketService.registerListener(HomeActivity.this); //Setze diese Klasse als Listener fuer neue Nachrichten
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            Log.d(this.getClass().getSimpleName(), "onServiceDisconnected has been called! The service is now disconnected from HomeActivity");
+            Log.d(HomeActivity.this.getClass().getSimpleName(), ":onServiceDisconnected()  The service is now disconnected from HomeActivity");
             serviceBound = false;
         }
     };
@@ -52,11 +52,11 @@ public class HomeActivity extends Activity implements MessageListener {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_home);
         Intent serviceIntent = new Intent(this, WebSocketService.class);
-        serviceIntent.putExtras(getIntent().getExtras());
-        startService(serviceIntent);
         if (webSocketService == null) {
             bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE);
-            Log.e(HomeActivity.this.getClass().getSimpleName(), "Bind Service should have been happend!");
+            Log.d(HomeActivity.this.getClass().getSimpleName() + ":onCreate() ", "Bind Service should have been happened!");
+        } else {
+            Log.d(HomeActivity.this.getClass().getSimpleName() + ":onCreate() ", "WebSocketService was not null, so service has not been bound again.");
         }
     }
 
@@ -69,42 +69,16 @@ public class HomeActivity extends Activity implements MessageListener {
                 webSocketService.unbindService(connection);
             }
             webSocketService = null;
-            Intent serviceIntent = new Intent(this, WebSocketService.class);
-            serviceIntent.putExtras(getIntent().getExtras());
-            stopService(serviceIntent);
-            Log.e(HomeActivity.this.getClass().getSimpleName(), "Service has been unbound in onDestroy and has been Stopped!");
+            Log.d(HomeActivity.this.getClass().getSimpleName() + ":onDestroy() ", "Service has been unbound and has been Stopped!");
         }
     }
-
-//    protected void onPause() {
-//        super.onPause();
-//        if (webSocketService != null) {
-//            webSocketService.deregisterListener(this);
-//            if (serviceBound) {
-//                webSocketService.unbindService(connection);
-//            }
-//            webSocketService = null;
-//        }
-//    }
-
-//    protected void onResume() {
-//        super.onResume();
-//        if (webSocketService == null) {
-//            Intent serviceIntent = new Intent(this, WebSocketService.class);
-//            serviceIntent.putExtras(getIntent().getExtras());
-//            bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE);
-//            Log.e(this.getClass().getSimpleName(), "Bind Service should have been happend!");
-//        } else {
-//            Log.wtf("GamelobbyscreenActivity", "onResume has been called but webSocketService was not null");
-//        }
-//    }
 
     public void startGame(View v) {
         username = getIntent().getExtras().getString("username");
         password = getIntent().getExtras().getString("password");
         auth = getIntent().getExtras().getString("auth");
         gameID = username;
-        Log.e(HomeActivity.this.getClass().getSimpleName(), "Start Game has been pressed. Will now send join request for game with gameID as own username that is: " + username);
+        Log.d(HomeActivity.this.getClass().getSimpleName(), "Start Game has been pressed. Will now send join request for game with gameID as own username that is: " + username);
         if (serviceBound) {
             webSocketService.sendMessage(gson.toJson(new GameMessage("JOIN_GAME", auth, GameMessage.Status.OK, gameID, null)));
         } else {
@@ -141,8 +115,6 @@ public class HomeActivity extends Activity implements MessageListener {
                     Log.wtf(HomeActivity.this.getClass().getSimpleName(), "Can't join game with gameID own username! Game should be created! Potentially error occurs because two users are logged in using same username?");
                     Toast.makeText(HomeActivity.this, R.string.cantJoinOwnGame, Toast.LENGTH_LONG).show();
                 }
-            } else {
-                Log.d(HomeActivity.this.getClass().getSimpleName(), "Message was not of type JoinAnswer - ignoring...");
             }
         } catch (JsonSyntaxException ex) {
             Log.w(this.getClass().getSimpleName(), "Couldn't cast message from backend, ignoring...\nMessage was: \"" + message + "\" printing stack trace...");

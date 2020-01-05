@@ -36,16 +36,16 @@ public class UserService {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.code() != 409 && !response.isSuccessful()) {
-                    Log.wtf("Sync Service: ", "An unexpected HTTP Response Code indicating an error has been returned by the webservice: Response Code is " + response.code());
+                    Log.wtf(UserService.this.getClass().getSimpleName(), "An unexpected HTTP Response Code indicating an error has been returned by the webservice: Response Code is " + response.code());
                 }
                 if (response.code() == 409) {
                     Toast.makeText(context, R.string.usernameNotAvailableToastMessage, Toast.LENGTH_LONG).show();
-                    Log.d("Sync Service: ", "Username was not available. Couldn't complete registration.");
+                    Log.d(UserService.this.getClass().getSimpleName(), "Username was not available. Couldn't complete registration.");
                 }
-                if (response.isSuccessful() && response.code() != 200) {
-                    Log.wtf("Sync Service: ", "An unexpected HTTP Response Code indicating successful registration has been returned by the webservice: Response Code is " + response.code());
+                if (response.isSuccessful() && response.code() != 200 && response.code() != 201) {
+                    Log.wtf(UserService.this.getClass().getSimpleName(), "An unexpected HTTP Response Code indicating successful registration has been returned by the webservice: Response Code is " + response.code());
                 }
-                if (response.code() == 200) {
+                if (response.code() == 200 || response.code() == 201) {
                     Toast.makeText(context, R.string.registrationSuccessfulToastMessage, Toast.LENGTH_LONG).show();
                     registrationProcessedInterface.onSuccess(username, password);
                     return;
@@ -56,7 +56,7 @@ public class UserService {
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Toast.makeText(context, R.string.connectionOnFailureToastMessage, Toast.LENGTH_LONG).show();
-                Log.wtf("Sync Service: ", "A serious error with the webservice occurred during registration, error: " + t.getMessage());
+                Log.wtf(UserService.this.getClass().getSimpleName(), "A serious error with the webservice occurred during registration, error: " + t.getMessage());
                 registrationProcessedInterface.onFailure();
             }
         });
@@ -70,14 +70,14 @@ public class UserService {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (!response.isSuccessful() && response.code() != 403) {
-                    Log.wtf("Sync Service: ", "An unexpected HTTP Response Code indicating an error has been returned by the webservice: Response Code is " + response.code());
+                    Log.wtf(UserService.this.getClass().getSimpleName(), "An unexpected HTTP Response Code indicating an error has been returned by the webservice: Response Code is " + response.code());
                 }
                 if (response.code() == 403) {
                     Toast.makeText(context, R.string.loginFailedToastMessage, Toast.LENGTH_LONG).show();
-                    Log.d("Auth Service: ", "Login unsuccessful. Got HTTP return 403 forbidden.");
+                    Log.d(UserService.this.getClass().getSimpleName(), "Login unsuccessful. Got HTTP return 403 forbidden.");
                 }
                 if (response.isSuccessful() && response.code() != 200 && response.code() != 201) {
-                    Log.wtf("Sync Service: ", "An unexpected HTTP Response Code indicating successful login has been returned by the webservice: Response Code is " + response.code());
+                    Log.wtf(UserService.this.getClass().getSimpleName(), "An unexpected HTTP Response Code indicating successful login has been returned by the webservice: Response Code is " + response.code());
                 }
                 if (response.code() == 200 || response.code() == 201) {
                     Toast.makeText(context, R.string.loginSuccessfulToastMessage, Toast.LENGTH_SHORT).show();
@@ -91,7 +91,7 @@ public class UserService {
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 Toast.makeText(context, R.string.connectionOnFailureToastMessage, Toast.LENGTH_LONG).show();
-                Log.wtf("Sync Service: ", "A serious error with the webservice occurred during login, error:" + t.getMessage());
+                Log.wtf(UserService.this.getClass().getSimpleName(), "A serious error with the webservice occurred during login, error:" + t.getMessage());
                 loginProcessedInterface.onFailure();
             }
         });

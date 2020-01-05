@@ -39,14 +39,14 @@ public class GamelobbyscreenActivity extends Activity implements MessageListener
             WebSocketService.WebSocketServiceBinder binder = (WebSocketService.WebSocketServiceBinder) service;
             webSocketService = binder.getService();
             serviceBound = true;
-            Log.e(this.getClass().getSimpleName(), "Service should have been bound to GlActivity now!");
+            Log.e(GamelobbyscreenActivity.this.getClass().getSimpleName(), "Service should have been bound to GamelobbyscreenActivity now!");
             webSocketService.registerListener(GamelobbyscreenActivity.this); //Setze diese Klasse als Listener fuer neue Nachrichten
             requestAllGames();
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            Log.d(this.getClass().getSimpleName(), "onServiceDisconnected has been called! The service is now disconnected from GamelobbyscreenActivity");
+            Log.d(GamelobbyscreenActivity.this.getClass().getSimpleName(), "onServiceDisconnected has been called! The service is now disconnected from GamelobbyscreenActivity");
             serviceBound = false;
         }
     };
@@ -64,9 +64,8 @@ public class GamelobbyscreenActivity extends Activity implements MessageListener
 
         if (webSocketService == null) {
             Intent serviceIntent = new Intent(this, WebSocketService.class);
-            serviceIntent.putExtras(getIntent().getExtras());
             bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE);
-            Log.e(this.getClass().getSimpleName(), "Bind Service should have been happend!");
+            Log.d(GamelobbyscreenActivity.this.getClass().getSimpleName(), "Bind Service should have been happened!");
         }
 
         Button button = findViewById(R.id.reloadbutton);
@@ -90,56 +89,17 @@ public class GamelobbyscreenActivity extends Activity implements MessageListener
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        webSocketService.deregisterListener(this);
-        startActivity(new Intent(GamelobbyscreenActivity.this, HomeActivity.class).putExtras(getIntent().getExtras()));
-    }
-
-    //    protected void onPause() {
-//        super.onPause();
-//        if (webSocketService != null) {
-//            webSocketService.deregisterListener(this);
-//            if (serviceBound) {
-//                webSocketService.unbindService(connection);
-//            }
-//            webSocketService = null;
-//        }
-//    }
-
-//    protected void onResume() {
-//        super.onResume();
-//        if (webSocketService == null) {
-//            Intent serviceIntent = new Intent(this, WebSocketService.class);
-//            serviceIntent.putExtras(getIntent().getExtras());
-//            bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE);
-//            Log.e(this.getClass().getSimpleName(), "Bind Service should have been happend!");
-//        } else {
-//            Log.wtf("GamelobbyscreenActivity", "onResume has been called but webSocketService was not null");
-//        }
-//    }
-
-//    protected void onStop() {
-//        super.onStop();
-//        if (webSocketService != null) {
-//            webSocketService.deregisterListener(this);
-//            webSocketService.unbindService(connection);
-//        }
-//    }
-
-//    protected void onStart() {
-//        super.onStart();
-//        if (webSocketService != null) {
-//            Intent serviceIntent = new Intent(this, WebSocketService.class);
-//            serviceIntent.putExtras(getIntent().getExtras());
-//            bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE);
-//            Log.e(this.getClass().getSimpleName(), "Bind Service should have been happend!");
-//        }
+//    @Override
+//    public void onBackPressed() {
+//        webSocketService.deregisterListener(this);
+//        startActivity(new Intent(GamelobbyscreenActivity.this, HomeActivity.class).putExtras(getIntent().getExtras()));
 //    }
 
     private void requestAllGames() {
-        GameMessage gameMessage = new GameMessage("GetGames", getIntent().getExtras().getString("auth"), GameMessage.Status.OK, null, null);
-        webSocketService.sendMessage(gson.toJson(gameMessage));
+        if (serviceBound) {
+            GameMessage gameMessage = new GameMessage("GetGames", getIntent().getExtras().getString("auth"), GameMessage.Status.OK, null, null);
+            webSocketService.sendMessage(gson.toJson(gameMessage));
+        }
     }
 
     @Override
@@ -149,10 +109,7 @@ public class GamelobbyscreenActivity extends Activity implements MessageListener
             if (gameMessage != null && "GameList".equals(gameMessage.getType()) && gameMessage.getStatus() == GameMessage.Status.OK) {
                 allGames.clear();
                 allGames = gameMessage.getStringList(); //Eine Liste aller Spiele, die auf dem Server existieren und denen der Spieler beitreten kann!
-                allGames.add("First item");
-                allGames.add("Second item");
-                allGames.add("Third item");
-                Log.e(GamelobbyscreenActivity.this.getClass().getSimpleName(), "Updaten auf dem UI Thread der empfangenen Ergebnisse als nächstes...");
+                Log.d(GamelobbyscreenActivity.this.getClass().getSimpleName(), "Updaten auf dem UI Thread der empfangenen Ergebnisse als nächstes...");
                 runOnUiThread(new Runnable() {
 
                     @Override
@@ -165,7 +122,6 @@ public class GamelobbyscreenActivity extends Activity implements MessageListener
                                 password = getIntent().getExtras().getString("password");
                                 auth = getIntent().getExtras().getString("auth");
                                 GamelobbyscreenActivity.this.gameID = gameID;
-                                Log.e(GamelobbyscreenActivity.this.getClass().getSimpleName(), "Join Game has been pressed. Will now send join request for game with gameID: " + gameID);
                                 if (serviceBound) {
                                     webSocketService.sendMessage(gson.toJson(new GameMessage("JOIN_GAME", auth, GameMessage.Status.OK, gameID, null)));
                                 } else {
@@ -188,8 +144,6 @@ public class GamelobbyscreenActivity extends Activity implements MessageListener
                     Log.wtf(GamelobbyscreenActivity.this.getClass().getSimpleName(), "Can't join game with gameID " + gameID);
                     Toast.makeText(GamelobbyscreenActivity.this, R.string.cantJoinGame, Toast.LENGTH_LONG).show();
                 }
-            } else {
-                Log.i(this.getClass().getSimpleName(), "Message was not of Type GameList - ignoring...");
             }
         } catch (JsonSyntaxException ex) {
             Log.w(this.getClass().getSimpleName(), "Couldn't cast message from backend, ignoring...\nMessage was: \"" + message + "\" printing stack trace...");

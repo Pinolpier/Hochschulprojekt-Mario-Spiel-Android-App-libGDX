@@ -7,7 +7,6 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
@@ -19,7 +18,7 @@ import server.MessageListener;
 import server.WebSocketService;
 import server.dtos.GameMessage;
 
-public class AndroidLauncher extends AndroidApplication implements BackendCommunicator, MessageListener {
+public class AndroidLauncher extends AndroidApplication implements MessageListener {
 
     boolean serviceBound = false;
     private MarioBros game;
@@ -57,18 +56,21 @@ public class AndroidLauncher extends AndroidApplication implements BackendCommun
         auth = getIntent().getExtras().getString("auth");
         gameID = getIntent().getExtras().getString("gameID");
         gson = new Gson();
-        Log.e(AndroidLauncher.this.getClass().getSimpleName(), "onCreate of Android Launcher is running...");
+        Log.d(AndroidLauncher.this.getClass().getSimpleName() + ":onCreate() ", "is running with username \"" + username + "\" and gameID \"" + gameID + "\"...");
         if (webSocketService == null) {
-            Log.e(AndroidLauncher.this.getClass().getSimpleName(), "...and webSocketService == null so binding it");
+            Log.d(AndroidLauncher.this.getClass().getSimpleName(), "...and webSocketService == null so binding it");
             Intent serviceIntent = new Intent(this, WebSocketService.class);
-            serviceIntent.putExtras(getIntent().getExtras());
             bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE);
-            Log.e(this.getClass().getSimpleName(), "Bind Service should have been happend!");
+            Log.d(this.getClass().getSimpleName(), "Bind Service should have been happened!");
         }
         game = new MarioBros(new BackendCommunicator() {
             @Override
             public void sendMessage(GameMessage message) {
-                webSocketService.sendMessage(gson.toJson(message));
+                if (webSocketService != null) {
+                    webSocketService.sendMessage(gson.toJson(message));
+                } else {
+                    Log.wtf(AndroidLauncher.this.getClass().getSimpleName() + ":sendMessage() ", "webSocketService is null, probably while the game itself is tryinfg to send a message! Message to be sent is: " + gson.toJson(message));
+                }
             }
         });
         gameHasBeenCreated = true;
@@ -87,61 +89,12 @@ public class AndroidLauncher extends AndroidApplication implements BackendCommun
         }
     }
 
-    //
-//    protected void onPause() {
-//        super.onPause();
-//        if (webSocketService != null) {
-//            webSocketService.deregisterListener(this);
-//            if (serviceBound) {
-//                webSocketService.unbindService(connection);
-//            }
-//            webSocketService = null;
-//        }
-//    }
-
-    //    protected void onStop() {
-//        super.onStop();
-//        if (webSocketService != null) {
-//            webSocketService.deregisterListener(this);
-//            if (serviceBound) {
-//                webSocketService.unbindService(connection);
-//            }
-//            webSocketService = null;
-//        }
-//    }
-//
-//    protected void onResume() {
-//        if (gameHasBeenCreated) {
-//            super.onResume();
-//        }
-//        if (webSocketService == null) {
-//            Intent serviceIntent = new Intent(this, WebSocketService.class);
-//            serviceIntent.putExtras(getIntent().getExtras());
-//            bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE);
-//            Log.e(this.getClass().getSimpleName(), "Bind Service should have been happend!");
-//        } else {
-//            Log.wtf("GamelobbyscreenActivity", "onResume has been called but webSocketService was not null");
-//        }
-//    }
-
-    @Override
-    public void sendMessage(GameMessage message) {
-        if (webSocketService != null) {
-            webSocketService.sendMessage(gson.toJson(message));
-        } else {
-            Log.wtf(AndroidLauncher.this.getClass().getSimpleName(), "webSocketService is null - can't send messages, multiplayer impossible");
-            Toast.makeText(this, "Lost connection, please restart App", Toast.LENGTH_LONG).show();
-        }
-    }
-
     @Override
     public void onMessageReceived(String message) {
         try {
             GameMessage msg = gson.fromJson(message, GameMessage.class);
             if (gameHasBeenCreated) {
                 game.receiveMessage(msg);
-            } else {
-                Log.e(AndroidLauncher.this.getClass().getSimpleName(), "Received message while game was not created! Message clear is: " + message);
             }
         } catch (JsonSyntaxException ex) {
             Log.w(this.getClass().getSimpleName(), "Couldn't cast message from backend, ignoring...\nMessage was: \"" + message + "\" printing stack trace...");

@@ -77,7 +77,9 @@ public class MarioBros extends Game {
     }
 
     public void receiveMessage(GameMessage gameMessage) {
-        playScreen.receiveMessage(gameMessage);
+        if (playScreen != null) {
+            playScreen.receiveMessage(gameMessage);
+        }
     }
 
     public void sendMessage(GameMessage gameMessage) {

@@ -47,12 +47,15 @@ public class WebSocketService extends Service implements MessageListener {
         Log.e("Service", "onBind called, does the webSocket already exist?: " + (webSocket != null));
         if(webSocket==null){
             //Erzeuge neue Websocket Verbindung mit Backend
+            Log.wtf(WebSocketService.this.getClass().getSimpleName() + ":onBind() ", "webSocket is null in onBind - shouldN#t be the case until the service is stopped. Service should be started before first bind!");
             Request request = new Request.Builder().url(URL).build();
             webSocket = client.newWebSocket(request,new SocketListener());
             Bundle extras = intent.getExtras();
-            this.auth = extras.getString("auth");
-            this.username = extras.getString("username");
-            this.password = extras.getString("password");
+            if (extras != null) {
+                this.auth = extras.getString("auth");
+                this.username = extras.getString("username");
+                this.password = extras.getString("password");
+            }
             registerListener(this);
             login();
         }
@@ -68,7 +71,7 @@ public class WebSocketService extends Service implements MessageListener {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.e("WebSocketService", "onStart has been called");
+        Log.i(WebSocketService.this.getClass().getSimpleName(), ":onStartCommand()  has been called");
         if (webSocket == null) {
             //Erzeuge neue Websocket Verbindung mit Backend
             Request request = new Request.Builder().url(URL).build();
@@ -80,7 +83,7 @@ public class WebSocketService extends Service implements MessageListener {
             registerListener(this);
             login();
         }
-        Log.e("Ist der Binder null? ", Boolean.toString(binder == null));
+        Log.d(WebSocketService.this.getClass().getSimpleName(), "Ist der Binder null? " + (binder == null));
         super.onStartCommand(intent, flags, startId);
         return START_REDELIVER_INTENT;
     }
@@ -90,14 +93,14 @@ public class WebSocketService extends Service implements MessageListener {
         listeners = new ArrayList<>();
         client = new OkHttpClient();
         gson = new Gson();
-        Log.d("Service", "OnCreate Executed");
+        Log.d(WebSocketService.this.getClass().getSimpleName(), ":onCreate() has been called");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         close(null, null);
-        Log.d(this.getClass().getSimpleName(), "onDestroy has been called. Websocket Connection has been closed. Service stopping after this log...");
+        Log.d(WebSocketService.this.getClass().getSimpleName(), ":onDestroy() has been called. Websocket Connection has been closed. Service stopping after this log...");
     }
 
     /**
@@ -118,7 +121,7 @@ public class WebSocketService extends Service implements MessageListener {
     }
 
     private void login() {
-        Log.d(this.getClass().getSimpleName(), "Login started with websocket.");
+        Log.d(WebSocketService.this.getClass().getSimpleName() + ":login() ", "Login with auth key from userservice at Websocket has been started.");
         GameMessage loginMessage = new GameMessage("LOGIN", auth, GameMessage.Status.OK, null, null);
         sendMessage(gson.toJson(loginMessage));
     }
