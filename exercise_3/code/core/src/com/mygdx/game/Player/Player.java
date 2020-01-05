@@ -22,7 +22,9 @@ import com.mygdx.game.Sprites.Enemies.Enemy;
 import com.mygdx.game.Sprites.Enemies.Turtle;
 
 public class Player extends Sprite {
-    public enum State { FALLING, JUMPING, STANDING, RUNNING, GROWING, DEAD, WIN };
+
+
+    public enum State { FALLING, JUMPING, STANDING, RUNNING, GROWING, DEAD, WIN;};
     public Body b2body;
     public World world;
     public State currentState;
@@ -43,6 +45,7 @@ public class Player extends Sprite {
     private boolean timeToDefineBigMario;
     private boolean timeToRedefineMario;
     private boolean marioIsDead;
+    private boolean marioReachedGoal;
     Array<TextureRegion> frames;
     public Player(){
         frames = new Array<>();
@@ -133,6 +136,12 @@ public class Player extends Sprite {
         }
     }
 
+    public void win() {
+        if(!isDead()) {
+            marioReachedGoal = true;
+        }
+    }
+
     public boolean isDead(){
         return marioIsDead;
     }
@@ -211,6 +220,10 @@ public class Player extends Sprite {
             die();
         }
 
+        if (screen.getHud().getScore()  >= 10000) {
+            win();
+        }
+
         if(marioIsBig)
             setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2 - 6 / MarioBros.PPM);
         else
@@ -278,6 +291,8 @@ public class Player extends Sprite {
             return State.FALLING;
         else if(b2body.getLinearVelocity().x != 0)
             return State.RUNNING;
+        else if(marioReachedGoal)
+            return State.WIN;
         else
             return State.STANDING;
     }
