@@ -39,9 +39,14 @@ public class MarioBros extends Game {
 
     //reference that needs to be kept to the android module.
     private BackendCommunicator backendCommunicator;
+    private String username, password, auth, gameID;
 
-    public MarioBros(BackendCommunicator backendCommunicator) {
+    public MarioBros(String auth, String username, String password, String gameID, BackendCommunicator backendCommunicator) {
         this.backendCommunicator = backendCommunicator;
+        this.auth = auth;
+        this.username = username;
+        this.password = password;
+        this.gameID = gameID;
     }
 
     @Override
@@ -84,5 +89,37 @@ public class MarioBros extends Game {
 
     public void sendMessage(GameMessage gameMessage) {
         backendCommunicator.sendMessage(gameMessage);
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getAuth() {
+        return auth;
+    }
+
+    public void setAuth(String auth) {
+        this.auth = auth;
+    }
+
+    public String getGameID() {
+        return gameID;
+    }
+
+    public void setGameID(String gameID) {
+        this.gameID = gameID;
     }
 }

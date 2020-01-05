@@ -63,7 +63,7 @@ public class AndroidLauncher extends AndroidApplication implements MessageListen
             bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE);
             Log.d(this.getClass().getSimpleName(), "Bind Service should have been happened!");
         }
-        game = new MarioBros(new BackendCommunicator() {
+        game = new MarioBros(auth, username, password, gameID, new BackendCommunicator() {
             @Override
             public void sendMessage(GameMessage message) {
                 if (webSocketService != null) {

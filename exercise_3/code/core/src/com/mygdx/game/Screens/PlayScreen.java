@@ -116,21 +116,18 @@ public class PlayScreen implements Screen {
      */
     public void handleInput(){
         if(player.getCurrentState() != Mario.State.DEAD) {
-            if(Gdx.input.justTouched())
-                player.jump(); //TODO mlink2 send 0
-            if(Gdx.input.getPitch()<-10)
-                player.getB2body().applyLinearImpulse(new Vector2(0.1f, 0), player.getB2body().getWorldCenter(), true); //TODO mlink2 send 1
-            if(Gdx.input.getPitch()>20)
-                player.getB2body().applyLinearImpulse(new Vector2(-0.1f, 0), player.getB2body().getWorldCenter(), true); //TODO mlink2 send 2
-        }
-
-        if(player2.getCurrentState() != Mario.State.DEAD) {
-            if(Gdx.input.justTouched())
-                player2.jump();
-            if(Gdx.input.getPitch()<-10)
-                player2.getB2body().applyLinearImpulse(new Vector2(0.1f, 0), player2.getB2body().getWorldCenter(), true);
-            if(Gdx.input.getPitch()>20)
-                player2.getB2body().applyLinearImpulse(new Vector2(-0.1f, 0), player2.getB2body().getWorldCenter(), true);
+            if (Gdx.input.justTouched()) {
+                player.jump();
+                game.sendMessage(new GameMessage("Movement_jump", game.getAuth(), GameMessage.Status.OK, game.getGameID(), null));
+            }
+            if (Gdx.input.getPitch() < -10) {
+                player.getB2body().applyLinearImpulse(new Vector2(0.1f, 0), player.getB2body().getWorldCenter(), true);
+                game.sendMessage(new GameMessage("Movement_1", game.getAuth(), GameMessage.Status.OK, game.getGameID(), null));
+            }
+            if (Gdx.input.getPitch() > 20) {
+                player.getB2body().applyLinearImpulse(new Vector2(-0.1f, 0), player.getB2body().getWorldCenter(), true);
+                game.sendMessage(new GameMessage("Movement_2", game.getAuth(), GameMessage.Status.OK, game.getGameID(), null));
+            }
         }
     }
 
@@ -259,18 +256,27 @@ public class PlayScreen implements Screen {
     public Hud getHud(){ return hud; }
 
     public void receiveMessage(GameMessage gameMessage) {
-        //TODO fix me
-        int status = 0;
-        switch (status) {
-            case 0:
-                player2.jump();
-                break;
-            case 1:
-                player2.getB2body().applyLinearImpulse(new Vector2(0.1f, 0), player2.getB2body().getWorldCenter(), true);
-                break;
-            case 2:
-                player2.getB2body().applyLinearImpulse(new Vector2(-0.1f, 0), player2.getB2body().getWorldCenter(), true);
-                break;
+        if (gameMessage != null && gameMessage.getType() != null) {
+            if (gameMessage.getType().contains("Movement")) {
+                int status = -1;
+                if (gameMessage.getType().equals("Movement_jump"))
+                    status = 0;
+                if (gameMessage.getType().equals("Movement_1"))
+                    status = 1;
+                if (gameMessage.getType().equals("Movement_2"))
+                    status = 2;
+                switch (status) {
+                    case 0:
+                        player2.jump();
+                        break;
+                    case 1:
+                        player2.getB2body().applyLinearImpulse(new Vector2(0.1f, 0), player2.getB2body().getWorldCenter(), true);
+                        break;
+                    case 2:
+                        player2.getB2body().applyLinearImpulse(new Vector2(-0.1f, 0), player2.getB2body().getWorldCenter(), true);
+                        break;
+                }
+            }
         }
     }
 }
