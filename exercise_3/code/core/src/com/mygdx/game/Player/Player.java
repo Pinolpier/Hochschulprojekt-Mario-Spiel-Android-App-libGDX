@@ -66,6 +66,7 @@ public class Player extends Sprite {
         fdef.filter.maskBits = MarioBros.GROUND_BIT |
                 MarioBros.COIN_BIT |
                 MarioBros.BRICK_BIT |
+                MarioBros.PIT_BIT |
                 MarioBros.ENEMY_BIT |
                 MarioBros.OBJECT_BIT |
                 MarioBros.ENEMY_HEAD_BIT |
@@ -102,7 +103,8 @@ public class Player extends Sprite {
                 MarioBros.ENEMY_BIT |
                 MarioBros.OBJECT_BIT |
                 MarioBros.ENEMY_HEAD_BIT |
-                MarioBros.ITEM_BIT;
+                MarioBros.ITEM_BIT |
+                MarioBros.PIT_BIT;
 
         fdef.shape = shape;
         b2body.createFixture(fdef).setUserData(this);

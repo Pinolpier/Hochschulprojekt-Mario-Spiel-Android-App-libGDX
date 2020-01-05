@@ -17,6 +17,9 @@ import com.mygdx.game.Player.Player;
 import com.mygdx.game.Screens.PlayScreen;
 import com.mygdx.game.Player.Mario;
 
+/**
+ * Defines Objects in the tiled Map
+ */
 public abstract class InteractiveTileObject {
     protected World world;
     protected TiledMap map;

@@ -9,6 +9,10 @@ import com.mygdx.game.Player.Player;
 import com.mygdx.game.Screens.PlayScreen;
 import com.mygdx.game.Player.Mario;
 
+/**
+ * This class represents the Mushroom Item in SuperMario Games.
+ * Player grows up if he catch a Mushroom
+ */
 public class Mushroom extends Item {
     public Mushroom(PlayScreen screen, float x, float y) {
         super(screen, x, y);

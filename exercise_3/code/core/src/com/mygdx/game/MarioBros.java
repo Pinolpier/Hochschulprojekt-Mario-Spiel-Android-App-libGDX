@@ -7,13 +7,14 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.game.Screens.PlayScreen;
 
+/**
+ * Main Game class to start the hole Game
+ */
 public class MarioBros extends Game {
-    //Virtual Screen size and Box2D Scale(Pixels Per Meter)
     public static final int V_WIDTH = 400;
     public static final int V_HEIGHT = 208;
     public static final float PPM = 100;
 
-    //Box2D Collision Bits
     public static final short NOTHING_BIT = 0;
     public static final short GROUND_BIT = 1;
     public static final short MARIO_BIT = 2;
@@ -25,10 +26,9 @@ public class MarioBros extends Game {
     public static final short ENEMY_HEAD_BIT = 128;
     public static final short ITEM_BIT = 256;
     public static final short MARIO_HEAD_BIT = 512;
-    public static final short FIREBALL_BIT = 1024;
+    public static final short PIT_BIT = 1024;
 
     public SpriteBatch batch;
-
     public static AssetManager manager;
 
     @Override
@@ -46,10 +46,8 @@ public class MarioBros extends Game {
         manager.load("audio/sounds/mariodie.wav", Sound.class);
 
         manager.finishLoading();
-
         setScreen(new PlayScreen(this));
     }
-
 
     @Override
     public void dispose() {

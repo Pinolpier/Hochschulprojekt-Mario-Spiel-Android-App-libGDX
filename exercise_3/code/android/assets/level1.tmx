@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.3.1" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="240" height="13" tilewidth="16" tileheight="16" infinite="0" nextlayerid="9" nextobjectid="154">
+<map version="1.2" tiledversion="1.3.1" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="240" height="13" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="161">
  <tileset firstgid="1" name="tileset_gutter" tilewidth="16" tileheight="16" spacing="2" margin="1" tilecount="924" columns="33">
   <image source="tileset_gutter.png" width="594" height="504"/>
   <tile id="0">
@@ -234,5 +234,11 @@
   <object id="150" x="400" y="176" width="16" height="16"/>
   <object id="151" x="864" y="176" width="16" height="16"/>
   <object id="152" x="2352" y="176" width="16" height="16"/>
+ </objectgroup>
+ <objectgroup id="9" name="Pit">
+  <object id="155" x="1392.04" y="195.631" width="47.9389" height="12.3636"/>
+  <object id="158" x="1104.09" y="194.043" width="31.7826" height="13.913"/>
+  <object id="159" x="2464.03" y="192.071" width="31.8424" height="15.8152"/>
+  <object id="160" x="3824.03" y="0.03125" width="15.9563" height="191.956"/>
  </objectgroup>
 </map>

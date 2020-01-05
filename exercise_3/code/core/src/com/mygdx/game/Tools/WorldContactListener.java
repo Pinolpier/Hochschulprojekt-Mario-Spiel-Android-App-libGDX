@@ -12,6 +12,9 @@ import com.mygdx.game.Sprites.Items.Item;
 import com.mygdx.game.Player.Mario;
 import com.mygdx.game.Sprites.TileObjects.InteractiveTileObject;
 
+/**
+ * This class handles all contacts of Player, Enemy Item and Objects in the Game
+ */
 public class WorldContactListener implements ContactListener {
     @Override
     public void beginContact(Contact contact) {
@@ -62,7 +65,12 @@ public class WorldContactListener implements ContactListener {
                 else
                     ((Item)fixB.getUserData()).use((Player) fixA.getUserData());
                 break;
-
+            case MarioBros.MARIO_BIT | MarioBros.PIT_BIT:
+                if(fixA.getFilterData().categoryBits == MarioBros.MARIO_BIT)
+                    ((InteractiveTileObject) fixB.getUserData()).onHeadHit((Mario) fixA.getUserData());
+                else
+                    ((InteractiveTileObject) fixA.getUserData()).onHeadHit((Mario) fixB.getUserData());
+                break;
         }
     }
 
