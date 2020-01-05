@@ -72,9 +72,28 @@ public class AndroidLauncher extends AndroidApplication implements MessageListen
                     Log.wtf(AndroidLauncher.this.getClass().getSimpleName() + ":sendMessage() ", "webSocketService is null, probably while the game itself is tryinfg to send a message! Message to be sent is: " + gson.toJson(message));
                 }
             }
+
+            @Override
+            public void stopGame() {
+                killLibGDX();
+            }
         });
         gameHasBeenCreated = true;
         initialize(game, config);
+    }
+
+    private void killLibGDX() {
+        gameHasBeenCreated = false;
+        game = null;
+        config = null;
+        Intent homeIntent = new Intent(this, HomeActivity.class);
+        Bundle extras = new Bundle();
+        extras.putString("username", username);
+        extras.putString("password", password);
+        extras.putString("auth", auth);
+        homeIntent.putExtras(extras);
+        finish();
+        startActivity(homeIntent);
     }
 
     @Override
@@ -83,7 +102,11 @@ public class AndroidLauncher extends AndroidApplication implements MessageListen
         if (webSocketService != null) {
             webSocketService.deregisterListener(this);
             if (serviceBound) {
-                webSocketService.unbindService(connection);
+                try {
+                    webSocketService.unbindService(connection);
+                } catch (IllegalArgumentException iaex) {
+                    Log.w(AndroidLauncher.this.getClass().getSimpleName(), "Can't unbind service because of an IllegalArgumentException - probably the Service is not bound for a strange reason of asynchronity.");
+                }
             }
             webSocketService = null;
         }

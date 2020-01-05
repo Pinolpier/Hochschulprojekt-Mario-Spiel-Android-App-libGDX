@@ -118,15 +118,21 @@ public class PlayScreen implements Screen {
         if(player.getCurrentState() != Mario.State.DEAD) {
             if (Gdx.input.justTouched()) {
                 player.jump();
-                game.sendMessage(new GameMessage("Movement_jump", game.getAuth(), GameMessage.Status.OK, game.getGameID(), null));
+                GameMessage sendMessage = new GameMessage("Movement", game.getAuth(), GameMessage.Status.OK, game.getGameID(), null);
+                sendMessage.setPayloadInteger(0);
+                game.sendMessage(sendMessage);
             }
             if (Gdx.input.getPitch() < -10) {
                 player.getB2body().applyLinearImpulse(new Vector2(0.1f, 0), player.getB2body().getWorldCenter(), true);
-                game.sendMessage(new GameMessage("Movement_1", game.getAuth(), GameMessage.Status.OK, game.getGameID(), null));
+                GameMessage sendMessage = new GameMessage("Movement", game.getAuth(), GameMessage.Status.OK, game.getGameID(), null);
+                sendMessage.setPayloadInteger(1);
+                game.sendMessage(sendMessage);
             }
             if (Gdx.input.getPitch() > 20) {
                 player.getB2body().applyLinearImpulse(new Vector2(-0.1f, 0), player.getB2body().getWorldCenter(), true);
-                game.sendMessage(new GameMessage("Movement_2", game.getAuth(), GameMessage.Status.OK, game.getGameID(), null));
+                GameMessage sendMessage = new GameMessage("Movement", game.getAuth(), GameMessage.Status.OK, game.getGameID(), null);
+                sendMessage.setPayloadInteger(2);
+                game.sendMessage(sendMessage);
             }
         }
     }
@@ -257,14 +263,8 @@ public class PlayScreen implements Screen {
 
     public void receiveMessage(GameMessage gameMessage) {
         if (gameMessage != null && gameMessage.getType() != null) {
-            if (gameMessage.getType().contains("Movement")) {
-                int status = -1;
-                if (gameMessage.getType().equals("Movement_jump"))
-                    status = 0;
-                if (gameMessage.getType().equals("Movement_1"))
-                    status = 1;
-                if (gameMessage.getType().equals("Movement_2"))
-                    status = 2;
+            if (gameMessage.getType().equals("Movement")) {
+                int status = gameMessage.getPayloadInteger();
                 switch (status) {
                     case 0:
                         player2.jump();
@@ -276,7 +276,40 @@ public class PlayScreen implements Screen {
                         player2.getB2body().applyLinearImpulse(new Vector2(-0.1f, 0), player2.getB2body().getWorldCenter(), true);
                         break;
                 }
+            } else if (gameMessage.getType().equals("scoreRequest")) {
+                GameMessage scoreReport = new GameMessage("scoreReport", game.getAuth(), GameMessage.Status.OK, game.getGameID(), null);
+                scoreReport.setPayloadInteger(hud.getScore());
+                game.sendMessage(scoreReport);
+            } else if (gameMessage.getType().equals("WinnerEvaluation")) {
+                int won = gameMessage.getPayloadInteger().intValue();
+                String player1score = gameMessage.getStringList().get(0);
+                String player2score = gameMessage.getStringList().get(1);
+                int p1score = Integer.parseInt(player1score), p2score = Integer.parseInt(player2score);
+                int ownScore, enemyScore;
+                switch (won) {
+                    case -1:
+                        ownScore = (p1score > p2score) ? p2score : p1score;
+                        enemyScore = (p1score > p2score) ? p1score : p2score;
+                        //TODO lostGame
+                        break;
+                    case 0:
+                        ownScore = p1score;
+                        enemyScore = p1score;
+                        //TODO drawGame
+                        break;
+                    case 1:
+                        ownScore = (p1score < p2score) ? p2score : p1score;
+                        enemyScore = (p1score > p2score) ? p1score : p2score;
+                        //TODO wonGame
+                        break;
+                }
             }
         }
+    }
+
+    private void sendEndGameMessage() {
+        GameMessage endMessage = new GameMessage("endGame", game.getAuth(), GameMessage.Status.OK, game.getGameID(), null);
+        endMessage.setPayloadInteger(hud.getScore());
+        game.sendMessage(endMessage);
     }
 }

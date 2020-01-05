@@ -40,6 +40,7 @@ public class MarioBros extends Game {
     //reference that needs to be kept to the android module.
     private BackendCommunicator backendCommunicator;
     private String username, password, auth, gameID;
+    private boolean countdownEnded = false;
 
     public MarioBros(String auth, String username, String password, String gameID, BackendCommunicator backendCommunicator) {
         this.backendCommunicator = backendCommunicator;
@@ -82,9 +83,34 @@ public class MarioBros extends Game {
     }
 
     public void receiveMessage(GameMessage gameMessage) {
-        if (playScreen != null) {
-            playScreen.receiveMessage(gameMessage);
+        if (countdownEnded) {
+            if (playScreen != null) {
+                playScreen.receiveMessage(gameMessage);
+            }
+        } else {
+            if (gameMessage.getType().equals("Countdown")) {
+                int secondsLeft = gameMessage.getPayloadInteger();
+                switch (secondsLeft) {
+                    case 3:
+                        //Todo something
+                        break;
+                    case 2:
+                        //Todo something
+                        break;
+                    case 1:
+                        //Todo something
+                        break;
+                    case 0:
+                        countdownEnded = true;
+                        //Todo start Game
+                        break;
+                }
+            }
         }
+    }
+
+    public void back2HomeActivty() {
+        backendCommunicator.stopGame();
     }
 
     public void sendMessage(GameMessage gameMessage) {
