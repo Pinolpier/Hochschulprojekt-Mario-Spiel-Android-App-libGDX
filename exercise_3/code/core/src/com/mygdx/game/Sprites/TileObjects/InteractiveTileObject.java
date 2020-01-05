@@ -64,5 +64,4 @@ public abstract class InteractiveTileObject {
         return layer.getCell((int)(body.getPosition().x * MarioBros.PPM / 16),
                 (int)(body.getPosition().y * MarioBros.PPM / 16));
     }
-
 }

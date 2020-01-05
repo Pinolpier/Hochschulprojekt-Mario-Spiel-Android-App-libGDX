@@ -12,6 +12,8 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.MarioBros;
 
+import sun.rmi.runtime.Log;
+
 public class Hud implements Disposable {
 
     //Scene2D.ui Stage and its own Viewport for HUD
@@ -96,4 +98,8 @@ public class Hud implements Disposable {
     public void dispose() { stage.dispose(); }
 
     public boolean isTimeUp() { return timeUp; }
+
+    public int getScore() {
+        return score;
+    }
 }

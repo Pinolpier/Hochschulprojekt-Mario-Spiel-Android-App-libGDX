@@ -210,6 +210,10 @@ public class PlayScreen implements Screen {
             game.setScreen(new GameOverScreen(game));
             dispose();
         }
+        if (gameWin()) {
+            game.setScreen(new VictoryScreen(game));
+            dispose();
+        }
 
     }
 
@@ -217,6 +221,12 @@ public class PlayScreen implements Screen {
         if(player.getCurrentState() == Mario.State.DEAD && player.getStateTimer() > 3){
             return true;
         }
+        return false;
+    }
+
+    public boolean gameWin() {
+        if(player.currentState == Mario.State.WIN)
+            return true;
         return false;
     }
 

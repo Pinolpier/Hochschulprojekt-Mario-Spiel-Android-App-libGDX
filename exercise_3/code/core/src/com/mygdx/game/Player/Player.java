@@ -1,4 +1,4 @@
-package com.mygdx.game.Player;
+package com.mygdx.game.Sprites;
 
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -20,6 +20,7 @@ import com.mygdx.game.MarioBros;
 import com.mygdx.game.Screens.PlayScreen;
 import com.mygdx.game.Sprites.Enemies.Enemy;
 import com.mygdx.game.Sprites.Enemies.Turtle;
+import com.mygdx.game.Sprites.Other.FireBall;
 
 public class Player extends Sprite {
     public enum State { FALLING, JUMPING, STANDING, RUNNING, GROWING, DEAD };
@@ -66,7 +67,8 @@ public class Player extends Sprite {
                 MarioBros.ENEMY_BIT |
                 MarioBros.OBJECT_BIT |
                 MarioBros.ENEMY_HEAD_BIT |
-                MarioBros.ITEM_BIT;
+                MarioBros.ITEM_BIT |
+                MarioBros.GOAL_BIT;
 
         fdef.shape = shape;
         b2body.createFixture(fdef).setUserData(this);
@@ -99,7 +101,8 @@ public class Player extends Sprite {
                 MarioBros.OBJECT_BIT |
                 MarioBros.ENEMY_HEAD_BIT |
                 MarioBros.ITEM_BIT |
-                MarioBros.PIT_BIT;
+                MarioBros.PIT_BIT |
+                MarioBros.GOAL_BIT;
 
         fdef.shape = shape;
         b2body.createFixture(fdef).setUserData(this);
@@ -185,7 +188,9 @@ public class Player extends Sprite {
                 MarioBros.ENEMY_BIT |
                 MarioBros.OBJECT_BIT |
                 MarioBros.ENEMY_HEAD_BIT |
-                MarioBros.ITEM_BIT;
+                MarioBros.ITEM_BIT |
+                MarioBros.PIT_BIT |
+                MarioBros.GOAL_BIT;
 
         fdef.shape = shape;
         b2body.createFixture(fdef).setUserData(this);
