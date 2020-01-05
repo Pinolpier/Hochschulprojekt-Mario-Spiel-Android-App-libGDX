@@ -30,68 +30,47 @@ import com.mygdx.game.Tools.WorldContactListener;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class PlayScreen implements Screen {
-    //Reference to our Game, used to set Screens
     private MarioBros game;
     private TextureAtlas atlas;
     public static boolean alreadyDestroyed = false;
 
-    //basic playscreen variables
     private OrthographicCamera gamecam;
     private Viewport gamePort;
     private Hud hud;
 
-    //Tiled map variables
     private TmxMapLoader maploader;
     private TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
 
-    //Box2d variables
     private World world;
     private Box2DDebugRenderer b2dr;
     private B2WorldCreator creator;
 
-    //sprites
     private Player player;
     private Player player2;
 
     private Music music;
-
     private Array<Item> items;
     private LinkedBlockingQueue<ItemDef> itemsToSpawn;
 
-
     public PlayScreen(MarioBros game){
         atlas = new TextureAtlas("Mario_and_Enemies.pack");
-
         this.game = game;
-        //create cam used to follow mario through cam world
         gamecam = new OrthographicCamera();
-
-        //create a FitViewport to maintain virtual aspect ratio despite screen size
         gamePort = new FitViewport(MarioBros.V_WIDTH / MarioBros.PPM, MarioBros.V_HEIGHT / MarioBros.PPM, gamecam);
-
-        //create our game HUD for scores/timers/level info
         hud = new Hud(game.batch);
-
-        //Load our map and setup our map renderer
         maploader = new TmxMapLoader();
         map = maploader.load("level1.tmx");
         renderer = new OrthogonalTiledMapRenderer(map, 1  / MarioBros.PPM);
-
-        //initially set our gamcam to be centered correctly at the start of of map
         gamecam.position.set(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight() / 2, 0);
-
-        //create our Box2D world, setting no gravity in X, -10 gravity in Y, and allow bodies to sleep
         world = new World(new Vector2(0, -10), true);
-        //allows for debug lines of our box2d world.
         b2dr = new Box2DDebugRenderer();
-
         creator = new B2WorldCreator(this);
 
-        //create mario in our game world
+
         player = new Mario(this);
         player2= new Mario(this);
-        player2.setPosition(3,1);
+
         world.setContactListener(new WorldContactListener());
 
         music = MarioBros.manager.get("audio/music/mario_music.ogg", Music.class);
@@ -107,7 +86,9 @@ public class PlayScreen implements Screen {
         itemsToSpawn.add(idef);
     }
 
-
+    /**
+     * if there is a item in the block, it will spawn
+     */
     public void handleSpawningItems(){
         if(!itemsToSpawn.isEmpty()){
             ItemDef idef = itemsToSpawn.poll();
@@ -128,8 +109,11 @@ public class PlayScreen implements Screen {
 
     }
 
-    public void handleInput(float dt){
-        //control our player using immediate impulses
+    /**
+     *
+     * @param
+     */
+    public void handleInput(){
         if(player.getCurrentState() != Mario.State.DEAD) {
             if(Gdx.input.justTouched())
                 player.jump();
@@ -159,8 +143,8 @@ public class PlayScreen implements Screen {
     }
 
     public void update(float dt){
-        //handle user input first
-        handleInput(dt);
+
+        handleInput();
         handleSpawningItems();
 
         //takes 1 step in the physics simulation(60 times per second)
