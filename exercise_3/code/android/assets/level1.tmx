@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.3.1" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="240" height="13" tilewidth="16" tileheight="16" infinite="0" nextlayerid="9" nextobjectid="154">
+<map version="1.2" tiledversion="1.3.1" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="240" height="13" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="167">
  <tileset firstgid="1" name="tileset_gutter" tilewidth="16" tileheight="16" spacing="2" margin="1" tilecount="924" columns="33">
   <image source="tileset_gutter.png" width="594" height="504"/>
   <tile id="0">
@@ -122,7 +122,7 @@
   </data>
  </layer>
  <objectgroup id="3" name="Ground">
-  <object id="5" x="0" y="192" width="1104" height="18"/>
+  <object id="5" x="0" y="192" width="1103.63" height="15.875"/>
   <object id="11" x="1136" y="192" width="256" height="16"/>
   <object id="25" x="1440" y="192" width="1024" height="16"/>
   <object id="26" x="2208" y="128" width="16" height="64"/>
@@ -152,7 +152,7 @@
   <object id="52" x="2928" y="160" width="16" height="32"/>
   <object id="53" x="2912" y="176" width="16" height="16"/>
   <object id="54" x="3184" y="176" width="16" height="16"/>
-  <object id="153" x="0.666667" y="0.666667" width="15.6667" height="207"/>
+  <object id="153" x="0.0222226" y="0.0444448" width="15.9334" height="207.622"/>
  </objectgroup>
  <objectgroup id="4" name="Pipes">
   <object id="61" x="3568" y="128" width="32" height="64"/>
@@ -221,6 +221,10 @@
   <object id="115" x="352" y="128" width="16" height="16"/>
   <object id="116" x="320" y="128" width="16" height="16"/>
   <object id="119" x="1904" y="128" width="16" height="16"/>
+  <object id="161" x="32.0909" y="64.1818" width="47.8182" height="15.7273"/>
+  <object id="166" x="79.9778" y="0.0444444">
+   <polygon points="0,0 0.0444444,15.9333 -31.97,15.9556 -31.9856,31.9477 0.0111111,31.9611 0.0222222,79.9399 -47.9622,79.9399 -47.9343,63.9556 -16.1082,64.0425 -16.0213,47.9556 -47.8908,48.0425 -47.97,-0.0288194"/>
+  </object>
  </objectgroup>
  <objectgroup id="7" name="Goombas">
   <object id="139" x="512" y="176" width="16" height="16"/>
@@ -234,5 +238,11 @@
   <object id="150" x="400" y="176" width="16" height="16"/>
   <object id="151" x="864" y="176" width="16" height="16"/>
   <object id="152" x="2352" y="176" width="16" height="16"/>
+ </objectgroup>
+ <objectgroup id="9" name="Pit">
+  <object id="155" x="1392.04" y="206.176" width="47.9389" height="1.81818"/>
+  <object id="158" x="1104.09" y="205.168" width="31.7826" height="2.78804"/>
+  <object id="159" x="2464.03" y="206.434" width="31.8424" height="1.45158"/>
+  <object id="160" x="3824.03" y="0.03125" width="15.9563" height="191.956"/>
  </objectgroup>
 </map>

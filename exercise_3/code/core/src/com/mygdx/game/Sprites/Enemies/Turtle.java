@@ -9,8 +9,9 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.MarioBros;
+import com.mygdx.game.Player.Player;
 import com.mygdx.game.Screens.PlayScreen;
-import com.mygdx.game.Sprites.Mario;
+import com.mygdx.game.Player.Mario;
 
 public class Turtle extends Enemy {
     public static final int KICK_LEFT = -2;
@@ -116,7 +117,7 @@ public class Turtle extends Enemy {
     }
 
     @Override
-    public void hitOnHead(Mario mario) {
+    public void hitOnHead(Player mario) {
         if(currentState == State.STANDING_SHELL) {
             if(mario.b2body.getPosition().x > b2body.getPosition().x)
                 velocity.x = -2;

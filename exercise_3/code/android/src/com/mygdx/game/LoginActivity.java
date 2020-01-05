@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -31,6 +32,7 @@ public class LoginActivity extends Activity {
                String username = textInputUsername.getText().toString();
                String password = textInputPassword.getText().toString();
                //login(username, password);
+               startActivity(new Intent(LoginActivity.this,AndroidLauncher.class));
            }
        });
 
