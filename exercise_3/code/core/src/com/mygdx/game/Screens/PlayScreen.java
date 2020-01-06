@@ -190,19 +190,8 @@ public class PlayScreen implements Screen {
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();
 
-        if(gameOver()){
-            GameOverScreen gameOverScreen = new GameOverScreen(game);
-            gameOverScreen.setPoints(""+ownScore);
-            gameOverScreen.setEnemyPoints(""+enemyScore);
-            game.setScreen(gameOverScreen);
-            dispose();
-        }
-        if (gameWin()) {
-            VictoryScreen victoryScreen = new VictoryScreen(game);
-            victoryScreen.setPoints(""+ownScore);
-            victoryScreen.setEnemy(""+enemyScore);
-            game.setScreen(victoryScreen);
-            dispose();
+        if(gameOver() | gameWin()){
+            sendEndGameMessage();
         }
 
     }
@@ -280,7 +269,11 @@ public class PlayScreen implements Screen {
                     case -1:
                         ownScore = (p1score > p2score) ? p2score : p1score;
                         enemyScore = (p1score > p2score) ? p1score : p2score;
-                        gameOver();
+                        GameOverScreen gameOverScreen = new GameOverScreen(game);
+                        gameOverScreen.setPoints(""+ownScore);
+                        gameOverScreen.setEnemyPoints(""+enemyScore);
+                        game.setScreen(gameOverScreen);
+                        dispose();
                         break;
                     case 0:
                         ownScore = p1score;
@@ -290,7 +283,10 @@ public class PlayScreen implements Screen {
                     case 1:
                         ownScore = (p1score < p2score) ? p2score : p1score;
                         enemyScore = (p1score > p2score) ? p1score : p2score;
-                        gameWin();
+                        VictoryScreen victoryScreen = new VictoryScreen(game);
+                        victoryScreen.setPoints(""+ownScore);
+                        victoryScreen.setEnemy(""+enemyScore);
+                        game.setScreen(victoryScreen);
                         break;
                 }
             }
