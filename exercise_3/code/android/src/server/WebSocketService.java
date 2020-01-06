@@ -137,8 +137,6 @@ public class WebSocketService extends Service implements MessageListener {
                 } else {
                     Log.w(this.getClass().getSimpleName(), "Login failed");
                 }
-            } else {
-                Log.i(this.getClass().getSimpleName(), "Message was not of Type LoginAnswer - ignoring...");
             }
         } catch (JsonSyntaxException ex) {
             Log.w(this.getClass().getSimpleName(), "Couldn't cast message from backend, ignoring...\nMessage was: \"" + message + "\" printing stack trace...");
