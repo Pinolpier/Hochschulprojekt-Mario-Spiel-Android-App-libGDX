@@ -36,11 +36,11 @@ public class VictoryScreen implements Screen {
         Label playAgainLabel = new Label("Click to Exit game", font);
         points= new Label("Your points: ",font);
         enemy = new Label("Enemy points: ",font);
-
         table.add(gameOverLabel).expandX();
         table.row();
         table.add(playAgainLabel).expandX().padTop(10f);
-
+        table.add(points).expandX();
+        table.add(enemy).expandX();
         stage.addActor(table);
     }
 
