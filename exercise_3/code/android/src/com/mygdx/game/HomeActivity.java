@@ -102,6 +102,7 @@ public class HomeActivity extends Activity implements MessageListener {
         Intent lobbyIntent = new Intent(this, GamelobbyscreenActivity.class);
         lobbyIntent.putExtras(getIntent().getExtras());
         startActivity(lobbyIntent);
+        finish();
     }
 
     @Override
