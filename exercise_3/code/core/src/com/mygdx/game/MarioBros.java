@@ -9,10 +9,10 @@ import com.mygdx.game.Screens.PlayScreen;
 
 import server.BackendCommunicator;
 import server.dtos.GameMessage;
+
 /**
  * Main Game class to start the hole Game
  */
-
 public class MarioBros extends Game {
     public static final int V_WIDTH = 400;
     public static final int V_HEIGHT = 208;
@@ -57,7 +57,6 @@ public class MarioBros extends Game {
         manager.load("audio/sounds/powerdown.wav", Sound.class);
         manager.load("audio/sounds/stomp.wav", Sound.class);
         manager.load("audio/sounds/mariodie.wav", Sound.class);
-
         manager.finishLoading();
         setScreen(new PlayScreen(this));
         playScreen = new PlayScreen(this);
@@ -84,5 +83,6 @@ public class MarioBros extends Game {
 
     public void sendMessage(GameMessage gameMessage) {
         backendCommunicator.sendMessage(gameMessage);
+
     }
 }
