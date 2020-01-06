@@ -69,7 +69,7 @@ public class MarioBros extends Game {
         manager.finishLoading();
         
         countdownScreen = new CountdownScreen(this);
-            setScreen(countdownScreen);
+        setScreen(countdownScreen);
     }
 
     @Override
