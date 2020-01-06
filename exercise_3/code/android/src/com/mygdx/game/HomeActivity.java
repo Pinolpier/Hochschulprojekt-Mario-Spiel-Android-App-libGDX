@@ -117,7 +117,9 @@ public class HomeActivity extends Activity implements MessageListener {
 
     public void joinGame(View v) {
         Intent lobbyIntent = new Intent(this, GamelobbyscreenActivity.class);
-        lobbyIntent.putExtras(getIntent().getExtras());
+        Bundle extras = getIntent().getExtras();
+        extras.putBoolean("soundonoff",soundboolean);
+        lobbyIntent.putExtras(extras);
         startActivity(lobbyIntent);
         finish();
     }
