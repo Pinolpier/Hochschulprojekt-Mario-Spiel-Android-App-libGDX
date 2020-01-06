@@ -43,7 +43,6 @@ public class MarioBros extends Game {
     //reference that needs to be kept to the android module.
     private BackendCommunicator backendCommunicator;
     private String username, password, auth, gameID;
-    private boolean countdownEnded = false;
 
     public MarioBros(String auth, String username, String password, String gameID, BackendCommunicator backendCommunicator) {
         this.backendCommunicator = backendCommunicator;
@@ -68,15 +67,7 @@ public class MarioBros extends Game {
         manager.load("audio/sounds/mariodie.wav", Sound.class);
 
         manager.finishLoading();
-
-        if(countdownEnded){
-        playScreen = new PlayScreen(this);
-        setScreen(playScreen);}
-
-        else{
-            countdownScreen = new CountdownScreen(this);
-            setScreen(countdownScreen);
-        }
+        setScreen(new CountdownScreen(this));
     }
 
     @Override
@@ -111,8 +102,7 @@ public class MarioBros extends Game {
                         break;
                     case 0:
                         countdownScreen.setCountdownLabel("0");
-                        countdownEnded = true;
-                        //Todo start Game
+                        setScreen(new PlayScreen(this));
                         break;
                 }
             }
