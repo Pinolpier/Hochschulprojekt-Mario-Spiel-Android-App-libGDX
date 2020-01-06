@@ -28,6 +28,7 @@ import com.mygdx.game.Tools.WorldContactListener;
 
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
+
 import server.dtos.GameMessage;
 
 public class PlayScreen implements Screen {
@@ -55,6 +56,7 @@ public class PlayScreen implements Screen {
     private LinkedBlockingQueue<ItemDef> itemsToSpawn;
     private int ownScore=0;
     private int enemyScore=0;
+    private int positionTicks = 0;
 
     public PlayScreen(MarioBros game){
         atlas = new TextureAtlas("Mario_and_Enemies.pack");
@@ -120,10 +122,13 @@ public class PlayScreen implements Screen {
     public void handleInput(){
         if(player.getCurrentState() != Mario.State.DEAD) {
             GameMessage sendMessage = new GameMessage("Movement", game.getAuth(), GameMessage.Status.OK, game.getGameID(), null);
-            ArrayList<String> position = new ArrayList<>();
-            position.add(player.getXPosition());
-            position.add(player.getYPosition());
-            sendMessage.setStringList(position);
+            if (positionTicks % 60 == 0) {
+                ArrayList<String> position = new ArrayList<>();
+                position.add(player.getXPosition());
+                position.add(player.getYPosition());
+                sendMessage.setStringList(position);
+            }
+            positionTicks++;
             if (Gdx.input.justTouched()) {
                 player.jump();
                 sendMessage.setPayloadInteger(0);
@@ -254,8 +259,10 @@ public class PlayScreen implements Screen {
     public void receiveMessage(GameMessage gameMessage) {
         if (gameMessage != null && gameMessage.getType() != null) {
             if (gameMessage.getType().equals("Movement")) {
-                ArrayList<String> position = gameMessage.getStringList();
-                player2.setPosition(Float.parseFloat(position.get(0)),Float.parseFloat(position.get(1)));
+                if (gameMessage.getStringList() != null) {
+                    ArrayList<String> position = gameMessage.getStringList();
+                    player2.setPosition(Float.parseFloat(position.get(0)), Float.parseFloat(position.get(1)));
+                }
                 int status = gameMessage.getPayloadInteger();
                 switch (status) {
                     case 0:
