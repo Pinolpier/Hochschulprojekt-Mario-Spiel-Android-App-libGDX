@@ -18,6 +18,8 @@ public class GameOverScreen implements Screen {
     private Viewport viewport;
     private Stage stage;
     private MarioBros game;
+    private Label points;
+    private Label enemy;
 
     public GameOverScreen(MarioBros MarioGame){
         this.game = MarioGame;
@@ -32,13 +34,24 @@ public class GameOverScreen implements Screen {
         table.setFillParent(true);
 
         Label gameOverLabel = new Label("GAME OVER", font);
-        Label playAgainLabel = new Label("Click to Play Again", font);
+        Label playAgainLabel = new Label("Click to Exit game", font);
+        points = new Label("Your points: ",font);
+        enemy = new Label("Enemy points: ",font);
+
 
         table.add(gameOverLabel).expandX();
         table.row();
         table.add(playAgainLabel).expandX().padTop(10f);
 
         stage.addActor(table);
+    }
+
+    public void setPoints(String ownPoints) {
+        points.setText("Your points: "+ ownPoints);
+    }
+
+    public void setEnemyPoints(String enemyPoints) {
+        enemy.setText("Enemy points: "+enemyPoints);
     }
 
     @Override

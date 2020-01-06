@@ -17,8 +17,9 @@ import com.mygdx.game.MarioBros;
 public class VictoryScreen implements Screen {
     private Viewport viewport;
     private Stage stage;
-
     private MarioBros game;
+    private Label points;
+    private Label enemy;
 
     public VictoryScreen(MarioBros game){
         this.game = game;
@@ -32,13 +33,23 @@ public class VictoryScreen implements Screen {
         table.setFillParent(true);
 
         Label gameOverLabel = new Label("VICTORY", font);
-        Label playAgainLabel = new Label("Click to Play Again", font);
+        Label playAgainLabel = new Label("Click to Exit game", font);
+        points= new Label("Your points: ",font);
+        enemy = new Label("Enemy points: ",font);
 
         table.add(gameOverLabel).expandX();
         table.row();
         table.add(playAgainLabel).expandX().padTop(10f);
 
         stage.addActor(table);
+    }
+
+    public void setPoints(String ownPoints) {
+        points.setText("Your points: "+ownPoints);
+    }
+
+    public void setEnemy(String enemyPoints) {
+        enemy.setText("Enemy points: "+enemyPoints);
     }
 
     @Override

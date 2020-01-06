@@ -53,6 +53,8 @@ public class PlayScreen implements Screen {
     private Music music;
     private Array<Item> items;
     private LinkedBlockingQueue<ItemDef> itemsToSpawn;
+    private int ownScore=0;
+    private int enemyScore=0;
 
     public PlayScreen(MarioBros game){
         atlas = new TextureAtlas("Mario_and_Enemies.pack");
@@ -141,10 +143,7 @@ public class PlayScreen implements Screen {
 
         handleInput();
         handleSpawningItems();
-
-        //takes 1 step in the physics simulation(60 times per second)
         world.step(1 / 60f, 6, 2);
-
         player.update(dt);
         player2.update(dt);
         for(Enemy enemy : creator.getEnemies()) {
@@ -158,15 +157,11 @@ public class PlayScreen implements Screen {
             item.update(dt);
 
         hud.update(dt);
-
-        //attach our gamecam to our players.x coordinate
         if(player.getCurrentState() != Mario.State.DEAD) {
             gamecam.position.x = player.getB2body().getPosition().x;
         }
 
-        //update our gamecam with correct coordinates after changes
         gamecam.update();
-        //tell our renderer to draw only what our camera can see in our game world.
         renderer.setView(gamecam);
 
     }
@@ -174,17 +169,12 @@ public class PlayScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        //separate our update logic from render
         update(delta);
 
-        //Clear the game screen with Black
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        //render our game map
         renderer.render();
-
-        //renderer our Box2DDebugLines
         b2dr.render(world, gamecam.combined);
 
         game.batch.setProjectionMatrix(gamecam.combined);
@@ -196,17 +186,21 @@ public class PlayScreen implements Screen {
         for (Item item : items)
             item.draw(game.batch);
         game.batch.end();
-
-        //Set our batch to now draw what the Hud camera sees.
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();
 
         if(gameOver()){
-            game.setScreen(new GameOverScreen(game));
+            GameOverScreen gameOverScreen = new GameOverScreen(game);
+            gameOverScreen.setPoints(""+ownScore);
+            gameOverScreen.setEnemyPoints(""+enemyScore);
+            game.setScreen(gameOverScreen);
             dispose();
         }
         if (gameWin()) {
-            game.setScreen(new VictoryScreen(game));
+            VictoryScreen victoryScreen = new VictoryScreen(game);
+            victoryScreen.setPoints(""+ownScore);
+            victoryScreen.setEnemy(""+enemyScore);
+            game.setScreen(victoryScreen);
             dispose();
         }
 
@@ -285,12 +279,11 @@ public class PlayScreen implements Screen {
                 String player1score = gameMessage.getStringList().get(0);
                 String player2score = gameMessage.getStringList().get(1);
                 int p1score = Integer.parseInt(player1score), p2score = Integer.parseInt(player2score);
-                int ownScore, enemyScore;
                 switch (won) {
                     case -1:
                         ownScore = (p1score > p2score) ? p2score : p1score;
                         enemyScore = (p1score > p2score) ? p1score : p2score;
-                        //TODO lostGame
+                        gameOver();
                         break;
                     case 0:
                         ownScore = p1score;
@@ -300,7 +293,7 @@ public class PlayScreen implements Screen {
                     case 1:
                         ownScore = (p1score < p2score) ? p2score : p1score;
                         enemyScore = (p1score > p2score) ? p1score : p2score;
-                        //TODO wonGame
+                        gameWin();
                         break;
                 }
             }
