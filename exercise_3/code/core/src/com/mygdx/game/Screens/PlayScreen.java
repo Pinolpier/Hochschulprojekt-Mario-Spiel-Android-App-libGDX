@@ -122,7 +122,7 @@ public class PlayScreen implements Screen {
     public void handleInput(){
         if(player.getCurrentState() != Mario.State.DEAD) {
             GameMessage sendMessage = new GameMessage("Movement", game.getAuth(), GameMessage.Status.OK, game.getGameID(), null);
-            if (positionTicks % 60 == 0) {
+            if (positionTicks % 20 == 0) {
                 ArrayList<String> position = new ArrayList<>();
                 position.add(player.getXPosition());
                 position.add(player.getYPosition());
@@ -156,9 +156,9 @@ public class PlayScreen implements Screen {
         player2.update(dt);
         for(Enemy enemy : creator.getEnemies()) {
             enemy.update(dt);
-            if(enemy.getX() < player.getX() + 224 / MarioBros.PPM) {
+           // if(enemy.getX() < player.getX() + 224 / MarioBros.PPM) {
                 enemy.b2body.setActive(true);
-            }
+            //}
         }
 
         for(Item item : items)
