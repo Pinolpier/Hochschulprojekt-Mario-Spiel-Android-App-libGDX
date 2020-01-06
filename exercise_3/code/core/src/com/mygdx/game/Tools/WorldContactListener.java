@@ -71,11 +71,11 @@ public class WorldContactListener implements ContactListener {
                 else
                     ((InteractiveTileObject) fixA.getUserData()).onHeadHit((Player) fixB.getUserData());
                 break;
-            case MarioBros.MARIO_HEAD_BIT | MarioBros.GOAL_BIT:
-                if(fixA.getFilterData().categoryBits == MarioBros.MARIO_HEAD_BIT)
-                    ((InteractiveTileObject) fixB.getUserData()).onHeadHit((Mario) fixA.getUserData());
+            case MarioBros.MARIO_BIT | MarioBros.GOAL_BIT:
+                if(fixA.getFilterData().categoryBits == MarioBros.MARIO_BIT)
+                    ((InteractiveTileObject) fixB.getUserData()).onHeadHit((Player) fixA.getUserData());
                 else
-                    ((InteractiveTileObject) fixA.getUserData()).onHeadHit((Mario) fixB.getUserData());
+                    ((InteractiveTileObject) fixA.getUserData()).onHeadHit((Player) fixB.getUserData());
                 break;
         }
     }

@@ -119,7 +119,6 @@ public class MarioBros extends Game {
 
     public void sendMessage(GameMessage gameMessage) {
         backendCommunicator.sendMessage(gameMessage);
-
     }
 
     public String getUsername() {
