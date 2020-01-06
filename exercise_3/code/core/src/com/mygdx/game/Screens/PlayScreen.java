@@ -204,7 +204,6 @@ public class PlayScreen implements Screen {
             game.setScreen(victoryScreen);
             dispose();
         }
-
     }
 
     public boolean gameOver(){
@@ -217,9 +216,7 @@ public class PlayScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        //updated our game viewport
         gamePort.update(width,height);
-
     }
 
     public TiledMap getMap(){

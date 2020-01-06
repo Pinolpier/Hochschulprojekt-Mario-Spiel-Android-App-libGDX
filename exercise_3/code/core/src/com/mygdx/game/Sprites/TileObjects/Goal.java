@@ -16,6 +16,8 @@ public class Goal extends InteractiveTileObject{
 
     @Override
     public void onHeadHit(Player mario) {
-        Hud.addScore(10000);
+        if(mario.getId()==1)
+        Hud.addScore(500);
+        mario.win();
     }
 }
