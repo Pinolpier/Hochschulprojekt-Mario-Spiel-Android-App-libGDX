@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -42,7 +43,6 @@ public class MarioBros extends Game {
     //reference that needs to be kept to the android module.
     private BackendCommunicator backendCommunicator;
     private String username, password, auth, gameID;
-    private boolean countdownEnded = false;
 
     public MarioBros(String auth, String username, String password, String gameID, BackendCommunicator backendCommunicator) {
         this.backendCommunicator = backendCommunicator;
@@ -67,9 +67,7 @@ public class MarioBros extends Game {
         manager.load("audio/sounds/mariodie.wav", Sound.class);
 
         manager.finishLoading();
-        
-        countdownScreen = new CountdownScreen(this);
-            setScreen(countdownScreen);
+        setScreen(new CountdownScreen(this));
     }
 
     @Override
@@ -104,10 +102,7 @@ public class MarioBros extends Game {
                         break;
                     case 0:
                         countdownScreen.setCountdownLabel("0");
-                        countdownEnded = true;
-
-                        playScreen = new PlayScreen(this);
-                        setScreen(playScreen);
+                        setScreen(new PlayScreen(this));
                         break;
                 }
             }
