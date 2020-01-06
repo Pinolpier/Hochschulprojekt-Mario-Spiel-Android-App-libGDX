@@ -3,7 +3,8 @@ package server.dtos;
 import java.util.ArrayList;
 
 public class GameMessage {
-    private String type, authentication, gameId;
+    private String type, authentication, gameId, payloadString;
+    private Integer payloadInteger;
     private Status status;
     private ArrayList<String> stringList;
 
@@ -53,6 +54,22 @@ public class GameMessage {
 
     public void setStringList(ArrayList<String> stringList) {
         this.stringList = stringList;
+    }
+
+    public String getPayloadString() {
+        return payloadString;
+    }
+
+    public void setPayloadString(String payloadString) {
+        this.payloadString = payloadString;
+    }
+
+    public Integer getPayloadInteger() {
+        return payloadInteger;
+    }
+
+    public void setPayloadInteger(Integer payloadInteger) {
+        this.payloadInteger = payloadInteger;
     }
 
     public enum Status {

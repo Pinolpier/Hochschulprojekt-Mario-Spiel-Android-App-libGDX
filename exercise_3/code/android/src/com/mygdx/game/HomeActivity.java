@@ -66,7 +66,11 @@ public class HomeActivity extends Activity implements MessageListener {
         if (webSocketService != null) {
             webSocketService.deregisterListener(this);
             if (serviceBound) {
-                webSocketService.unbindService(connection);
+                try {
+                    webSocketService.unbindService(connection);
+                } catch (IllegalArgumentException iaex) {
+                    Log.w(HomeActivity.this.getClass().getSimpleName(), "Can't unbind service because of an IllegalArgumentException - probably the Service is not bound for a strange reason of asynchronity.");
+                }
             }
             webSocketService = null;
             Log.d(HomeActivity.this.getClass().getSimpleName() + ":onDestroy() ", "Service has been unbound and has been Stopped!");
@@ -98,6 +102,7 @@ public class HomeActivity extends Activity implements MessageListener {
         Intent lobbyIntent = new Intent(this, GamelobbyscreenActivity.class);
         lobbyIntent.putExtras(getIntent().getExtras());
         startActivity(lobbyIntent);
+        finish();
     }
 
     @Override

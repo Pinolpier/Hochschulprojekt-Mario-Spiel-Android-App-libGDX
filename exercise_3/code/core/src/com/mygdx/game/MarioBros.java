@@ -5,6 +5,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.mygdx.game.Screens.CountdownScreen;
 import com.mygdx.game.Screens.PlayScreen;
 
 import server.BackendCommunicator;
@@ -36,12 +37,19 @@ public class MarioBros extends Game {
     public static AssetManager manager;
 
     private PlayScreen playScreen;
+    private CountdownScreen countdownScreen;
 
     //reference that needs to be kept to the android module.
     private BackendCommunicator backendCommunicator;
+    private String username, password, auth, gameID;
+    private boolean countdownEnded = false;
 
-    public MarioBros(BackendCommunicator backendCommunicator) {
+    public MarioBros(String auth, String username, String password, String gameID, BackendCommunicator backendCommunicator) {
         this.backendCommunicator = backendCommunicator;
+        this.auth = auth;
+        this.username = username;
+        this.password = password;
+        this.gameID = gameID;
     }
 
     @Override
@@ -58,9 +66,10 @@ public class MarioBros extends Game {
         manager.load("audio/sounds/stomp.wav", Sound.class);
         manager.load("audio/sounds/mariodie.wav", Sound.class);
         manager.finishLoading();
-        setScreen(new PlayScreen(this));
+
         playScreen = new PlayScreen(this);
-        setScreen(playScreen);
+        countdownScreen = new CountdownScreen(this);
+        setScreen(countdownScreen);
     }
 
     @Override
@@ -76,13 +85,72 @@ public class MarioBros extends Game {
     }
 
     public void receiveMessage(GameMessage gameMessage) {
-        if (playScreen != null) {
-            playScreen.receiveMessage(gameMessage);
+        if (countdownEnded) {
+            if (playScreen != null) {
+                playScreen.receiveMessage(gameMessage);
+            }
+        } else {
+            if (gameMessage.getType().equals("Countdown")) {
+                int secondsLeft = gameMessage.getPayloadInteger();
+                switch (secondsLeft) {
+                    case 3:
+                        countdownScreen.setCountdownLabel("3");
+                        break;
+                    case 2:
+                        countdownScreen.setCountdownLabel("2");
+                        break;
+                    case 1:
+                        countdownScreen.setCountdownLabel("1");
+                        break;
+                    case 0:
+                        countdownScreen.setCountdownLabel("0");
+                        countdownEnded = true;
+
+                        setScreen(playScreen);
+                        break;
+                }
+            }
         }
+    }
+
+    public void back2HomeActivty() {
+        backendCommunicator.stopGame();
     }
 
     public void sendMessage(GameMessage gameMessage) {
         backendCommunicator.sendMessage(gameMessage);
 
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getAuth() {
+        return auth;
+    }
+
+    public void setAuth(String auth) {
+        this.auth = auth;
+    }
+
+    public String getGameID() {
+        return gameID;
+    }
+
+    public void setGameID(String gameID) {
+        this.gameID = gameID;
     }
 }

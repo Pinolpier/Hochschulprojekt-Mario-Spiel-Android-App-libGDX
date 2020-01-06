@@ -17,13 +17,14 @@ import com.mygdx.game.MarioBros;
 public class VictoryScreen implements Screen {
     private Viewport viewport;
     private Stage stage;
+    private MarioBros game;
+    private Label points;
+    private Label enemy;
 
-    private Game game;
-
-    public VictoryScreen(Game game){
+    public VictoryScreen(MarioBros game){
         this.game = game;
         viewport = new FitViewport(MarioBros.V_WIDTH, MarioBros.V_HEIGHT, new OrthographicCamera());
-        stage = new Stage(viewport, ((MarioBros) game).batch);
+        stage = new Stage(viewport, (game).batch);
 
         Label.LabelStyle font = new Label.LabelStyle(new BitmapFont(), Color.WHITE);
 
@@ -32,13 +33,23 @@ public class VictoryScreen implements Screen {
         table.setFillParent(true);
 
         Label gameOverLabel = new Label("VICTORY", font);
-        Label playAgainLabel = new Label("Click to Play Again", font);
+        Label playAgainLabel = new Label("Click to Exit game", font);
+        points= new Label("Your points: ",font);
+        enemy = new Label("Enemy points: ",font);
 
         table.add(gameOverLabel).expandX();
         table.row();
         table.add(playAgainLabel).expandX().padTop(10f);
 
         stage.addActor(table);
+    }
+
+    public void setPoints(String ownPoints) {
+        points.setText("Your points: "+ownPoints);
+    }
+
+    public void setEnemy(String enemyPoints) {
+        enemy.setText("Enemy points: "+enemyPoints);
     }
 
     @Override
@@ -49,7 +60,7 @@ public class VictoryScreen implements Screen {
     @Override
     public void render(float delta) {
         if(Gdx.input.justTouched()) {
-            game.setScreen(new PlayScreen((MarioBros) game));
+            game.back2HomeActivty();
             dispose();
         }
         Gdx.gl.glClearColor(0, 0, 0, 1);

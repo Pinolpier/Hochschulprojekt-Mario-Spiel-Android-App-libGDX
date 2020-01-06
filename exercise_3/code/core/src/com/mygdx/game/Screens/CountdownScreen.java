@@ -14,18 +14,17 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.MarioBros;
 
-public class GameOverScreen implements Screen {
+public class CountdownScreen implements Screen {
     private Viewport viewport;
     private Stage stage;
-    private MarioBros game;
-    private Label points;
-    private Label enemy;
+    private Game game;
+    Label infoLabel;
+    Label countdownLabel;
 
-    public GameOverScreen(MarioBros MarioGame){
-        this.game = MarioGame;
 
+    public CountdownScreen(Game game){
         viewport = new FitViewport(MarioBros.V_WIDTH, MarioBros.V_HEIGHT, new OrthographicCamera());
-        stage = new Stage(viewport,(game).batch);
+        stage = new Stage(viewport, ((MarioBros) game).batch);
 
         Label.LabelStyle font = new Label.LabelStyle(new BitmapFont(), Color.WHITE);
 
@@ -33,25 +32,17 @@ public class GameOverScreen implements Screen {
         table.center();
         table.setFillParent(true);
 
-        Label gameOverLabel = new Label("GAME OVER", font);
-        Label playAgainLabel = new Label("Click to Exit game", font);
-        points = new Label("Your points: ",font);
-        enemy = new Label("Enemy points: ",font);
+        countdownLabel = new Label("Countdown will begin when Player arrives", font);
+        infoLabel = new Label("Waiting for other Player...", font);
 
-
-        table.add(gameOverLabel).expandX();
+        table.add(countdownLabel).expandX();
         table.row();
-        table.add(playAgainLabel).expandX().padTop(10f);
-
+        table.add(infoLabel).expandX().padTop(10f);
         stage.addActor(table);
     }
 
-    public void setPoints(String ownPoints) {
-        points.setText("Your points: "+ ownPoints);
-    }
-
-    public void setEnemyPoints(String enemyPoints) {
-        enemy.setText("Enemy points: "+enemyPoints);
+    public void setCountdownLabel(String countdown) {
+        countdownLabel.setText(countdown);
     }
 
     @Override
@@ -61,10 +52,6 @@ public class GameOverScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        if(Gdx.input.justTouched()) {
-            game.back2HomeActivty();
-            dispose();
-        }
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.draw();
@@ -92,6 +79,6 @@ public class GameOverScreen implements Screen {
 
     @Override
     public void dispose() {
-        stage.dispose();
+    stage.dispose();
     }
 }
