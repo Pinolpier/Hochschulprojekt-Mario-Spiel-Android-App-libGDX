@@ -27,6 +27,7 @@ public class AndroidLauncher extends AndroidApplication implements MessageListen
     private WebSocketService webSocketService;
     private String username, password, auth, gameID;
     private boolean gameHasBeenCreated = false;
+    private boolean soundboolean;
     private ServiceConnection connection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -63,7 +64,8 @@ public class AndroidLauncher extends AndroidApplication implements MessageListen
             bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE);
             Log.d(this.getClass().getSimpleName(), "Bind Service should have been happened!");
         }
-        game = new MarioBros(auth, username, password, gameID, new BackendCommunicator() {
+        soundboolean = getIntent().getExtras().getBoolean("soundonoff");
+        game = new MarioBros(auth, username, password, gameID,soundboolean, new BackendCommunicator() {
             @Override
             public void sendMessage(GameMessage message) {
                 if (webSocketService != null) {

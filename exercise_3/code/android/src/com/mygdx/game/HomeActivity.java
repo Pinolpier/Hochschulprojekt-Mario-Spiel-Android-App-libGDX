@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -25,6 +26,7 @@ public class HomeActivity extends Activity implements MessageListener {
     boolean serviceBound = false;
     private String username, password, auth, gameID;
     private Gson gson;
+    private Boolean soundboolean = true;
 
     private ServiceConnection connection = new ServiceConnection() {
         @Override
@@ -58,6 +60,21 @@ public class HomeActivity extends Activity implements MessageListener {
         } else {
             Log.d(HomeActivity.this.getClass().getSimpleName() + ":onCreate() ", "WebSocketService was not null, so service has not been bound again.");
         }
+
+        final Switch soundswitch = findViewById(R.id.switch_soundonoff);
+        soundswitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(soundswitch.isChecked())
+                {
+                    soundboolean = false;
+                }
+                else
+                {
+                    soundboolean = true;
+                }
+            }
+        });
     }
 
     @Override
@@ -114,6 +131,7 @@ public class HomeActivity extends Activity implements MessageListener {
                     Intent gameIntent = new Intent(this, AndroidLauncher.class);
                     Bundle extras = getIntent().getExtras();
                     extras.putString("gameID", gameID);
+                    extras.putBoolean("soundonoff",soundboolean);
                     gameIntent.putExtras(extras);
                     startActivity(gameIntent);
                 } else {
