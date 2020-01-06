@@ -1,10 +1,12 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.mygdx.game.Screens.CountdownScreen;
 import com.mygdx.game.Screens.PlayScreen;
 
 import server.BackendCommunicator;
@@ -36,6 +38,7 @@ public class MarioBros extends Game {
     public static AssetManager manager;
 
     private PlayScreen playScreen;
+    private CountdownScreen countdownScreen;
 
     //reference that needs to be kept to the android module.
     private BackendCommunicator backendCommunicator;
@@ -65,9 +68,15 @@ public class MarioBros extends Game {
         manager.load("audio/sounds/mariodie.wav", Sound.class);
 
         manager.finishLoading();
-        setScreen(new PlayScreen(this));
+
+        if(countdownEnded){
         playScreen = new PlayScreen(this);
-        setScreen(playScreen);
+        setScreen(playScreen);}
+
+        else{
+            countdownScreen = new CountdownScreen(this);
+            setScreen(countdownScreen);
+        }
     }
 
     @Override
@@ -92,15 +101,16 @@ public class MarioBros extends Game {
                 int secondsLeft = gameMessage.getPayloadInteger();
                 switch (secondsLeft) {
                     case 3:
-                        //Todo something
+                        countdownScreen.setCountdownLabel("3");
                         break;
                     case 2:
-                        //Todo something
+                        countdownScreen.setCountdownLabel("2");
                         break;
                     case 1:
-                        //Todo something
+                        countdownScreen.setCountdownLabel("1");
                         break;
                     case 0:
+                        countdownScreen.setCountdownLabel("0");
                         countdownEnded = true;
                         //Todo start Game
                         break;

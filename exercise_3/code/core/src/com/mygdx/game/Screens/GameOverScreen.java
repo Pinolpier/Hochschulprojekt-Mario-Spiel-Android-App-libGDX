@@ -17,13 +17,13 @@ import com.mygdx.game.MarioBros;
 public class GameOverScreen implements Screen {
     private Viewport viewport;
     private Stage stage;
+    private MarioBros game;
 
-    private Game game;
+    public GameOverScreen(MarioBros MarioGame){
+        this.game = MarioGame;
 
-    public GameOverScreen(Game game){
-        this.game = game;
         viewport = new FitViewport(MarioBros.V_WIDTH, MarioBros.V_HEIGHT, new OrthographicCamera());
-        stage = new Stage(viewport, ((MarioBros) game).batch);
+        stage = new Stage(viewport,(game).batch);
 
         Label.LabelStyle font = new Label.LabelStyle(new BitmapFont(), Color.WHITE);
 
@@ -49,7 +49,7 @@ public class GameOverScreen implements Screen {
     @Override
     public void render(float delta) {
         if(Gdx.input.justTouched()) {
-            game.setScreen(new PlayScreen((MarioBros) game));
+            game.back2HomeActivty();
             dispose();
         }
         Gdx.gl.glClearColor(0, 0, 0, 1);
