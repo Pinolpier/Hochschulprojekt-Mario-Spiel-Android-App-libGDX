@@ -229,6 +229,7 @@ public class Player extends Sprite {
         }
 
         if (screen.getHud().getScore()  >= 10000) {
+            Hud.addScore(-9500);
             win();
         }
 
