@@ -84,7 +84,7 @@ public class GamelobbyscreenActivity extends Activity implements MessageListener
             webSocketService.deregisterListener(this);
             if (serviceBound) {
                 try {
-                    webSocketService.unbindService(connection);
+                    unbindService(connection);
                 } catch (IllegalArgumentException iaex) {
                     Log.w(GamelobbyscreenActivity.this.getClass().getSimpleName(), "Can't unbind service because of an IllegalArgumentException - probably the Service is not bound for a strange reason of asynchronity.");
                 }
