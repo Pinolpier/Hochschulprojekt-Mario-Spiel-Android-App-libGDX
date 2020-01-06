@@ -67,7 +67,8 @@ public class MarioBros extends Game {
         manager.load("audio/sounds/mariodie.wav", Sound.class);
 
         manager.finishLoading();
-        
+
+        playScreen = new PlayScreen(this);
         countdownScreen = new CountdownScreen(this);
         setScreen(countdownScreen);
     }
@@ -106,7 +107,6 @@ public class MarioBros extends Game {
                         countdownScreen.setCountdownLabel("0");
                         countdownEnded = true;
 
-                        playScreen = new PlayScreen(this);
                         setScreen(playScreen);
                         break;
                 }
