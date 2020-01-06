@@ -70,7 +70,9 @@ public class PlayScreen implements Screen {
 
 
         player = new Mario(this);
+        player.setId(1);
         player2= new Mario(this);
+        player2.setId(2);
 
         world.setContactListener(new WorldContactListener());
 
@@ -107,7 +109,6 @@ public class PlayScreen implements Screen {
     @Override
     public void show() {
 
-
     }
 
     /**
@@ -118,9 +119,9 @@ public class PlayScreen implements Screen {
         if(player.getCurrentState() != Mario.State.DEAD) {
             if(Gdx.input.justTouched())
                 player.jump(); //TODO mlink2 send 0
-            if(Gdx.input.getPitch()<-10)
+            if(Gdx.input.getPitch()<-20)
                 player.getB2body().applyLinearImpulse(new Vector2(0.1f, 0), player.getB2body().getWorldCenter(), true); //TODO mlink2 send 1
-            if(Gdx.input.getPitch()>20)
+            if(Gdx.input.getPitch()>30)
                 player.getB2body().applyLinearImpulse(new Vector2(-0.1f, 0), player.getB2body().getWorldCenter(), true); //TODO mlink2 send 2
         }
 
@@ -233,22 +234,18 @@ public class PlayScreen implements Screen {
 
     @Override
     public void pause() {
-
     }
 
     @Override
     public void resume() {
-
     }
 
     @Override
     public void hide() {
-
     }
 
     @Override
     public void dispose() {
-        //dispose of all our opened resources
         map.dispose();
         renderer.dispose();
         world.dispose();

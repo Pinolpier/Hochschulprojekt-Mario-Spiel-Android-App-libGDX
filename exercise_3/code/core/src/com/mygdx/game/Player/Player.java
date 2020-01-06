@@ -17,6 +17,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.MarioBros;
+import com.mygdx.game.Scenes.Hud;
 import com.mygdx.game.Screens.PlayScreen;
 import com.mygdx.game.Sprites.Enemies.Enemy;
 import com.mygdx.game.Sprites.Enemies.Turtle;
@@ -46,7 +47,9 @@ public class Player extends Sprite {
     private boolean timeToRedefineMario;
     private boolean marioIsDead;
     private boolean marioReachedGoal;
+    private int id=0;
     Array<TextureRegion> frames;
+
     public Player(){
         frames = new Array<>();
     }
@@ -134,6 +137,11 @@ public class Player extends Sprite {
 
             b2body.applyLinearImpulse(new Vector2(0, 4f), b2body.getWorldCenter(), true);
         }
+    }
+
+    public void addScore(int value){
+        if(id==1)
+        Hud.addScore(value);
     }
 
     public void win() {
@@ -432,5 +440,13 @@ public class Player extends Sprite {
     }
     public void setFrames(Array<TextureRegion> frames) {
         this.frames = frames;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

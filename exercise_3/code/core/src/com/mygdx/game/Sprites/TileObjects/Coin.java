@@ -36,7 +36,7 @@ public class Coin extends InteractiveTileObject {
             else
                 MarioBros.manager.get("audio/sounds/coin.wav", Sound.class).play();
             getCell().setTile(tileSet.getTile(BLANK_COIN));
-            Hud.addScore(100);
+            mario.addScore(100);
         }
     }
 }
