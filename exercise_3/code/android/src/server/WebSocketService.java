@@ -34,6 +34,7 @@ public class WebSocketService extends Service implements MessageListener {
     private List<MessageListener> listeners;
     private String auth, username, password;
     private Gson gson;
+    private boolean listIsAccessible = true;
 
     //Standard bound Service Sachen
     public class WebSocketServiceBinder extends Binder{
@@ -154,6 +155,24 @@ public class WebSocketService extends Service implements MessageListener {
         webSocket = null;
     }
 
+    public void deregisterListener(MessageListener listener) {
+        while (!listIsAccessible) ;
+        listIsAccessible = false;
+        listeners.remove(listener);
+        listIsAccessible = true;
+    }
+
+    /**
+     * Register a {@link MessageListener} that will be called when a new message arrives
+     *
+     * @param listener the listener to be called
+     */
+    public void registerListener(MessageListener listener) {
+        if (listener != null) {
+            listeners.add(listener);
+        }
+    }
+
     private final class SocketListener extends WebSocketListener { //Listener der bei verschiedenen Websocket Ereignissen aufgerufen wird
         @Override
         public void onOpen(WebSocket socket, Response response) { //Aufgerufen, wenn neue Websocket Verbindung erzeugt wurde
@@ -163,9 +182,12 @@ public class WebSocketService extends Service implements MessageListener {
         @Override
         public void onMessage(WebSocket socket, String text) {//Aufgerufen, wenn neue Textnachricht ueber Websocket Verbindung eintrifft
             Log.i(WebSocketService.this.getClass().getSimpleName(), "Received message: " + text);
+            while (!listIsAccessible) ;
+            listIsAccessible = false;
             for (MessageListener listener : listeners) {
                 listener.onMessageReceived(text);
             }
+            listIsAccessible = true;
         }
 
         @Override
@@ -190,19 +212,5 @@ public class WebSocketService extends Service implements MessageListener {
             Log.e(WebSocketService.this.getClass().getSimpleName(), "Error : " + t.getMessage());
             t.printStackTrace();
         }
-    }
-
-    /**
-     * Register a {@link MessageListener} that will be called when a new message arrives
-     * @param listener  the listener to be called
-     */
-    public void registerListener(MessageListener listener){
-        if(listener!=null){
-            listeners.add(listener);
-        }
-    }
-
-    public void deregisterListener(MessageListener listener){
-        listeners.remove(listener);
     }
 }
