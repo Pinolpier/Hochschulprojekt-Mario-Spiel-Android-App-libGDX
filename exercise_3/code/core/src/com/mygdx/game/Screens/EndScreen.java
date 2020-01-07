@@ -14,14 +14,15 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.MarioBros;
 
-public class GameOverScreen implements Screen {
+public class EndScreen implements Screen {
     private Viewport viewport;
     private Stage stage;
     private MarioBros game;
     private Label points;
     private Label enemy;
+    private Label textLabel;
 
-    public GameOverScreen(MarioBros MarioGame){
+    public EndScreen(MarioBros MarioGame){
         this.game = MarioGame;
 
         viewport = new FitViewport(MarioBros.V_WIDTH, MarioBros.V_HEIGHT, new OrthographicCamera());
@@ -33,13 +34,13 @@ public class GameOverScreen implements Screen {
         table.center();
         table.setFillParent(true);
 
-        Label gameOverLabel = new Label("GAME OVER", font);
+        textLabel = new Label("GAME OVER", font);
         Label playAgainLabel = new Label("Click to Exit game", font);
         points = new Label("Your points: ",font);
         enemy = new Label("Enemy points: ",font);
 
 
-        table.add(gameOverLabel).expandX();
+        table.add(textLabel).expandX();
         table.row();
         table.add(playAgainLabel).expandX().padTop(10f);
         table.add(points).expandX();
@@ -53,6 +54,9 @@ public class GameOverScreen implements Screen {
 
     public void setEnemyPoints(String enemyPoints) {
         enemy.setText("Enemy points: "+enemyPoints);
+    }
+    public void setText(String text){
+        textLabel.setText(text);
     }
 
     @Override

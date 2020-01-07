@@ -50,7 +50,7 @@ public class PlayScreen implements Screen {
 
     private Player player;
     private Player player2;
-
+    private EndScreen endScreen;
     private Music music;
     private Array<Item> items;
     private LinkedBlockingQueue<ItemDef> itemsToSpawn;
@@ -276,28 +276,34 @@ public class PlayScreen implements Screen {
                 String player1score = gameMessage.getStringList().get(0);
                 String player2score = gameMessage.getStringList().get(1);
                 int p1score = Integer.parseInt(player1score), p2score = Integer.parseInt(player2score);
+                endScreen = new EndScreen(game);
                 switch (won) {
                     case -1:
                         ownScore = (p1score > p2score) ? p2score : p1score;
                         enemyScore = (p1score > p2score) ? p1score : p2score;
-                        GameOverScreen gameOverScreen = new GameOverScreen(game);
-                        gameOverScreen.setPoints(""+ownScore);
-                        gameOverScreen.setEnemyPoints(""+enemyScore);
-                        game.setScreen(gameOverScreen);
+                        endScreen.setPoints(""+ownScore);
+                        endScreen.setEnemyPoints(""+enemyScore);
+                        endScreen.setText("DEFEAT");
+                        game.setScreen(endScreen);
                         dispose();
                         break;
                     case 0:
                         ownScore = p1score;
                         enemyScore = p1score;
-                        //TODO drawGame
+                        endScreen.setPoints(""+ownScore);
+                        endScreen.setEnemyPoints(""+enemyScore);
+                        endScreen.setText("DRAW");
+                        game.setScreen(endScreen);
+                        dispose();
                         break;
                     case 1:
                         ownScore = (p1score < p2score) ? p2score : p1score;
                         enemyScore = (p1score > p2score) ? p1score : p2score;
-                        VictoryScreen victoryScreen = new VictoryScreen(game);
-                        victoryScreen.setPoints(""+ownScore);
-                        victoryScreen.setEnemy(""+enemyScore);
-                        game.setScreen(victoryScreen);
+                        endScreen.setPoints(""+ownScore);
+                        endScreen.setEnemyPoints(""+enemyScore);
+                        endScreen.setText("VICTORY");
+                        game.setScreen(endScreen);
+                        dispose();
                         break;
                 }
             }
