@@ -39,7 +39,6 @@ public class EndScreen implements Screen {
         points = new Label("Your points: ",font);
         enemy = new Label("Enemy points: ",font);
 
-
         table.add(textLabel).expandX();
         table.row();
         table.add(playAgainLabel).expandX().padTop(10f);
@@ -51,7 +50,6 @@ public class EndScreen implements Screen {
     public void setPoints(String ownPoints) {
         points.setText("Your points: "+ ownPoints);
     }
-
     public void setEnemyPoints(String enemyPoints) {
         enemy.setText("Enemy points: "+enemyPoints);
     }
