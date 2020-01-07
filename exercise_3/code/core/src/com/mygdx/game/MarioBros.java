@@ -43,13 +43,15 @@ public class MarioBros extends Game {
     private BackendCommunicator backendCommunicator;
     private String username, password, auth, gameID;
     private boolean countdownEnded = false;
+    private boolean soundboolean;
 
-    public MarioBros(String auth, String username, String password, String gameID, BackendCommunicator backendCommunicator) {
+    public MarioBros(String auth, String username, String password, String gameID,Boolean soundonoff, BackendCommunicator backendCommunicator) {
         this.backendCommunicator = backendCommunicator;
         this.auth = auth;
         this.username = username;
         this.password = password;
         this.gameID = gameID;
+        this.soundboolean = soundonoff;
     }
 
     @Override
@@ -67,7 +69,7 @@ public class MarioBros extends Game {
         manager.load("audio/sounds/mariodie.wav", Sound.class);
         manager.finishLoading();
 
-        playScreen = new PlayScreen(this);
+        playScreen = new PlayScreen(this,soundboolean);
         countdownScreen = new CountdownScreen(this);
         setScreen(countdownScreen);
     }

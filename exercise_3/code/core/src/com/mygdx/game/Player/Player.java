@@ -113,7 +113,6 @@ public class Player extends Sprite {
         b2body.createFixture(fdef).setUserData(this);
         shape.setPosition(new Vector2(0, -14 / MarioBros.PPM));
         b2body.createFixture(fdef).setUserData(this);
-
         EdgeShape head = new EdgeShape();
         head.set(new Vector2(-2 / MarioBros.PPM, 6 / MarioBros.PPM), new Vector2(2 / MarioBros.PPM, 6 / MarioBros.PPM));
         fdef.filter.categoryBits = MarioBros.MARIO_HEAD_BIT;
@@ -226,11 +225,6 @@ public class Player extends Sprite {
     public void update(float dt){
         if (screen.getHud().isTimeUp() && !isDead()) {
             die();
-        }
-
-        if (screen.getHud().getScore()  >= 10000) {
-            Hud.addScore(-9500);
-            win();
         }
 
         if(marioIsBig)

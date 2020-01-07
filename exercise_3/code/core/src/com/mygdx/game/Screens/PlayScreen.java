@@ -56,7 +56,7 @@ public class PlayScreen implements Screen {
     private int ownScore=0;
     private int enemyScore=0;
 
-    public PlayScreen(MarioBros game){
+    public PlayScreen(MarioBros game,Boolean soundboolean){
         atlas = new TextureAtlas("Mario_and_Enemies.pack");
         this.game = game;
         gamecam = new OrthographicCamera();
@@ -81,7 +81,10 @@ public class PlayScreen implements Screen {
         music = MarioBros.manager.get("audio/music/mario_music.ogg", Music.class);
         music.setLooping(true);
         music.setVolume(0.3f);
-        music.play();
+        if(soundboolean)
+        {
+            music.play();
+        }
 
         items = new Array<Item>();
         itemsToSpawn = new LinkedBlockingQueue<ItemDef>();
@@ -204,7 +207,6 @@ public class PlayScreen implements Screen {
             game.setScreen(victoryScreen);
             dispose();
         }
-
     }
 
     public boolean gameOver(){
@@ -217,9 +219,7 @@ public class PlayScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        //updated our game viewport
         gamePort.update(width,height);
-
     }
 
     public TiledMap getMap(){
