@@ -284,7 +284,6 @@ public class PlayScreen implements Screen {
                         defeatScreen.setEnemyPoints(""+enemyScore);
                         defeatScreen.setText("DEFEAT");
                         game.setScreen(defeatScreen);
-                        dispose();
                         break;
                     case 0:
                         EndScreen drawScreen = new EndScreen(game);
@@ -294,17 +293,15 @@ public class PlayScreen implements Screen {
                         drawScreen.setEnemyPoints(""+enemyScore);
                         drawScreen.setText("DRAW");
                         game.setScreen(drawScreen);
-                        dispose();
                         break;
                     case 1:
                         EndScreen victoryScreen = new EndScreen(game);
                         ownScore = (p1score < p2score) ? p2score : p1score;
-                        enemyScore = (p1score > p2score) ? p1score : p2score;
+                        enemyScore = (p1score < p2score) ? p1score : p2score;
                         victoryScreen.setPoints(""+ownScore);
                         victoryScreen.setEnemyPoints(""+enemyScore);
                         victoryScreen.setText("VICTORY");
                         game.setScreen(victoryScreen);
-                        dispose();
                         break;
                 }
             }
