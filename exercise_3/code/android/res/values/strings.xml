@@ -9,7 +9,7 @@
     <string name="textview_password">password</string>
     <string name="creategame_button">Create Game</string>
     <string name="joingame_button">Join Game</string>
-    <string name="exit_button">Exit</string>
+    <string name="logout_button">Log Out</string>
     <string name="textview_availablegamelobbys">Available Gamelobbys (Click to Join)</string>
     <string name="contentdescription_gamelobbyscreenicon">super mario icon for lobbyscreen</string>
     <string name="textview_gamename">Game Name</string>
