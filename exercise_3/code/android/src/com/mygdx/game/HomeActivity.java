@@ -65,14 +65,7 @@ public class HomeActivity extends Activity implements MessageListener {
         soundswitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(soundswitch.isChecked())
-                {
-                    soundboolean = false;
-                }
-                else
-                {
-                    soundboolean = true;
-                }
+                soundboolean = !soundswitch.isChecked();
             }
         });
     }
@@ -135,6 +128,7 @@ public class HomeActivity extends Activity implements MessageListener {
                     extras.putString("gameID", gameID);
                     extras.putBoolean("soundonoff",soundboolean);
                     gameIntent.putExtras(extras);
+                    finish();
                     startActivity(gameIntent);
                 } else {
                     Log.wtf(HomeActivity.this.getClass().getSimpleName(), "Can't join game with gameID own username! Game should be created! Potentially error occurs because two users are logged in using same username?");

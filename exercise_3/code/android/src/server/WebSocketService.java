@@ -133,6 +133,7 @@ public class WebSocketService extends Service implements MessageListener {
                 if (gameMessage.getStatus() == GameMessage.Status.OK) {
                     //Login succeeded
                     Log.i(this.getClass().getSimpleName(), "Login succeeded");
+                    deregisterListener(this);
                 } else {
                     Log.w(this.getClass().getSimpleName(), "Login failed");
                 }
