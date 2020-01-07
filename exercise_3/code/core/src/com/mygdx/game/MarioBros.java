@@ -116,7 +116,7 @@ public class MarioBros extends Game {
     }
 
     public void back2HomeActivty() {
-        backendCommunicator.stopGame();
+        backendCommunicator.stopGame(soundboolean);
     }
 
     public void sendMessage(GameMessage gameMessage) {

@@ -76,15 +76,15 @@ public class AndroidLauncher extends AndroidApplication implements MessageListen
             }
 
             @Override
-            public void stopGame() {
-                killLibGDX();
+            public void stopGame(boolean sound) {
+                killLibGDX(sound);
             }
         });
         gameHasBeenCreated = true;
         initialize(game, config);
     }
 
-    private void killLibGDX() {
+    private void killLibGDX(boolean sound) {
         gameHasBeenCreated = false;
         game = null;
         config = null;
@@ -93,6 +93,7 @@ public class AndroidLauncher extends AndroidApplication implements MessageListen
         extras.putString("username", username);
         extras.putString("password", password);
         extras.putString("auth", auth);
+        extras.putBoolean("Sound", sound);
         homeIntent.putExtras(extras);
         finish();
         startActivity(homeIntent);

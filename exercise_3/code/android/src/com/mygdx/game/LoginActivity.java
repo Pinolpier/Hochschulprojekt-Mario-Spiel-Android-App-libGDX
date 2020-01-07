@@ -90,6 +90,7 @@ public class LoginActivity extends Activity {
                 startService(serviceIntent);
 
                 Intent intent = new Intent(context, HomeActivity.class);
+                bundle.putBoolean("Sound", true);
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
