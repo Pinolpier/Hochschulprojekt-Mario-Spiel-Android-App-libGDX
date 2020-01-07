@@ -272,9 +272,9 @@ public class PlayScreen implements Screen {
                 String player1score = gameMessage.getStringList().get(0);
                 String player2score = gameMessage.getStringList().get(1);
                 int p1score = Integer.parseInt(player1score), p2score = Integer.parseInt(player2score);
-                endScreen = new EndScreen(game);
                 switch (won) {
                     case -1:
+                        endScreen = new EndScreen(game);
                         ownScore = (p1score > p2score) ? p2score : p1score;
                         enemyScore = (p1score > p2score) ? p1score : p2score;
                         endScreen.setPoints(""+ownScore);
@@ -284,6 +284,7 @@ public class PlayScreen implements Screen {
                         dispose();
                         break;
                     case 0:
+                        endScreen = new EndScreen(game);
                         ownScore = p1score;
                         enemyScore = p1score;
                         endScreen.setPoints(""+ownScore);
@@ -293,6 +294,7 @@ public class PlayScreen implements Screen {
                         dispose();
                         break;
                     case 1:
+                        endScreen = new EndScreen(game);
                         ownScore = (p1score < p2score) ? p2score : p1score;
                         enemyScore = (p1score > p2score) ? p1score : p2score;
                         endScreen.setPoints(""+ownScore);
