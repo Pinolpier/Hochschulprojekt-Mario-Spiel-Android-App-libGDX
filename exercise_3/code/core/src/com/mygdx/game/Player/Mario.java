@@ -67,7 +67,6 @@ public class Mario extends Player {
         setMarioStand(marioStand);
         bigMarioStand = new TextureRegion(screen.getAtlas().findRegion("big_mario"), 0, 0, 16, 32);
         setBigMarioStand(bigMarioStand);
-
         marioDead = new TextureRegion(screen.getAtlas().findRegion("little_mario"), 96, 0, 16, 16);
         setMarioDead(marioDead);
         setB2body(b2body);

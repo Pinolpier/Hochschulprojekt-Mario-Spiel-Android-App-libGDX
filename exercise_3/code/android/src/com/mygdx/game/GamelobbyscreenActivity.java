@@ -32,6 +32,7 @@ public class GamelobbyscreenActivity extends Activity implements MessageListener
     private RecyclerView recyclerView;
     private GamelobbyscreenAdapter adapter;
     private String username, password, auth, gameID;
+    private Boolean soundboolean;
 
     private ServiceConnection connection = new ServiceConnection() {
         @Override
@@ -56,6 +57,7 @@ public class GamelobbyscreenActivity extends Activity implements MessageListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gamelobbyscreen);
 
+        soundboolean = getIntent().getExtras().getBoolean("soundonoff");
         allGames = new ArrayList<>();
         gson = new Gson();
 
@@ -142,6 +144,7 @@ public class GamelobbyscreenActivity extends Activity implements MessageListener
                     Intent gameIntent = new Intent(this, AndroidLauncher.class);
                     Bundle extras = getIntent().getExtras();
                     extras.putString("gameID", gameID);
+                    extras.putBoolean("soundonoff",soundboolean);
                     gameIntent.putExtras(extras);
                     startActivity(gameIntent);
                 } else {

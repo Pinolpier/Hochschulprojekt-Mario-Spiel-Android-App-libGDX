@@ -26,6 +26,7 @@ import com.mygdx.game.Sprites.Items.Mushroom;
 import com.mygdx.game.Tools.B2WorldCreator;
 import com.mygdx.game.Tools.WorldContactListener;
 
+import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import server.dtos.GameMessage;
@@ -33,8 +34,6 @@ import server.dtos.GameMessage;
 public class PlayScreen implements Screen {
     private MarioBros game;
     private TextureAtlas atlas;
-    public static boolean alreadyDestroyed = false;
-
     private OrthographicCamera gamecam;
     private Viewport gamePort;
     private Hud hud;
@@ -49,14 +48,15 @@ public class PlayScreen implements Screen {
 
     private Player player;
     private Player player2;
-
+    private EndScreen endScreen;
     private Music music;
     private Array<Item> items;
     private LinkedBlockingQueue<ItemDef> itemsToSpawn;
     private int ownScore=0;
     private int enemyScore=0;
+    private int positionTicks = 0;
 
-    public PlayScreen(MarioBros game){
+    public PlayScreen(MarioBros game,Boolean soundboolean){
         atlas = new TextureAtlas("Mario_and_Enemies.pack");
         this.game = game;
         gamecam = new OrthographicCamera();
@@ -81,10 +81,13 @@ public class PlayScreen implements Screen {
         music = MarioBros.manager.get("audio/music/mario_music.ogg", Music.class);
         music.setLooping(true);
         music.setVolume(0.3f);
-        music.play();
+        if(soundboolean)
+        {
+            music.play();
+        }
 
-        items = new Array<Item>();
-        itemsToSpawn = new LinkedBlockingQueue<ItemDef>();
+        items = new Array<>();
+        itemsToSpawn = new LinkedBlockingQueue<>();
     }
 
     public void spawnItem(ItemDef idef){
@@ -119,21 +122,26 @@ public class PlayScreen implements Screen {
      */
     public void handleInput(){
         if(player.getCurrentState() != Mario.State.DEAD) {
+            GameMessage sendMessage = new GameMessage("Movement", game.getAuth(), GameMessage.Status.OK, game.getGameID(), null);
+            if (positionTicks % 20 == 0) {
+                ArrayList<String> position = new ArrayList<>();
+                position.add(player.getXPosition());
+                position.add(player.getYPosition());
+                sendMessage.setStringList(position);
+            }
+            positionTicks++;
             if (Gdx.input.justTouched()) {
                 player.jump();
-                GameMessage sendMessage = new GameMessage("Movement", game.getAuth(), GameMessage.Status.OK, game.getGameID(), null);
                 sendMessage.setPayloadInteger(0);
                 game.sendMessage(sendMessage);
             }
             if (Gdx.input.getPitch() < -10) {
                 player.getB2body().applyLinearImpulse(new Vector2(0.1f, 0), player.getB2body().getWorldCenter(), true);
-                GameMessage sendMessage = new GameMessage("Movement", game.getAuth(), GameMessage.Status.OK, game.getGameID(), null);
                 sendMessage.setPayloadInteger(1);
                 game.sendMessage(sendMessage);
             }
             if (Gdx.input.getPitch() > 20) {
                 player.getB2body().applyLinearImpulse(new Vector2(-0.1f, 0), player.getB2body().getWorldCenter(), true);
-                GameMessage sendMessage = new GameMessage("Movement", game.getAuth(), GameMessage.Status.OK, game.getGameID(), null);
                 sendMessage.setPayloadInteger(2);
                 game.sendMessage(sendMessage);
             }
@@ -149,9 +157,8 @@ public class PlayScreen implements Screen {
         player2.update(dt);
         for(Enemy enemy : creator.getEnemies()) {
             enemy.update(dt);
-            if(enemy.getX() < player.getX() + 224 / MarioBros.PPM) {
                 enemy.b2body.setActive(true);
-            }
+
         }
 
         for(Item item : items)
@@ -161,7 +168,6 @@ public class PlayScreen implements Screen {
         if(player.getCurrentState() != Mario.State.DEAD) {
             gamecam.position.x = player.getB2body().getPosition().x;
         }
-
         gamecam.update();
         renderer.setView(gamecam);
 
@@ -190,21 +196,9 @@ public class PlayScreen implements Screen {
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();
 
-        if(gameOver()){
-            GameOverScreen gameOverScreen = new GameOverScreen(game);
-            gameOverScreen.setPoints(""+ownScore);
-            gameOverScreen.setEnemyPoints(""+enemyScore);
-            game.setScreen(gameOverScreen);
-            dispose();
+        if(gameOver() | gameWin()){
+            sendEndGameMessage();
         }
-        if (gameWin()) {
-            VictoryScreen victoryScreen = new VictoryScreen(game);
-            victoryScreen.setPoints(""+ownScore);
-            victoryScreen.setEnemy(""+enemyScore);
-            game.setScreen(victoryScreen);
-            dispose();
-        }
-
     }
 
     public boolean gameOver(){
@@ -217,9 +211,7 @@ public class PlayScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        //updated our game viewport
         gamePort.update(width,height);
-
     }
 
     public TiledMap getMap(){
@@ -255,6 +247,10 @@ public class PlayScreen implements Screen {
     public void receiveMessage(GameMessage gameMessage) {
         if (gameMessage != null && gameMessage.getType() != null) {
             if (gameMessage.getType().equals("Movement")) {
+                if (gameMessage.getStringList() != null) {
+                    ArrayList<String> position = gameMessage.getStringList();
+                    player2.setPosition(Float.parseFloat(position.get(0)), Float.parseFloat(position.get(1)));
+                }
                 int status = gameMessage.getPayloadInteger();
                 switch (status) {
                     case 0:
@@ -278,19 +274,34 @@ public class PlayScreen implements Screen {
                 int p1score = Integer.parseInt(player1score), p2score = Integer.parseInt(player2score);
                 switch (won) {
                     case -1:
+                        endScreen = new EndScreen(game);
                         ownScore = (p1score > p2score) ? p2score : p1score;
                         enemyScore = (p1score > p2score) ? p1score : p2score;
-                        gameOver();
+                        endScreen.setPoints(""+ownScore);
+                        endScreen.setEnemyPoints(""+enemyScore);
+                        endScreen.setText("DEFEAT");
+                        game.setScreen(endScreen);
+                        dispose();
                         break;
                     case 0:
+                        endScreen = new EndScreen(game);
                         ownScore = p1score;
                         enemyScore = p1score;
-                        //TODO drawGame
+                        endScreen.setPoints(""+ownScore);
+                        endScreen.setEnemyPoints(""+enemyScore);
+                        endScreen.setText("DRAW");
+                        game.setScreen(endScreen);
+                        dispose();
                         break;
                     case 1:
+                        endScreen = new EndScreen(game);
                         ownScore = (p1score < p2score) ? p2score : p1score;
                         enemyScore = (p1score > p2score) ? p1score : p2score;
-                        gameWin();
+                        endScreen.setPoints(""+ownScore);
+                        endScreen.setEnemyPoints(""+enemyScore);
+                        endScreen.setText("VICTORY");
+                        game.setScreen(endScreen);
+                        dispose();
                         break;
                 }
             }

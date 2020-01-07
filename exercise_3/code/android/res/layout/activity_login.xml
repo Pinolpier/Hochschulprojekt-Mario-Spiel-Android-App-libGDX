@@ -56,6 +56,7 @@
         android:hint="@string/textview_password"
         android:textSize="15sp"
         android:textStyle="italic"
+        android:inputType="textPassword"
         app:layout_constraintBottom_toTopOf="@+id/button_login"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

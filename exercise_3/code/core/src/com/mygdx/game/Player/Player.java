@@ -60,7 +60,6 @@ public class Player extends Sprite {
         bdef.position.set(32 / MarioBros.PPM, 32 / MarioBros.PPM);
         bdef.type = BodyDef.BodyType.DynamicBody;
         b2body = world.createBody(bdef);
-
         FixtureDef fdef = new FixtureDef();
         CircleShape shape = new CircleShape();
         shape.setRadius(6 / MarioBros.PPM);
@@ -85,6 +84,14 @@ public class Player extends Sprite {
 
         b2body.createFixture(fdef).setUserData(this);
     }
+
+    public String getXPosition(){
+        return ""+b2body.getPosition().x;
+    }
+    public String getYPosition(){
+        return ""+b2body.getPosition().y;
+    }
+
 
     public void defineBigMario(){
         Vector2 currentPosition = b2body.getPosition();
@@ -113,7 +120,6 @@ public class Player extends Sprite {
         b2body.createFixture(fdef).setUserData(this);
         shape.setPosition(new Vector2(0, -14 / MarioBros.PPM));
         b2body.createFixture(fdef).setUserData(this);
-
         EdgeShape head = new EdgeShape();
         head.set(new Vector2(-2 / MarioBros.PPM, 6 / MarioBros.PPM), new Vector2(2 / MarioBros.PPM, 6 / MarioBros.PPM));
         fdef.filter.categoryBits = MarioBros.MARIO_HEAD_BIT;
@@ -226,11 +232,6 @@ public class Player extends Sprite {
     public void update(float dt){
         if (screen.getHud().isTimeUp() && !isDead()) {
             die();
-        }
-
-        if (screen.getHud().getScore()  >= 10000) {
-            Hud.addScore(-9500);
-            win();
         }
 
         if(marioIsBig)
