@@ -26,6 +26,7 @@ import com.mygdx.game.Sprites.Items.Mushroom;
 import com.mygdx.game.Tools.B2WorldCreator;
 import com.mygdx.game.Tools.WorldContactListener;
 
+import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import server.dtos.GameMessage;
@@ -55,6 +56,7 @@ public class PlayScreen implements Screen {
     private LinkedBlockingQueue<ItemDef> itemsToSpawn;
     private int ownScore=0;
     private int enemyScore=0;
+    private int positionTicks = 0;
 
     public PlayScreen(MarioBros game,Boolean soundboolean){
         atlas = new TextureAtlas("Mario_and_Enemies.pack");
@@ -122,21 +124,26 @@ public class PlayScreen implements Screen {
      */
     public void handleInput(){
         if(player.getCurrentState() != Mario.State.DEAD) {
+            GameMessage sendMessage = new GameMessage("Movement", game.getAuth(), GameMessage.Status.OK, game.getGameID(), null);
+            if (positionTicks % 20 == 0) {
+                ArrayList<String> position = new ArrayList<>();
+                position.add(player.getXPosition());
+                position.add(player.getYPosition());
+                sendMessage.setStringList(position);
+            }
+            positionTicks++;
             if (Gdx.input.justTouched()) {
                 player.jump();
-                GameMessage sendMessage = new GameMessage("Movement", game.getAuth(), GameMessage.Status.OK, game.getGameID(), null);
                 sendMessage.setPayloadInteger(0);
                 game.sendMessage(sendMessage);
             }
             if (Gdx.input.getPitch() < -10) {
                 player.getB2body().applyLinearImpulse(new Vector2(0.1f, 0), player.getB2body().getWorldCenter(), true);
-                GameMessage sendMessage = new GameMessage("Movement", game.getAuth(), GameMessage.Status.OK, game.getGameID(), null);
                 sendMessage.setPayloadInteger(1);
                 game.sendMessage(sendMessage);
             }
             if (Gdx.input.getPitch() > 20) {
                 player.getB2body().applyLinearImpulse(new Vector2(-0.1f, 0), player.getB2body().getWorldCenter(), true);
-                GameMessage sendMessage = new GameMessage("Movement", game.getAuth(), GameMessage.Status.OK, game.getGameID(), null);
                 sendMessage.setPayloadInteger(2);
                 game.sendMessage(sendMessage);
             }
@@ -152,9 +159,9 @@ public class PlayScreen implements Screen {
         player2.update(dt);
         for(Enemy enemy : creator.getEnemies()) {
             enemy.update(dt);
-            if(enemy.getX() < player.getX() + 224 / MarioBros.PPM) {
+           // if(enemy.getX() < player.getX() + 224 / MarioBros.PPM) {
                 enemy.b2body.setActive(true);
-            }
+            //}
         }
 
         for(Item item : items)
@@ -255,6 +262,10 @@ public class PlayScreen implements Screen {
     public void receiveMessage(GameMessage gameMessage) {
         if (gameMessage != null && gameMessage.getType() != null) {
             if (gameMessage.getType().equals("Movement")) {
+                if (gameMessage.getStringList() != null) {
+                    ArrayList<String> position = gameMessage.getStringList();
+                    player2.setPosition(Float.parseFloat(position.get(0)), Float.parseFloat(position.get(1)));
+                }
                 int status = gameMessage.getPayloadInteger();
                 switch (status) {
                     case 0:

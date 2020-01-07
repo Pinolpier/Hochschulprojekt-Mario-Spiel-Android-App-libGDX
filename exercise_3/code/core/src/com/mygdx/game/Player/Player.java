@@ -60,7 +60,6 @@ public class Player extends Sprite {
         bdef.position.set(32 / MarioBros.PPM, 32 / MarioBros.PPM);
         bdef.type = BodyDef.BodyType.DynamicBody;
         b2body = world.createBody(bdef);
-
         FixtureDef fdef = new FixtureDef();
         CircleShape shape = new CircleShape();
         shape.setRadius(6 / MarioBros.PPM);
@@ -85,6 +84,14 @@ public class Player extends Sprite {
 
         b2body.createFixture(fdef).setUserData(this);
     }
+
+    public String getXPosition(){
+        return ""+b2body.getPosition().x;
+    }
+    public String getYPosition(){
+        return ""+b2body.getPosition().y;
+    }
+
 
     public void defineBigMario(){
         Vector2 currentPosition = b2body.getPosition();
