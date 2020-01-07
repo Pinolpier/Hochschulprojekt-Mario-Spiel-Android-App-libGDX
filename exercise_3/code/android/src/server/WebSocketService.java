@@ -14,8 +14,7 @@ import com.google.gson.JsonSyntaxException;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -31,10 +30,9 @@ public class WebSocketService extends Service implements MessageListener {
     private final IBinder binder = new WebSocketServiceBinder();
     private OkHttpClient client;
     private WebSocket webSocket;
-    private List<MessageListener> listeners;
+    private CopyOnWriteArrayList<MessageListener> listeners;
     private String auth, username, password;
     private Gson gson;
-    private boolean listIsAccessible = true;
 
     //Standard bound Service Sachen
     public class WebSocketServiceBinder extends Binder{
@@ -91,7 +89,7 @@ public class WebSocketService extends Service implements MessageListener {
 
     @Override
     public void onCreate(){
-        listeners = new ArrayList<>();
+        listeners = new CopyOnWriteArrayList<>();
         client = new OkHttpClient();
         gson = new Gson();
         Log.d(WebSocketService.this.getClass().getSimpleName(), ":onCreate() has been called");
@@ -156,10 +154,7 @@ public class WebSocketService extends Service implements MessageListener {
     }
 
     public void deregisterListener(MessageListener listener) {
-        while (!listIsAccessible) ;
-        listIsAccessible = false;
         listeners.remove(listener);
-        listIsAccessible = true;
     }
 
     /**
@@ -182,12 +177,9 @@ public class WebSocketService extends Service implements MessageListener {
         @Override
         public void onMessage(WebSocket socket, String text) {//Aufgerufen, wenn neue Textnachricht ueber Websocket Verbindung eintrifft
             Log.i(WebSocketService.this.getClass().getSimpleName(), "Received message: " + text);
-            while (!listIsAccessible) ;
-            listIsAccessible = false;
             for (MessageListener listener : listeners) {
                 listener.onMessageReceived(text);
             }
-            listIsAccessible = true;
         }
 
         @Override
