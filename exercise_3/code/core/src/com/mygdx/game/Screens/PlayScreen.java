@@ -121,6 +121,7 @@ public class PlayScreen implements Screen {
      * @param
      */
     public void handleInput(){
+        if(endMessageSent){
         if(player.getCurrentState() != Mario.State.DEAD) {
             GameMessage sendMessage = new GameMessage("Movement", game.getAuth(), GameMessage.Status.OK, game.getGameID(), null);
             if (positionTicks % 20 == 0) {
@@ -145,6 +146,7 @@ public class PlayScreen implements Screen {
                 sendMessage.setPayloadInteger(2);
                 game.sendMessage(sendMessage);
             }
+        }
         }
     }
 
