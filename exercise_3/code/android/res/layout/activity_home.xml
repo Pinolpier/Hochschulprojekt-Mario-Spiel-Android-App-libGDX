@@ -8,13 +8,13 @@
     tools:context=".HomeActivity">
 
     <Button
-        android:id="@+id/button_exit"
+        android:id="@+id/button_logout"
         android:layout_width="210dp"
         android:layout_height="55dp"
         android:layout_marginBottom="10dp"
         android:background="@drawable/mariopipe"
         android:onClick="exitApp"
-        android:text="@string/exit_button"
+        android:text="@string/logout_button"
         android:textStyle="italic"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -29,7 +29,7 @@
         android:onClick="joinGame"
         android:text="@string/joingame_button"
         android:textStyle="italic"
-        app:layout_constraintBottom_toTopOf="@+id/button_exit"
+        app:layout_constraintBottom_toTopOf="@+id/button_logout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
