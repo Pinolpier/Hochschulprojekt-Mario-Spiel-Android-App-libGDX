@@ -34,8 +34,6 @@ import server.dtos.GameMessage;
 public class PlayScreen implements Screen {
     private MarioBros game;
     private TextureAtlas atlas;
-    public static boolean alreadyDestroyed = false;
-
     private OrthographicCamera gamecam;
     private Viewport gamePort;
     private Hud hud;
@@ -88,8 +86,8 @@ public class PlayScreen implements Screen {
             music.play();
         }
 
-        items = new Array<Item>();
-        itemsToSpawn = new LinkedBlockingQueue<ItemDef>();
+        items = new Array<>();
+        itemsToSpawn = new LinkedBlockingQueue<>();
     }
 
     public void spawnItem(ItemDef idef){
@@ -159,9 +157,8 @@ public class PlayScreen implements Screen {
         player2.update(dt);
         for(Enemy enemy : creator.getEnemies()) {
             enemy.update(dt);
-           // if(enemy.getX() < player.getX() + 224 / MarioBros.PPM) {
                 enemy.b2body.setActive(true);
-            //}
+
         }
 
         for(Item item : items)
@@ -171,7 +168,6 @@ public class PlayScreen implements Screen {
         if(player.getCurrentState() != Mario.State.DEAD) {
             gamecam.position.x = player.getB2body().getPosition().x;
         }
-
         gamecam.update();
         renderer.setView(gamecam);
 
