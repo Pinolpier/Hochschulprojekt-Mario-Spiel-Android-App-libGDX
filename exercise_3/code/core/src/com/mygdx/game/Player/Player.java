@@ -131,9 +131,12 @@ public class Player extends Sprite {
 
     public void die() {
         if (!isDead()) {
-            MarioBros.manager.get("audio/music/mario_music.ogg", Music.class).stop();
-            MarioBros.manager.get("audio/sounds/mariodie.wav", Sound.class).play();
-            marioIsDead = true;
+            if(id==1) {
+                MarioBros.manager.get("audio/music/mario_music.ogg", Music.class).stop();
+                MarioBros.manager.get("audio/sounds/mariodie.wav", Sound.class).play();
+                marioIsDead = true;
+                addScore(-500);
+            }
             Filter filter = new Filter();
             filter.maskBits = MarioBros.NOTHING_BIT;
 

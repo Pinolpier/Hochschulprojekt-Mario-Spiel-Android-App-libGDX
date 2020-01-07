@@ -55,6 +55,7 @@ public class PlayScreen implements Screen {
     private int ownScore=0;
     private int enemyScore=0;
     private int positionTicks = 0;
+    private boolean endMessageSent = true;
 
     public PlayScreen(MarioBros game,Boolean soundboolean){
         atlas = new TextureAtlas("Mario_and_Enemies.pack");
@@ -197,7 +198,10 @@ public class PlayScreen implements Screen {
         hud.stage.draw();
 
         if(gameOver() | gameWin()){
-            sendEndGameMessage();
+            if(endMessageSent) {
+                sendEndGameMessage();
+                endMessageSent = false;
+            }
         }
     }
 
