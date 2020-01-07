@@ -146,6 +146,7 @@ public class GamelobbyscreenActivity extends Activity implements MessageListener
                     extras.putString("gameID", gameID);
                     extras.putBoolean("soundonoff",soundboolean);
                     gameIntent.putExtras(extras);
+                    finish();
                     startActivity(gameIntent);
                 } else {
                     Log.wtf(GamelobbyscreenActivity.this.getClass().getSimpleName(), "Can't join game with gameID " + gameID);
