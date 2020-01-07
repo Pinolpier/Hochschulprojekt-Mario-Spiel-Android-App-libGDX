@@ -95,11 +95,11 @@ public class GamelobbyscreenActivity extends Activity implements MessageListener
         }
     }
 
-//    @Override
-//    public void onBackPressed() {
-//        webSocketService.deregisterListener(this);
-//        startActivity(new Intent(GamelobbyscreenActivity.this, HomeActivity.class).putExtras(getIntent().getExtras()));
-//    }
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(GamelobbyscreenActivity.this, HomeActivity.class).putExtras(getIntent().getExtras()));
+        finish();
+    }
 
     private void requestAllGames() {
         if (serviceBound) {
