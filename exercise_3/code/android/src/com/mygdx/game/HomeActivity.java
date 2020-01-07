@@ -62,6 +62,7 @@ public class HomeActivity extends Activity implements MessageListener {
         }
 
         final Switch soundswitch = findViewById(R.id.switch_soundonoff);
+        boolean sound = getIntent().getExtras().getBoolean("Sound");
         soundswitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
