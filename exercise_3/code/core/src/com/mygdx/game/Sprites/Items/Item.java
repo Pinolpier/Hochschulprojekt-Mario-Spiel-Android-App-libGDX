@@ -17,6 +17,12 @@ public abstract class Item extends Sprite {
     protected boolean destroyed;
     protected Body body;
 
+    /**
+     * the class represents the items in the game
+     * @param screen
+     * @param x
+     * @param y
+     */
     public Item(PlayScreen screen, float x, float y){
         this.screen = screen;
         this.world = screen.getWorld();
@@ -46,6 +52,7 @@ public abstract class Item extends Sprite {
     public void destroy(){
         toDestroy = true;
     }
+
     public void reverseVelocity(boolean x, boolean y){
         if(x)
             velocity.x = -velocity.x;

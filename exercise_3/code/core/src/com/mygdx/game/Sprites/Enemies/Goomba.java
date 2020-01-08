@@ -14,7 +14,10 @@ import com.mygdx.game.MarioBros;
 import com.mygdx.game.Player.Player;
 import com.mygdx.game.Screens.PlayScreen;
 
-public class Goomba extends com.mygdx.game.Sprites.Enemies.Enemy
+/**
+ * the class represents the Goomba enemy
+ */
+public class Goomba extends Enemy
 {
     private float stateTime;
     private Animation walkAnimation;
@@ -37,6 +40,10 @@ public class Goomba extends com.mygdx.game.Sprites.Enemies.Enemy
         angle = 0;
     }
 
+    /**
+     * the method updates the goomba if he changes position or dies
+     * @param dt
+     */
     public void update(float dt){
         stateTime += dt;
         if(setToDestroy && !destroyed){

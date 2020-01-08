@@ -43,13 +43,13 @@ public class Mario extends Player {
         for (int i = 1; i < 4; i++)
             frames.add(new TextureRegion(screen.getAtlas().findRegion("little_mario"), i * 16, 0, 16, 16));
         marioRun = new Animation(0.1f, frames);
-        setMarioRun(marioRun);
+        setPlayerRun(marioRun);
         frames.clear();
 
         for (int i = 1; i < 4; i++)
             frames.add(new TextureRegion(screen.getAtlas().findRegion("big_mario"), i * 16, 0, 16, 32));
         bigMarioRun = new Animation(0.1f, frames);
-        setBigMarioRun(bigMarioRun);
+        setBigPlayerRun(bigMarioRun);
         frames.clear();
 
         frames.add(new TextureRegion(screen.getAtlas().findRegion("big_mario"), 240, 0, 16, 32));
@@ -60,15 +60,15 @@ public class Mario extends Player {
         setGrowMario(growMario);
 
         marioJump = new TextureRegion(screen.getAtlas().findRegion("little_mario"), 80, 0, 16, 16);
-        setMarioJump(marioJump);
+        setPlayerJump(marioJump);
         bigMarioJump = new TextureRegion(screen.getAtlas().findRegion("big_mario"), 80, 0, 16, 32);
-        setBigMarioJump(bigMarioJump);
+        setBigPlayerJump(bigMarioJump);
         marioStand = new TextureRegion(screen.getAtlas().findRegion("little_mario"), 0, 0, 16, 16);
-        setMarioStand(marioStand);
+        setPlayerStand(marioStand);
         bigMarioStand = new TextureRegion(screen.getAtlas().findRegion("big_mario"), 0, 0, 16, 32);
-        setBigMarioStand(bigMarioStand);
+        setBigPlayerStand(bigMarioStand);
         marioDead = new TextureRegion(screen.getAtlas().findRegion("little_mario"), 96, 0, 16, 16);
-        setMarioDead(marioDead);
+        setPlayerDead(marioDead);
         setB2body(b2body);
 
         defineMario();

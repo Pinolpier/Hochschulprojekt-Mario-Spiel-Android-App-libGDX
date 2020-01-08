@@ -56,6 +56,11 @@ public class PlayScreen implements Screen {
     private int positionTicks = 0;
     private boolean endMessageSent = true;
 
+    /**
+     * This class represents the main playscreen
+     * @param game the main game
+     * @param soundboolean if the music should be muted
+     */
     public PlayScreen(MarioBros game, Boolean soundboolean) {
         atlas = new TextureAtlas("Mario_and_Enemies.pack");
         this.game = game;
@@ -89,6 +94,10 @@ public class PlayScreen implements Screen {
         itemsToSpawn = new LinkedBlockingQueue<>();
     }
 
+    /**
+     * spawn a item on the screen
+     * @param idef
+     */
     public void spawnItem(ItemDef idef) {
         itemsToSpawn.add(idef);
     }
@@ -115,6 +124,9 @@ public class PlayScreen implements Screen {
 
     }
 
+    /**
+     * handles every input to controll de player
+     */
     public void handleInput(){
         if(endMessageSent){
         if(player.getCurrentState() != Mario.State.DEAD) {
@@ -249,6 +261,10 @@ public class PlayScreen implements Screen {
         return hud;
     }
 
+    /**
+     * handles messages from the server
+     * @param gameMessage
+     */
     public void receiveMessage(GameMessage gameMessage) {
         if (gameMessage != null && gameMessage.getType() != null) {
             switch (gameMessage.getType()) {

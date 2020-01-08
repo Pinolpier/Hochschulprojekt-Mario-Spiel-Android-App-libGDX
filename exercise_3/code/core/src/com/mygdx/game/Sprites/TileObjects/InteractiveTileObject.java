@@ -17,7 +17,7 @@ import com.mygdx.game.Player.Player;
 import com.mygdx.game.Screens.PlayScreen;
 
 /**
- * Defines Objects in the tiled Map
+ * Defines Objects in the tiled Map like blocks or the ground
  */
 public abstract class InteractiveTileObject {
     protected World world;

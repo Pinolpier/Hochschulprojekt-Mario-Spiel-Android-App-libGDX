@@ -34,21 +34,21 @@ public class Player extends Sprite {
     public State currentState;
     public State previousState;
     public PlayScreen screen;
-    private TextureRegion marioStand;
-    private Animation marioRun;
-    private TextureRegion marioJump;
-    private TextureRegion marioDead;
-    private TextureRegion bigMarioStand;
-    private TextureRegion bigMarioJump;
-    private Animation bigMarioRun;
+    private TextureRegion PlayerStand;
+    private Animation PlayerRun;
+    private TextureRegion PlayerJump;
+    private TextureRegion PlayerDead;
+    private TextureRegion bigPlayerStand;
+    private TextureRegion bigPlayerJump;
+    private Animation bigPlayerRun;
     private Animation growMario;
     private float stateTimer;
     private boolean runningRight;
-    private boolean marioIsBig;
+    private boolean PlayerIsBig;
     private boolean runGrowAnimation;
-    private boolean timeToDefineBigMario;
-    private boolean timeToRedefineMario;
-    private boolean marioIsDead;
+    private boolean timeToDefineBigPlayer;
+    private boolean timeToRedefinePlayer;
+    private boolean PlayerIsDead;
     private boolean marioReachedGoal;
     private int id=0;
     Array<TextureRegion> frames;
@@ -106,7 +106,7 @@ public class Player extends Sprite {
     public enum State {FALLING, JUMPING, STANDING, RUNNING, GROWING, DEAD, WIN}
 
 
-    public void defineBigMario(){
+    public void defineBigPlayer(){
         Vector2 currentPosition = b2body.getPosition();
         world.destroyBody(b2body);
 
@@ -139,7 +139,7 @@ public class Player extends Sprite {
         fdef.shape = head;
         fdef.isSensor = true;
         b2body.createFixture(fdef).setUserData(this);
-        timeToDefineBigMario = false;
+        timeToDefineBigPlayer = false;
     }
 
     public void die() {
@@ -147,7 +147,7 @@ public class Player extends Sprite {
             if(id==1) {
                 MarioBros.manager.get("audio/music/mario_music.ogg", Music.class).stop();
                 MarioBros.manager.get("audio/sounds/mariodie.wav", Sound.class).play();
-                marioIsDead = true;
+                PlayerIsDead = true;
                 addScore(-500);
             }
             Filter filter = new Filter();
@@ -173,13 +173,13 @@ public class Player extends Sprite {
     }
 
     public boolean isDead(){
-        return !marioIsDead;
+        return !PlayerIsDead;
     }
     public float getStateTimer(){
         return stateTimer;
     }
     public boolean isBig(){
-        return marioIsBig;
+        return PlayerIsBig;
     }
     public void jump(){
         if ( currentState != State.JUMPING ) {
@@ -196,9 +196,9 @@ public class Player extends Sprite {
         if(enemy instanceof Turtle && ((Turtle) enemy).currentState == Turtle.State.STANDING_SHELL)
             ((Turtle) enemy).kick(enemy.b2body.getPosition().x > b2body.getPosition().x ? Turtle.KICK_RIGHT : Turtle.KICK_LEFT);
         else {
-            if (marioIsBig) {
-                marioIsBig = false;
-                timeToRedefineMario = true;
+            if (PlayerIsBig) {
+                PlayerIsBig = false;
+                timeToRedefinePlayer = true;
                 setBounds(getX(), getY(), getWidth(), getHeight() / 2);
                 MarioBros.manager.get("audio/sounds/powerdown.wav", Sound.class).play();
             } else {
@@ -207,7 +207,7 @@ public class Player extends Sprite {
         }
     }
 
-    public void redefineMario(){
+    public void redefinePlayer(){
         Vector2 position = b2body.getPosition();
         world.destroyBody(b2body);
 
@@ -238,7 +238,7 @@ public class Player extends Sprite {
         fdef.shape = head;
         fdef.isSensor = true;
         b2body.createFixture(fdef).setUserData(this);
-        timeToRedefineMario = false;
+        timeToRedefinePlayer = false;
     }
 
     /**
@@ -250,16 +250,16 @@ public class Player extends Sprite {
             die();
         }
 
-        if(marioIsBig)
+        if(PlayerIsBig)
             setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2 - 6 / MarioBros.PPM);
         else
             setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2);
 
         setRegion(getFrame(dt));
-        if(timeToDefineBigMario)
-            defineBigMario();
-        if(timeToRedefineMario)
-            redefineMario();
+        if(timeToDefineBigPlayer)
+            defineBigPlayer();
+        if(timeToRedefinePlayer)
+            redefinePlayer();
 
     }
 
@@ -269,7 +269,7 @@ public class Player extends Sprite {
 
         switch(currentState){
             case DEAD:
-                region = marioDead;
+                region = PlayerDead;
                 break;
             case GROWING:
                 region = (TextureRegion) growMario.getKeyFrame(stateTimer);
@@ -278,15 +278,15 @@ public class Player extends Sprite {
                 }
                 break;
             case JUMPING:
-                region = marioIsBig ? bigMarioJump : marioJump;
+                region = PlayerIsBig ? bigPlayerJump : PlayerJump;
                 break;
             case RUNNING:
-                region = (TextureRegion) (marioIsBig ? bigMarioRun.getKeyFrame(stateTimer, true) : marioRun.getKeyFrame(stateTimer, true));
+                region = (TextureRegion) (PlayerIsBig ? bigPlayerRun.getKeyFrame(stateTimer, true) : PlayerRun.getKeyFrame(stateTimer, true));
                 break;
             case FALLING:
             case STANDING:
             default:
-                region = marioIsBig ? bigMarioStand : marioStand;
+                region = PlayerIsBig ? bigPlayerStand : PlayerStand;
                 break;
         }
 
@@ -307,7 +307,7 @@ public class Player extends Sprite {
     }
 
     public State getState(){
-        if(marioIsDead)
+        if(PlayerIsDead)
             return State.DEAD;
         else if(runGrowAnimation)
             return State.GROWING;
@@ -326,8 +326,8 @@ public class Player extends Sprite {
     public void grow(){
         if( !isBig() ) {
             runGrowAnimation = true;
-            marioIsBig = true;
-            timeToDefineBigMario = true;
+            PlayerIsBig = true;
+            timeToDefineBigPlayer = true;
             setBounds(getX(), getY(), getWidth(), getHeight() * 2);
             MarioBros.manager.get("audio/sounds/powerup.wav", Sound.class).play();
         }
@@ -360,41 +360,41 @@ public class Player extends Sprite {
     public void setPreviousState(State previousState) {
         this.previousState = previousState;
     }
-    public Animation getMarioRun() {
-        return marioRun;
+    public Animation getPlayerRun() {
+        return PlayerRun;
     }
-    public void setMarioRun(Animation marioRun) {
-        this.marioRun = marioRun;
+    public void setPlayerRun(Animation playerRun) {
+        this.PlayerRun = playerRun;
     }
-    public TextureRegion getMarioJump() {
-        return marioJump;
+    public TextureRegion getPlayerJump() {
+        return PlayerJump;
     }
-    public void setMarioJump(TextureRegion marioJump) {
-        this.marioJump = marioJump;
+    public void setPlayerJump(TextureRegion playerJump) {
+        this.PlayerJump = playerJump;
     }
-    public TextureRegion getMarioDead() {
-        return marioDead;
+    public TextureRegion getPlayerDead() {
+        return PlayerDead;
     }
-    public void setMarioDead(TextureRegion marioDead) {
-        this.marioDead = marioDead;
+    public void setPlayerDead(TextureRegion playerDead) {
+        this.PlayerDead = playerDead;
     }
-    public TextureRegion getBigMarioStand() {
-        return bigMarioStand;
+    public TextureRegion getBigPlayerStand() {
+        return bigPlayerStand;
     }
-    public void setBigMarioStand(TextureRegion bigMarioStand) {
-        this.bigMarioStand = bigMarioStand;
+    public void setBigPlayerStand(TextureRegion bigPlayerStand) {
+        this.bigPlayerStand = bigPlayerStand;
     }
-    public TextureRegion getBigMarioJump() {
-        return bigMarioJump;
+    public TextureRegion getBigPlayerJump() {
+        return bigPlayerJump;
     }
-    public void setBigMarioJump(TextureRegion bigMarioJump) {
-        this.bigMarioJump = bigMarioJump;
+    public void setBigPlayerJump(TextureRegion bigPlayerJump) {
+        this.bigPlayerJump = bigPlayerJump;
     }
-    public Animation getBigMarioRun() {
-        return bigMarioRun;
+    public Animation getBigPlayerRun() {
+        return bigPlayerRun;
     }
-    public void setBigMarioRun(Animation bigMarioRun) {
-        this.bigMarioRun = bigMarioRun;
+    public void setBigPlayerRun(Animation bigPlayerRun) {
+        this.bigPlayerRun = bigPlayerRun;
     }
     public Animation getGrowMario() {
         return growMario;
@@ -411,11 +411,11 @@ public class Player extends Sprite {
     public void setRunningRight(boolean runningRight) {
         this.runningRight = runningRight;
     }
-    public boolean isMarioIsBig() {
-        return marioIsBig;
+    public boolean isPlayerIsBig() {
+        return PlayerIsBig;
     }
-    public void setMarioIsBig(boolean marioIsBig) {
-        this.marioIsBig = marioIsBig;
+    public void setPlayerIsBig(boolean playerIsBig) {
+        this.PlayerIsBig = playerIsBig;
     }
     public boolean isRunGrowAnimation() {
         return runGrowAnimation;
@@ -423,23 +423,23 @@ public class Player extends Sprite {
     public void setRunGrowAnimation(boolean runGrowAnimation) {
         this.runGrowAnimation = runGrowAnimation;
     }
-    public boolean isTimeToDefineBigMario() {
-        return timeToDefineBigMario;
+    public boolean isTimeToDefineBigPlayer() {
+        return timeToDefineBigPlayer;
     }
-    public void setTimeToDefineBigMario(boolean timeToDefineBigMario) {
-        this.timeToDefineBigMario = timeToDefineBigMario;
+    public void setTimeToDefineBigPlayer(boolean timeToDefineBigPlayer) {
+        this.timeToDefineBigPlayer = timeToDefineBigPlayer;
     }
-    public boolean isTimeToRedefineMario() {
-        return timeToRedefineMario;
+    public boolean isTimeToRedefinePlayer() {
+        return timeToRedefinePlayer;
     }
-    public void setTimeToRedefineMario(boolean timeToRedefineMario) {
-        this.timeToRedefineMario = timeToRedefineMario;
+    public void setTimeToRedefinePlayer(boolean timeToRedefinePlayer) {
+        this.timeToRedefinePlayer = timeToRedefinePlayer;
     }
-    public boolean isMarioIsDead() {
-        return marioIsDead;
+    public boolean isPlayerIsDead() {
+        return PlayerIsDead;
     }
-    public void setMarioIsDead(boolean marioIsDead) {
-        this.marioIsDead = marioIsDead;
+    public void setPlayerIsDead(boolean playerIsDead) {
+        this.PlayerIsDead = playerIsDead;
     }
     public PlayScreen getScreen() {
         return screen;
@@ -447,11 +447,11 @@ public class Player extends Sprite {
     public void setScreen(PlayScreen screen) {
         this.screen = screen;
     }
-    public TextureRegion getMarioStand() {
-        return marioStand;
+    public TextureRegion getPlayerStand() {
+        return PlayerStand;
     }
-    public void setMarioStand(TextureRegion marioStand) {
-        this.marioStand = marioStand;
+    public void setPlayerStand(TextureRegion playerStand) {
+        this.PlayerStand = playerStand;
     }
     public Array<TextureRegion> getFrames() {
         return frames;

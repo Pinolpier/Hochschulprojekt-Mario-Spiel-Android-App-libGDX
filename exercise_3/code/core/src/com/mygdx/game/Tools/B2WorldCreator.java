@@ -20,20 +20,25 @@ import com.mygdx.game.Sprites.TileObjects.Coin;
 import com.mygdx.game.Sprites.TileObjects.Goal;
 import com.mygdx.game.Sprites.TileObjects.Pit;
 
+/**
+ * The class creates everything shown on the screen
+ */
 public class B2WorldCreator {
     private Array<Goomba> goombas;
     private Array<Turtle> turtles;
 
+    /**
+     * create the map with all enemys and blocks etc.
+     * @param screen for the game
+     */
     public B2WorldCreator(PlayScreen screen){
         World world = screen.getWorld();
         TiledMap map = screen.getMap();
-        //create body and fixture variables
         BodyDef bdef = new BodyDef();
         PolygonShape shape = new PolygonShape();
         FixtureDef fdef = new FixtureDef();
         Body body;
 
-        //create ground bodies/fixtures
         for(MapObject object : map.getLayers().get(2).getObjects().getByType(RectangleMapObject.class)){
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
@@ -47,7 +52,6 @@ public class B2WorldCreator {
             body.createFixture(fdef);
         }
 
-        //create pipe bodies/fixtures
         for(MapObject object : map.getLayers().get(3).getObjects().getByType(RectangleMapObject.class)){
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
@@ -62,12 +66,10 @@ public class B2WorldCreator {
             body.createFixture(fdef);
         }
 
-        //create brick bodies/fixtures
         for(MapObject object : map.getLayers().get(5).getObjects().getByType(RectangleMapObject.class)){
             new Brick(screen, object);
         }
 
-        //create coin bodies/fixtures
         for(MapObject object : map.getLayers().get(4).getObjects().getByType(RectangleMapObject.class)){
 
             new Coin(screen, object);
@@ -78,7 +80,6 @@ public class B2WorldCreator {
             new Goal(screen, object);
         }
 
-        //create all goombas
         goombas = new Array<>();
         for(MapObject object : map.getLayers().get(6).getObjects().getByType(RectangleMapObject.class)){
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
