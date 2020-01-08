@@ -241,8 +241,7 @@
  <objectgroup id="8" name="Turtles">
   <object id="151" x="864" y="176" width="16" height="16"/>
   <object id="152" x="2352" y="176" width="16" height="16"/>
-  <object id="172" x="384" y="176" width="16" height="16" visible="0"/>
-  <object id="178" x="368.273" y="176.636" width="15.5455" height="15.0909"/>
+  <object id="178" x="368" y="176" width="16" height="16"/>
  </objectgroup>
  <objectgroup id="9" name="Goal">
   <object id="167" x="3191" y="16" width="2" height="160"/>
