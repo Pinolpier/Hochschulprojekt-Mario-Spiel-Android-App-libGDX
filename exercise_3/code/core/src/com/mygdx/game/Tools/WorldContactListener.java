@@ -9,7 +9,6 @@ import com.mygdx.game.MarioBros;
 import com.mygdx.game.Player.Player;
 import com.mygdx.game.Sprites.Enemies.Enemy;
 import com.mygdx.game.Sprites.Items.Item;
-import com.mygdx.game.Player.Mario;
 import com.mygdx.game.Sprites.TileObjects.InteractiveTileObject;
 
 /**
