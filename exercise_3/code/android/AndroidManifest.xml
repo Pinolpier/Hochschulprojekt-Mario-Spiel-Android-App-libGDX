@@ -10,7 +10,7 @@
         android:isGame="true"
         android:label="@string/app_name"
         android:theme="@style/GdxTheme"
-        android:allowBackup="">
+        android:allowBackup="true">
         <activity
             android:name=".LoginActivity"
             android:screenOrientation="landscape" />
