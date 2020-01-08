@@ -65,11 +65,6 @@ public class WorldContactListener implements ContactListener {
                     ((Item)fixB.getUserData()).use((Player) fixA.getUserData());
                 break;
             case MarioBros.MARIO_BIT | MarioBros.PIT_BIT:
-                if(fixA.getFilterData().categoryBits == MarioBros.MARIO_BIT)
-                    ((InteractiveTileObject) fixB.getUserData()).onHeadHit((Player) fixA.getUserData());
-                else
-                    ((InteractiveTileObject) fixA.getUserData()).onHeadHit((Player) fixB.getUserData());
-                break;
             case MarioBros.MARIO_BIT | MarioBros.GOAL_BIT:
                 if(fixA.getFilterData().categoryBits == MarioBros.MARIO_BIT)
                     ((InteractiveTileObject) fixB.getUserData()).onHeadHit((Player) fixA.getUserData());

@@ -17,8 +17,8 @@ import com.mygdx.game.Sprites.Enemies.Goomba;
 import com.mygdx.game.Sprites.Enemies.Turtle;
 import com.mygdx.game.Sprites.TileObjects.Brick;
 import com.mygdx.game.Sprites.TileObjects.Coin;
-import com.mygdx.game.Sprites.TileObjects.Pit;
 import com.mygdx.game.Sprites.TileObjects.Goal;
+import com.mygdx.game.Sprites.TileObjects.Pit;
 
 public class B2WorldCreator {
     private Array<Goomba> goombas;
@@ -79,12 +79,12 @@ public class B2WorldCreator {
         }
 
         //create all goombas
-        goombas = new Array<Goomba>();
+        goombas = new Array<>();
         for(MapObject object : map.getLayers().get(6).getObjects().getByType(RectangleMapObject.class)){
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
             goombas.add(new Goomba(screen, rect.getX() / MarioBros.PPM, rect.getY() / MarioBros.PPM));
         }
-        turtles = new Array<Turtle>();
+        turtles = new Array<>();
         for(MapObject object : map.getLayers().get(7).getObjects().getByType(RectangleMapObject.class)){
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
             turtles.add(new Turtle(screen, rect.getX() / MarioBros.PPM, rect.getY() / MarioBros.PPM));
@@ -100,7 +100,7 @@ public class B2WorldCreator {
         return goombas;
     }
     public Array<Enemy> getEnemies(){
-        Array<Enemy> enemies = new Array<Enemy>();
+        Array<Enemy> enemies = new Array<>();
         enemies.addAll(goombas);
         enemies.addAll(turtles);
         return enemies;

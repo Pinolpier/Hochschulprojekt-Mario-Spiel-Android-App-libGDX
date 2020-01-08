@@ -28,7 +28,7 @@ public class Turtle extends Enemy {
 
     public Turtle(PlayScreen screen, float x, float y) {
         super(screen, x, y);
-        frames = new Array<TextureRegion>();
+        frames = new Array<>();
         frames.add(new TextureRegion(screen.getAtlas().findRegion("turtle"), 0, 0, 16, 24));
         frames.add(new TextureRegion(screen.getAtlas().findRegion("turtle"), 16, 0, 16, 24));
         shell = new TextureRegion(screen.getAtlas().findRegion("turtle"), 64, 0, 16, 24);
@@ -89,10 +89,10 @@ public class Turtle extends Enemy {
                 break;
         }
 
-        if(velocity.x > 0 && region.isFlipX() == false){
+        if(velocity.x > 0 && !region.isFlipX()){
             region.flip(true, false);
         }
-        if(velocity.x < 0 && region.isFlipX() == true){
+        if(velocity.x < 0 && region.isFlipX()){
             region.flip(true, false);
         }
         stateTime = currentState == previousState ? stateTime + dt : 0;

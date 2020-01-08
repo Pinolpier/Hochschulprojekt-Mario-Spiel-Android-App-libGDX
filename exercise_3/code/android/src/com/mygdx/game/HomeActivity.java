@@ -17,6 +17,8 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
+import java.util.Objects;
+
 import server.MessageListener;
 import server.WebSocketService;
 import server.dtos.GameMessage;
@@ -62,7 +64,7 @@ public class HomeActivity extends Activity implements MessageListener {
         }
 
         final Switch soundswitch = findViewById(R.id.switch_soundonoff);
-        boolean sound = getIntent().getExtras().getBoolean("Sound");
+        boolean sound = Objects.requireNonNull(getIntent().getExtras()).getBoolean("Sound");
         soundboolean = sound;
         soundswitch.setChecked(sound);
         soundswitch.setOnClickListener(new View.OnClickListener() {
@@ -91,7 +93,7 @@ public class HomeActivity extends Activity implements MessageListener {
     }
 
     public void startGame(View v) {
-        username = getIntent().getExtras().getString("username");
+        username = Objects.requireNonNull(getIntent().getExtras()).getString("username");
         password = getIntent().getExtras().getString("password");
         auth = getIntent().getExtras().getString("auth");
         gameID = username;
@@ -114,6 +116,7 @@ public class HomeActivity extends Activity implements MessageListener {
     public void joinGame(View v) {
         Intent lobbyIntent = new Intent(this, GamelobbyscreenActivity.class);
         Bundle extras = getIntent().getExtras();
+        assert extras != null;
         extras.putBoolean("soundonoff",soundboolean);
         lobbyIntent.putExtras(extras);
         startActivity(lobbyIntent);
@@ -128,6 +131,7 @@ public class HomeActivity extends Activity implements MessageListener {
                 if (msg.getStatus() == GameMessage.Status.OK) {
                     Intent gameIntent = new Intent(this, AndroidLauncher.class);
                     Bundle extras = getIntent().getExtras();
+                    assert extras != null;
                     extras.putString("gameID", gameID);
                     extras.putBoolean("soundonoff",soundboolean);
                     gameIntent.putExtras(extras);
