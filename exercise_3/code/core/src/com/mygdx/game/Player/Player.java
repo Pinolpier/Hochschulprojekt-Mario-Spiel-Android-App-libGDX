@@ -139,7 +139,7 @@ public class Player extends Sprite {
     }
 
     public void die() {
-        if (!isDead()) {
+        if (isDead()) {
             if(id==1) {
                 MarioBros.manager.get("audio/music/mario_music.ogg", Music.class).stop();
                 MarioBros.manager.get("audio/sounds/mariodie.wav", Sound.class).play();
@@ -163,13 +163,13 @@ public class Player extends Sprite {
     }
 
     public void win() {
-        if(!isDead()) {
+        if(isDead()) {
             marioReachedGoal = true;
         }
     }
 
     public boolean isDead(){
-        return marioIsDead;
+        return !marioIsDead;
     }
     public float getStateTimer(){
         return stateTimer;
@@ -242,7 +242,7 @@ public class Player extends Sprite {
      * @param dt deltaTime
      */
     public void update(float dt){
-        if (screen.getHud().isTimeUp() && !isDead()) {
+        if (screen.getHud().isTimeUp() && isDead()) {
             die();
         }
 
