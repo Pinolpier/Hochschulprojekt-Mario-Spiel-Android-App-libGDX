@@ -30,4 +30,7 @@
     <string name="cantSendJoinRequestToastMessage">Die Serververbindung befindet sich noch im Aufbau, gleich nochmal probieren</string>
     <string name="cantJoinOwnGame">Spiel konnte nicht erstellt werden! 2 Nutzer mit demselben Username online?</string>
     <string name="cantJoinGame">Dem Spiel konnte nicht beigetreten werden, vermutlich ist es voll, bitte ein anderes Spiel wählen.</string>
+
+    <!-- Game Toasts -->
+    <string name="cowardForbiddenToast">Feigling. Zurück verboten! Bitte zu Ende spielen.</string>
 </resources>

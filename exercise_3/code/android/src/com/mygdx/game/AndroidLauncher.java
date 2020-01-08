@@ -7,6 +7,7 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
@@ -113,6 +114,12 @@ public class AndroidLauncher extends AndroidApplication implements MessageListen
             }
             webSocketService = null;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Toast.makeText(this, R.string.cowardForbiddenToast, Toast.LENGTH_SHORT).show();
+        Log.d(AndroidLauncher.this.getClass().getSimpleName() + ":back", "Back has been pressed. Ignoring in game and showing toast.");
     }
 
     @Override
