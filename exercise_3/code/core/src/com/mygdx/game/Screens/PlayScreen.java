@@ -280,35 +280,39 @@ public class PlayScreen implements Screen {
                 String player1score = gameMessage.getStringList().get(0);
                 String player2score = gameMessage.getStringList().get(1);
                 int p1score = Integer.parseInt(player1score), p2score = Integer.parseInt(player2score);
+                EndScreen endScreen = new EndScreen(game);
                 switch (won) {
                     case -1:
-                        EndScreen defeatScreen = new EndScreen(game);
                         ownScore = (p1score > p2score) ? p2score : p1score;
                         enemyScore = (p1score > p2score) ? p1score : p2score;
-                        defeatScreen.setPoints(""+ownScore);
-                        defeatScreen.setEnemyPoints(""+enemyScore);
-                        defeatScreen.setText("DEFEAT");
-                        game.setScreen(defeatScreen);
+                        endScreen.setPoints("" + ownScore);
+                        endScreen.setEnemyPoints("" + enemyScore);
+                        endScreen.setText("DEFEAT");
+                        game.setScreen(endScreen);
                         break;
                     case 0:
-                        EndScreen drawScreen = new EndScreen(game);
                         ownScore = p1score;
                         enemyScore = p1score;
-                        drawScreen.setPoints(""+ownScore);
-                        drawScreen.setEnemyPoints(""+enemyScore);
-                        drawScreen.setText("DRAW");
-                        game.setScreen(drawScreen);
+                        endScreen.setPoints("" + ownScore);
+                        endScreen.setEnemyPoints("" + enemyScore);
+                        endScreen.setText("DRAW");
+                        game.setScreen(endScreen);
                         break;
                     case 1:
-                        EndScreen victoryScreen = new EndScreen(game);
                         ownScore = (p1score < p2score) ? p2score : p1score;
                         enemyScore = (p1score < p2score) ? p1score : p2score;
-                        victoryScreen.setPoints(""+ownScore);
-                        victoryScreen.setEnemyPoints(""+enemyScore);
-                        victoryScreen.setText("VICTORY");
-                        game.setScreen(victoryScreen);
+                        endScreen.setPoints("" + ownScore);
+                        endScreen.setEnemyPoints("" + enemyScore);
+                        endScreen.setText("VICTORY");
+                        game.setScreen(endScreen);
                         break;
                 }
+            } else if (gameMessage.getType().equals("WinBecauseLeave")) {
+                EndScreen endScreen = new EndScreen(game);
+                endScreen.setPoints("" + hud.getScore());
+                endScreen.setEnemyPoints("quitting coward");
+                endScreen.setText("VICTORY");
+                game.setScreen(endScreen);
             }
         }
     }
