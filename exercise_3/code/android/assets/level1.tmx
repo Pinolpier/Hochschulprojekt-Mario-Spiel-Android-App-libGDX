@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.3.1" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="240" height="13" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="242">
+<map version="1.2" tiledversion="1.3.1" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="240" height="13" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="247">
  <tileset firstgid="1" name="tileset_gutter" tilewidth="16" tileheight="16" spacing="2" margin="1" tilecount="924" columns="33">
   <image source="tileset_gutter.png" width="594" height="504"/>
   <tile id="0">
@@ -118,7 +118,7 @@
  </layer>
  <layer id="2" name="Graphic Layer" width="240" height="13">
   <data encoding="base64" compression="zlib">
-   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
+   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
   </data>
  </layer>
  <objectgroup id="3" name="Ground">
@@ -169,6 +169,11 @@
   <object id="231" x="2880" y="192.364" width="960.364" height="15.2727"/>
   <object id="232" x="2496.73" y="192.727" width="158.727" height="15.2727"/>
   <object id="235" x="16.75" y="192" width="431.25" height="16.125"/>
+  <object id="242" x="752.182" y="96.3182" width="47.8182" height="15.5455"/>
+  <object id="243" x="831.966" y="112.227" width="47.8182" height="15.5455"/>
+  <object id="244" x="2688.18" y="144.182" width="47.4545" height="15.7273"/>
+  <object id="245" x="2752" y="111.955" width="63.909" height="15.7273"/>
+  <object id="246" x="2832.27" y="80.1364" width="47.4545" height="15.7273"/>
  </objectgroup>
  <objectgroup id="4" name="Pipes">
   <object id="61" x="3568" y="128" width="32" height="64"/>
