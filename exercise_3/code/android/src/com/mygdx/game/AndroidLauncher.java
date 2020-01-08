@@ -82,7 +82,7 @@ public class AndroidLauncher extends AndroidApplication implements MessageListen
             public void stopGame(boolean sound) {
                 killLibGDX(sound);
             }
-        });
+        }, getIntent().getExtras().getInt("Level"));
         gameHasBeenCreated = true;
         initialize(game, config);
     }

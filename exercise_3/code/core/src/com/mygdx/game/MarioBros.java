@@ -40,19 +40,22 @@ public class MarioBros extends Game {
     private PlayScreen playScreen;
     private CountdownScreen countdownScreen;
 
+    private int level;
+
     //reference that needs to be kept to the android module.
     private BackendCommunicator backendCommunicator;
     private String username, password, auth, gameID;
     private boolean countdownEnded = false;
     private boolean soundboolean, quited = false;
 
-    public MarioBros(String auth, String username, String password, String gameID, Boolean soundonoff, BackendCommunicator backendCommunicator) {
+    public MarioBros(String auth, String username, String password, String gameID, Boolean soundonoff, BackendCommunicator backendCommunicator, int level) {
         this.backendCommunicator = backendCommunicator;
         this.auth = auth;
         this.username = username;
         this.password = password;
         this.gameID = gameID;
         this.soundboolean = soundonoff;
+        this.level = level;
     }
 
     @Override
@@ -70,7 +73,7 @@ public class MarioBros extends Game {
         manager.load("audio/sounds/mariodie.wav", Sound.class);
         manager.finishLoading();
 
-        playScreen = new PlayScreen(this, soundboolean);
+        playScreen = new PlayScreen(this, soundboolean, level);
         countdownScreen = new CountdownScreen(this);
         setScreen(countdownScreen);
     }
