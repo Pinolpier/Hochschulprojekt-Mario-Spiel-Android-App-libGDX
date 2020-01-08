@@ -6,6 +6,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.game.Screens.CountdownScreen;
+import com.mygdx.game.Screens.EndScreen;
 import com.mygdx.game.Screens.PlayScreen;
 
 import server.BackendCommunicator;
@@ -110,6 +111,13 @@ public class MarioBros extends Game {
 
                         setScreen(playScreen);
                         break;
+                }
+            } else {
+                if (gameMessage.getType().equals("WinBecauseLeave")) {
+                    EndScreen endScreen = new EndScreen(this);
+                    endScreen.setEnemyPoints("quitting coward");
+                    endScreen.setText("VICTORY");
+                    setScreen(endScreen);
                 }
             }
         }

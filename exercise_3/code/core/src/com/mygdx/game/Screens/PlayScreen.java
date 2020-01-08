@@ -51,12 +51,12 @@ public class PlayScreen implements Screen {
     private Music music;
     private Array<Item> items;
     private LinkedBlockingQueue<ItemDef> itemsToSpawn;
-    private int ownScore=0;
-    private int enemyScore=0;
+    private int ownScore = 0;
+    private int enemyScore = 0;
     private int positionTicks = 0;
     private boolean endMessageSent = true;
 
-    public PlayScreen(MarioBros game,Boolean soundboolean){
+    public PlayScreen(MarioBros game, Boolean soundboolean) {
         atlas = new TextureAtlas("Mario_and_Enemies.pack");
         this.game = game;
         gamecam = new OrthographicCamera();
@@ -64,7 +64,7 @@ public class PlayScreen implements Screen {
         hud = new Hud(game.batch);
         maploader = new TmxMapLoader();
         map = maploader.load("level1.tmx");
-        renderer = new OrthogonalTiledMapRenderer(map, 1  / MarioBros.PPM);
+        renderer = new OrthogonalTiledMapRenderer(map, 1 / MarioBros.PPM);
         gamecam.position.set(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight() / 2, 0);
         world = new World(new Vector2(0, -10), true);
         b2dr = new Box2DDebugRenderer();
@@ -73,7 +73,7 @@ public class PlayScreen implements Screen {
 
         player = new Mario(this);
         player.setId(1);
-        player2= new Mario(this);
+        player2 = new Mario(this);
         player2.setId(2);
 
         world.setContactListener(new WorldContactListener());
@@ -81,8 +81,7 @@ public class PlayScreen implements Screen {
         music = MarioBros.manager.get("audio/music/mario_music.ogg", Music.class);
         music.setLooping(true);
         music.setVolume(0.3f);
-        if(soundboolean)
-        {
+        if (soundboolean) {
             music.play();
         }
 
@@ -90,24 +89,24 @@ public class PlayScreen implements Screen {
         itemsToSpawn = new LinkedBlockingQueue<>();
     }
 
-    public void spawnItem(ItemDef idef){
+    public void spawnItem(ItemDef idef) {
         itemsToSpawn.add(idef);
     }
 
     /**
      * if there is a item in the block, it will spawn
      */
-    public void handleSpawningItems(){
-        if(!itemsToSpawn.isEmpty()){
+    public void handleSpawningItems() {
+        if (!itemsToSpawn.isEmpty()) {
             ItemDef idef = itemsToSpawn.poll();
-            if(idef.type == Mushroom.class){
+            if (idef.type == Mushroom.class) {
                 items.add(new Mushroom(this, idef.position.x, idef.position.y));
             }
         }
     }
 
 
-    public TextureAtlas getAtlas(){
+    public TextureAtlas getAtlas() {
         return atlas;
     }
 
@@ -117,59 +116,64 @@ public class PlayScreen implements Screen {
     }
 
     /**
-     *
      * @param
      */
-    public void handleInput(){
-        if(endMessageSent){
-        if(player.getCurrentState() != Mario.State.DEAD) {
-            GameMessage sendMessage = new GameMessage("Movement", game.getAuth(), GameMessage.Status.OK, game.getGameID(), null);
-            if (positionTicks % 20 == 0) {
-                ArrayList<String> position = new ArrayList<>();
-                position.add(player.getXPosition());
-                position.add(player.getYPosition());
-                position.add(player.getXVelocity());
-                position.add(player.getYVelocity());
-                sendMessage.setStringList(position);
+    public void handleInput() {
+        if (endMessageSent) {
+            if (player.getCurrentState() != Mario.State.DEAD) {
+                GameMessage sendMessage = new GameMessage("Movement", game.getAuth(), GameMessage.Status.OK, game.getGameID(), null);
+                boolean needForSend = false;
+                if (Gdx.input.justTouched()) {
+                    player.jump();
+                    sendMessage.setPayloadInteger(0);
+                    needForSend = true;
+                }
+                if (Gdx.input.getPitch() < -10) {
+                    if (!player.tooFast()) {
+                        player.getB2body().applyLinearImpulse(new Vector2(0.1f, 0), player.getB2body().getWorldCenter(), true);
+                    }
+                    sendMessage.setPayloadInteger(1);
+                    needForSend = true;
+                }
+                if (Gdx.input.getPitch() > 20) {
+                    player.getB2body().applyLinearImpulse(new Vector2(-0.1f, 0), player.getB2body().getWorldCenter(), true);
+                    sendMessage.setPayloadInteger(2);
+                    needForSend = true;
+                }
+                if (positionTicks % 20 == 0) {
+                    ArrayList<String> position = new ArrayList<>();
+                    position.add(player.getXPosition());
+                    position.add(player.getYPosition());
+                    position.add(player.getXVelocity());
+                    position.add(player.getYVelocity());
+                    sendMessage.setStringList(position);
+                }
+                if (needForSend) {
+                    game.sendMessage(sendMessage);
+                }
+                positionTicks++;
             }
-            positionTicks++;
-            if (Gdx.input.justTouched()) {
-                player.jump();
-                sendMessage.setPayloadInteger(0);
-                game.sendMessage(sendMessage);
-            }
-            if (Gdx.input.getPitch() < -10) {
-                player.getB2body().applyLinearImpulse(new Vector2(0.1f, 0), player.getB2body().getWorldCenter(), true);
-                sendMessage.setPayloadInteger(1);
-                game.sendMessage(sendMessage);
-            }
-            if (Gdx.input.getPitch() > 20) {
-                player.getB2body().applyLinearImpulse(new Vector2(-0.1f, 0), player.getB2body().getWorldCenter(), true);
-                sendMessage.setPayloadInteger(2);
-                game.sendMessage(sendMessage);
-            }
-        }
         }
     }
 
-    public void update(float dt){
+    public void update(float dt) {
 
         handleInput();
         handleSpawningItems();
         world.step(1 / 60f, 6, 2);
         player.update(dt);
         player2.update(dt);
-        for(Enemy enemy : creator.getEnemies()) {
+        for (Enemy enemy : creator.getEnemies()) {
             enemy.update(dt);
-                enemy.b2body.setActive(true);
+            enemy.b2body.setActive(true);
 
         }
 
-        for(Item item : items)
+        for (Item item : items)
             item.update(dt);
 
         hud.update(dt);
-        if(player.getCurrentState() != Mario.State.DEAD) {
+        if (player.getCurrentState() != Mario.State.DEAD) {
             gamecam.position.x = player.getB2body().getPosition().x;
         }
         gamecam.update();
@@ -200,15 +204,15 @@ public class PlayScreen implements Screen {
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();
 
-        if(gameOver() | gameWin()){
-            if(endMessageSent) {
+        if (gameOver() | gameWin()) {
+            if (endMessageSent) {
                 sendEndGameMessage();
                 endMessageSent = false;
             }
         }
     }
 
-    public boolean gameOver(){
+    public boolean gameOver() {
         return player.getCurrentState() == Mario.State.DEAD && player.getStateTimer() > 3;
     }
 
@@ -218,13 +222,14 @@ public class PlayScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        gamePort.update(width,height);
+        gamePort.update(width, height);
     }
 
-    public TiledMap getMap(){
+    public TiledMap getMap() {
         return map;
     }
-    public World getWorld(){
+
+    public World getWorld() {
         return world;
     }
 
@@ -249,7 +254,9 @@ public class PlayScreen implements Screen {
         hud.dispose();
     }
 
-    public Hud getHud(){ return hud; }
+    public Hud getHud() {
+        return hud;
+    }
 
     public void receiveMessage(GameMessage gameMessage) {
         if (gameMessage != null && gameMessage.getType() != null) {
@@ -265,7 +272,9 @@ public class PlayScreen implements Screen {
                         player2.jump();
                         break;
                     case 1:
-                        player2.getB2body().applyLinearImpulse(new Vector2(0.1f, 0), player2.getB2body().getWorldCenter(), true);
+                        if (!player2.tooFast()) {
+                            player2.getB2body().applyLinearImpulse(new Vector2(0.1f, 0), player2.getB2body().getWorldCenter(), true);
+                        }
                         break;
                     case 2:
                         player2.getB2body().applyLinearImpulse(new Vector2(-0.1f, 0), player2.getB2body().getWorldCenter(), true);
@@ -307,12 +316,6 @@ public class PlayScreen implements Screen {
                         game.setScreen(endScreen);
                         break;
                 }
-            } else if (gameMessage.getType().equals("WinBecauseLeave")) {
-                EndScreen endScreen = new EndScreen(game);
-                endScreen.setPoints("" + hud.getScore());
-                endScreen.setEnemyPoints("quitting coward");
-                endScreen.setText("VICTORY");
-                game.setScreen(endScreen);
             }
         }
     }

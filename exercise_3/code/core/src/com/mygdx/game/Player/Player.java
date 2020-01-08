@@ -99,6 +99,10 @@ public class Player extends Sprite {
         return "" + b2body.getLinearVelocity().y;
     }
 
+    public boolean tooFast() {
+        return b2body.getLinearVelocity().len() >= 2;
+    }
+
     public enum State {FALLING, JUMPING, STANDING, RUNNING, GROWING, DEAD, WIN}
 
 
