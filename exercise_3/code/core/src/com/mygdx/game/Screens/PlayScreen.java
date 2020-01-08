@@ -61,7 +61,7 @@ public class PlayScreen implements Screen {
      * @param game the main game
      * @param soundboolean if the music should be muted
      */
-    public PlayScreen(MarioBros game, Boolean soundboolean) {
+    public PlayScreen(MarioBros game, Boolean soundboolean,int level) {
         atlas = new TextureAtlas("Mario_and_Enemies.pack");
         this.game = game;
         gamecam = new OrthographicCamera();
