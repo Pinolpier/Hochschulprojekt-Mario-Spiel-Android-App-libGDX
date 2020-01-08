@@ -244,7 +244,7 @@
   <object id="178" x="368" y="176" width="16" height="16"/>
  </objectgroup>
  <objectgroup id="9" name="Goal">
-  <object id="167" x="3191" y="16" width="2" height="160"/>
+  <object id="167" x="3191" y="-116.5" width="2" height="300"/>
  </objectgroup>
  <objectgroup id="10" name="Pit">
   <object id="155" x="1392.04" y="206.176" width="47.9389" height="1.81818"/>
