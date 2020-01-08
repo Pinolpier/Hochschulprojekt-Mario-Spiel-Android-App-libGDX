@@ -99,7 +99,10 @@ public class HomeActivity extends Activity implements MessageListener {
         gameID = username;
         Log.d(HomeActivity.this.getClass().getSimpleName(), "Start Game has been pressed. Will now send join request for game with gameID as own username that is: " + username);
         if (serviceBound) {
-            webSocketService.sendMessage(gson.toJson(new GameMessage("JOIN_GAME", auth, GameMessage.Status.OK, gameID, null)));
+            int level = ((int) Math.round(Math.random())) + 1;
+            GameMessage msg = new GameMessage("JOIN_GAME", auth, GameMessage.Status.OK, gameID, null);
+            msg.setPayloadInteger(level);
+            webSocketService.sendMessage(gson.toJson(msg));
         } else {
             Log.e(HomeActivity.this.getClass().getSimpleName(), "Couldn't send Join request because service is not bound. Will show error toast, retry should work soon!");
             Toast.makeText(HomeActivity.this, R.string.cantSendJoinRequestToastMessage, Toast.LENGTH_LONG).show();
@@ -134,6 +137,7 @@ public class HomeActivity extends Activity implements MessageListener {
                     assert extras != null;
                     extras.putString("gameID", gameID);
                     extras.putBoolean("soundonoff",soundboolean);
+                    extras.putInt("Level", msg.getPayloadInteger());
                     gameIntent.putExtras(extras);
                     finish();
                     startActivity(gameIntent);

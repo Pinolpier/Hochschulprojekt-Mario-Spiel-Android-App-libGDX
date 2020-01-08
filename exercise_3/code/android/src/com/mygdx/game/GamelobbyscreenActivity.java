@@ -147,6 +147,7 @@ public class GamelobbyscreenActivity extends Activity implements MessageListener
                     assert extras != null;
                     extras.putString("gameID", gameID);
                     extras.putBoolean("soundonoff",soundboolean);
+                    extras.putInt("Level", gameMessage.getPayloadInteger());
                     gameIntent.putExtras(extras);
                     finish();
                     startActivity(gameIntent);
