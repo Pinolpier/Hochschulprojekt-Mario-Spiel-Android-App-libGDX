@@ -116,10 +116,6 @@ public class PlayScreen implements Screen {
 
     }
 
-    /**
-     *
-     * @param
-     */
     public void handleInput(){
         if(endMessageSent){
         if(player.getCurrentState() != Mario.State.DEAD) {
@@ -253,66 +249,73 @@ public class PlayScreen implements Screen {
 
     public void receiveMessage(GameMessage gameMessage) {
         if (gameMessage != null && gameMessage.getType() != null) {
-            if (gameMessage.getType().equals("Movement")) {
-                if (gameMessage.getStringList() != null) {
-                    ArrayList<String> position = gameMessage.getStringList();
-                    player2.setPosition(Float.parseFloat(position.get(0)), Float.parseFloat(position.get(1)));
-                    player2.b2body.setLinearVelocity(Float.parseFloat(position.get(2)), Float.parseFloat(position.get(3)));
+            switch (gameMessage.getType()) {
+                case "Movement":
+                    if (gameMessage.getStringList() != null) {
+                        ArrayList<String> position = gameMessage.getStringList();
+                        player2.setPosition(Float.parseFloat(position.get(0)), Float.parseFloat(position.get(1)));
+                        player2.b2body.setLinearVelocity(Float.parseFloat(position.get(2)), Float.parseFloat(position.get(3)));
+                    }
+                    int status = gameMessage.getPayloadInteger();
+                    switch (status) {
+                        case 0:
+                            player2.jump();
+                            break;
+                        case 1:
+                            player2.getB2body().applyLinearImpulse(new Vector2(0.1f, 0), player2.getB2body().getWorldCenter(), true);
+                            break;
+                        case 2:
+                            player2.getB2body().applyLinearImpulse(new Vector2(-0.1f, 0), player2.getB2body().getWorldCenter(), true);
+                            break;
+                    }
+                    break;
+                case "scoreRequest":
+                    GameMessage scoreReport = new GameMessage("scoreReport", game.getAuth(), GameMessage.Status.OK, game.getGameID(), null);
+                    scoreReport.setPayloadInteger(hud.getScore());
+                    game.sendMessage(scoreReport);
+                    break;
+                case "WinnerEvaluation": {
+                    int won = gameMessage.getPayloadInteger();
+                    String player1score = gameMessage.getStringList().get(0);
+                    String player2score = gameMessage.getStringList().get(1);
+                    int p1score = Integer.parseInt(player1score), p2score = Integer.parseInt(player2score);
+                    EndScreen endScreen = new EndScreen(game);
+                    switch (won) {
+                        case -1:
+                            ownScore = (p1score > p2score) ? p2score : p1score;
+                            enemyScore = (p1score > p2score) ? p1score : p2score;
+                            endScreen.setPoints("" + ownScore);
+                            endScreen.setEnemyPoints("" + enemyScore);
+                            endScreen.setText("DEFEAT");
+                            game.setScreen(endScreen);
+                            break;
+                        case 0:
+                            ownScore = p1score;
+                            enemyScore = p1score;
+                            endScreen.setPoints("" + ownScore);
+                            endScreen.setEnemyPoints("" + enemyScore);
+                            endScreen.setText("DRAW");
+                            game.setScreen(endScreen);
+                            break;
+                        case 1:
+                            ownScore = (p1score < p2score) ? p2score : p1score;
+                            enemyScore = (p1score < p2score) ? p1score : p2score;
+                            endScreen.setPoints("" + ownScore);
+                            endScreen.setEnemyPoints("" + enemyScore);
+                            endScreen.setText("VICTORY");
+                            game.setScreen(endScreen);
+                            break;
+                    }
+                    break;
                 }
-                int status = gameMessage.getPayloadInteger();
-                switch (status) {
-                    case 0:
-                        player2.jump();
-                        break;
-                    case 1:
-                        player2.getB2body().applyLinearImpulse(new Vector2(0.1f, 0), player2.getB2body().getWorldCenter(), true);
-                        break;
-                    case 2:
-                        player2.getB2body().applyLinearImpulse(new Vector2(-0.1f, 0), player2.getB2body().getWorldCenter(), true);
-                        break;
+                case "WinBecauseLeave": {
+                    EndScreen endScreen = new EndScreen(game);
+                    endScreen.setPoints("" + hud.getScore());
+                    endScreen.setEnemyPoints("quitting coward");
+                    endScreen.setText("VICTORY");
+                    game.setScreen(endScreen);
+                    break;
                 }
-            } else if (gameMessage.getType().equals("scoreRequest")) {
-                GameMessage scoreReport = new GameMessage("scoreReport", game.getAuth(), GameMessage.Status.OK, game.getGameID(), null);
-                scoreReport.setPayloadInteger(hud.getScore());
-                game.sendMessage(scoreReport);
-            } else if (gameMessage.getType().equals("WinnerEvaluation")) {
-                int won = gameMessage.getPayloadInteger().intValue();
-                String player1score = gameMessage.getStringList().get(0);
-                String player2score = gameMessage.getStringList().get(1);
-                int p1score = Integer.parseInt(player1score), p2score = Integer.parseInt(player2score);
-                EndScreen endScreen = new EndScreen(game);
-                switch (won) {
-                    case -1:
-                        ownScore = (p1score > p2score) ? p2score : p1score;
-                        enemyScore = (p1score > p2score) ? p1score : p2score;
-                        endScreen.setPoints("" + ownScore);
-                        endScreen.setEnemyPoints("" + enemyScore);
-                        endScreen.setText("DEFEAT");
-                        game.setScreen(endScreen);
-                        break;
-                    case 0:
-                        ownScore = p1score;
-                        enemyScore = p1score;
-                        endScreen.setPoints("" + ownScore);
-                        endScreen.setEnemyPoints("" + enemyScore);
-                        endScreen.setText("DRAW");
-                        game.setScreen(endScreen);
-                        break;
-                    case 1:
-                        ownScore = (p1score < p2score) ? p2score : p1score;
-                        enemyScore = (p1score < p2score) ? p1score : p2score;
-                        endScreen.setPoints("" + ownScore);
-                        endScreen.setEnemyPoints("" + enemyScore);
-                        endScreen.setText("VICTORY");
-                        game.setScreen(endScreen);
-                        break;
-                }
-            } else if (gameMessage.getType().equals("WinBecauseLeave")) {
-                EndScreen endScreen = new EndScreen(game);
-                endScreen.setPoints("" + hud.getScore());
-                endScreen.setEnemyPoints("quitting coward");
-                endScreen.setText("VICTORY");
-                game.setScreen(endScreen);
             }
         }
     }

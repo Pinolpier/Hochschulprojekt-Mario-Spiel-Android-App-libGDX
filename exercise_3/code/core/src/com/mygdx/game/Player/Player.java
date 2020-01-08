@@ -239,7 +239,7 @@ public class Player extends Sprite {
 
     /**
      * Updates the Player position and size
-     * @param dt
+     * @param dt deltaTime
      */
     public void update(float dt){
         if (screen.getHud().isTimeUp() && !isDead()) {

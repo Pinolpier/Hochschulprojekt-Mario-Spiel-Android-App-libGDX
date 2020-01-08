@@ -6,7 +6,6 @@ import com.mygdx.game.MarioBros;
 import com.mygdx.game.Player.Player;
 import com.mygdx.game.Scenes.Hud;
 import com.mygdx.game.Screens.PlayScreen;
-import com.mygdx.game.Player.Mario;
 
 public class Brick extends InteractiveTileObject {
     public Brick(PlayScreen screen, MapObject object){

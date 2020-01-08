@@ -13,7 +13,6 @@ import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.MarioBros;
 import com.mygdx.game.Player.Player;
 import com.mygdx.game.Screens.PlayScreen;
-import com.mygdx.game.Player.Mario;
 
 public class Goomba extends com.mygdx.game.Sprites.Enemies.Enemy
 {
@@ -27,7 +26,7 @@ public class Goomba extends com.mygdx.game.Sprites.Enemies.Enemy
 
     public Goomba(PlayScreen screen, float x, float y) {
         super(screen, x, y);
-        frames = new Array<TextureRegion>();
+        frames = new Array<>();
         for(int i = 0; i < 2; i++)
             frames.add(new TextureRegion(screen.getAtlas().findRegion("goomba"), i * 16, 0, 16, 16));
         walkAnimation = new Animation(0.4f, frames);
