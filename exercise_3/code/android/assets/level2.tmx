@@ -265,7 +265,6 @@
  </objectgroup>
  <objectgroup id="8" name="Turtles">
   <object id="152" x="2352" y="176" width="16" height="16"/>
-  <object id="172" x="384" y="176" width="16" height="16" visible="0"/>
  </objectgroup>
  <objectgroup id="9" name="Goal">
   <object id="167" x="3191" y="16" width="2" height="160"/>
