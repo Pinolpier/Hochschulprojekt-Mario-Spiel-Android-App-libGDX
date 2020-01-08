@@ -63,11 +63,12 @@ public class HomeActivity extends Activity implements MessageListener {
 
         final Switch soundswitch = findViewById(R.id.switch_soundonoff);
         boolean sound = getIntent().getExtras().getBoolean("Sound");
+        soundboolean = sound;
         soundswitch.setChecked(sound);
         soundswitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                soundboolean = !soundswitch.isChecked();
+                soundboolean = soundswitch.isChecked();
             }
         });
     }
