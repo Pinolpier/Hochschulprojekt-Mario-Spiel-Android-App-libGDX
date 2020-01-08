@@ -128,6 +128,8 @@ public class PlayScreen implements Screen {
                 ArrayList<String> position = new ArrayList<>();
                 position.add(player.getXPosition());
                 position.add(player.getYPosition());
+                position.add(player.getXVelocity());
+                position.add(player.getYVelocity());
                 sendMessage.setStringList(position);
             }
             positionTicks++;
@@ -255,6 +257,7 @@ public class PlayScreen implements Screen {
                 if (gameMessage.getStringList() != null) {
                     ArrayList<String> position = gameMessage.getStringList();
                     player2.setPosition(Float.parseFloat(position.get(0)), Float.parseFloat(position.get(1)));
+                    player2.b2body.setLinearVelocity(Float.parseFloat(position.get(2)), Float.parseFloat(position.get(3)));
                 }
                 int status = gameMessage.getPayloadInteger();
                 switch (status) {

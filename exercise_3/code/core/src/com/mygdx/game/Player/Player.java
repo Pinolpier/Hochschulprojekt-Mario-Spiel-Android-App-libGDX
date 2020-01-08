@@ -25,7 +25,10 @@ import com.mygdx.game.Sprites.Enemies.Turtle;
 public class Player extends Sprite {
 
 
-    public enum State { FALLING, JUMPING, STANDING, RUNNING, GROWING, DEAD, WIN;};
+    public String getXVelocity() {
+        return "" + b2body.getLinearVelocity().x;
+    }
+
     public Body b2body;
     public World world;
     public State currentState;
@@ -91,6 +94,12 @@ public class Player extends Sprite {
     public String getYPosition(){
         return ""+b2body.getPosition().y;
     }
+
+    public String getYVelocity() {
+        return "" + b2body.getLinearVelocity().y;
+    }
+
+    public enum State {FALLING, JUMPING, STANDING, RUNNING, GROWING, DEAD, WIN}
 
 
     public void defineBigMario(){
