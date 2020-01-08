@@ -44,9 +44,9 @@ public class MarioBros extends Game {
     private BackendCommunicator backendCommunicator;
     private String username, password, auth, gameID;
     private boolean countdownEnded = false;
-    private boolean soundboolean;
+    private boolean soundboolean, quited = false;
 
-    public MarioBros(String auth, String username, String password, String gameID,Boolean soundonoff, BackendCommunicator backendCommunicator) {
+    public MarioBros(String auth, String username, String password, String gameID, Boolean soundonoff, BackendCommunicator backendCommunicator) {
         this.backendCommunicator = backendCommunicator;
         this.auth = auth;
         this.username = username;
@@ -56,7 +56,7 @@ public class MarioBros extends Game {
     }
 
     @Override
-    public void create () {
+    public void create() {
         batch = new SpriteBatch();
         manager = new AssetManager();
         manager.load("audio/music/mario_music.ogg", Music.class);
@@ -70,7 +70,7 @@ public class MarioBros extends Game {
         manager.load("audio/sounds/mariodie.wav", Sound.class);
         manager.finishLoading();
 
-        playScreen = new PlayScreen(this,soundboolean);
+        playScreen = new PlayScreen(this, soundboolean);
         countdownScreen = new CountdownScreen(this);
         setScreen(countdownScreen);
     }
@@ -83,7 +83,7 @@ public class MarioBros extends Game {
     }
 
     @Override
-    public void render () {
+    public void render() {
         super.render();
     }
 
@@ -93,7 +93,7 @@ public class MarioBros extends Game {
                 playScreen.receiveMessage(gameMessage);
             }
         } else {
-            if (gameMessage.getType().equals("Countdown")) {
+            if (gameMessage.getType().equals("Countdown") && !quited) {
                 int secondsLeft = gameMessage.getPayloadInteger();
                 switch (secondsLeft) {
                     case 3:
@@ -112,13 +112,12 @@ public class MarioBros extends Game {
                         setScreen(playScreen);
                         break;
                 }
-            } else {
-                if (gameMessage.getType().equals("WinBecauseLeave")) {
-                    EndScreen endScreen = new EndScreen(this);
-                    endScreen.setEnemyPoints("quitting coward");
-                    endScreen.setText("VICTORY");
-                    setScreen(endScreen);
-                }
+            } else if (gameMessage.getType().equals("WinBecauseLeave")) {
+                quited = true;
+                EndScreen endScreen = new EndScreen(this);
+                endScreen.setEnemyPoints("quitting coward");
+                endScreen.setText("VICTORY");
+                setScreen(endScreen);
             }
         }
     }

@@ -115,44 +115,35 @@ public class PlayScreen implements Screen {
 
     }
 
-    /**
-     * @param
-     */
-    public void handleInput() {
-        if (endMessageSent) {
-            if (player.getCurrentState() != Mario.State.DEAD) {
-                GameMessage sendMessage = new GameMessage("Movement", game.getAuth(), GameMessage.Status.OK, game.getGameID(), null);
-                boolean needForSend = false;
-                if (Gdx.input.justTouched()) {
-                    player.jump();
-                    sendMessage.setPayloadInteger(0);
-                    needForSend = true;
-                }
-                if (Gdx.input.getPitch() < -10) {
-                    if (!player.tooFast()) {
-                        player.getB2body().applyLinearImpulse(new Vector2(0.1f, 0), player.getB2body().getWorldCenter(), true);
-                    }
-                    sendMessage.setPayloadInteger(1);
-                    needForSend = true;
-                }
-                if (Gdx.input.getPitch() > 20) {
-                    player.getB2body().applyLinearImpulse(new Vector2(-0.1f, 0), player.getB2body().getWorldCenter(), true);
-                    sendMessage.setPayloadInteger(2);
-                    needForSend = true;
-                }
-                if (positionTicks % 20 == 0) {
-                    ArrayList<String> position = new ArrayList<>();
-                    position.add(player.getXPosition());
-                    position.add(player.getYPosition());
-                    position.add(player.getXVelocity());
-                    position.add(player.getYVelocity());
-                    sendMessage.setStringList(position);
-                }
-                if (needForSend) {
-                    game.sendMessage(sendMessage);
-                }
-                positionTicks++;
+    public void handleInput(){
+        if(endMessageSent){
+        if(player.getCurrentState() != Mario.State.DEAD) {
+            GameMessage sendMessage = new GameMessage("Movement", game.getAuth(), GameMessage.Status.OK, game.getGameID(), null);
+            if (positionTicks % 20 == 0) {
+                ArrayList<String> position = new ArrayList<>();
+                position.add(player.getXPosition());
+                position.add(player.getYPosition());
+                position.add(player.getXVelocity());
+                position.add(player.getYVelocity());
+                sendMessage.setStringList(position);
             }
+            positionTicks++;
+            if (Gdx.input.justTouched()) {
+                player.jump();
+                sendMessage.setPayloadInteger(0);
+                game.sendMessage(sendMessage);
+            }
+            if (Gdx.input.getPitch() < -10) {
+                player.getB2body().applyLinearImpulse(new Vector2(0.1f, 0), player.getB2body().getWorldCenter(), true);
+                sendMessage.setPayloadInteger(1);
+                game.sendMessage(sendMessage);
+            }
+            if (Gdx.input.getPitch() > 20) {
+                player.getB2body().applyLinearImpulse(new Vector2(-0.1f, 0), player.getB2body().getWorldCenter(), true);
+                sendMessage.setPayloadInteger(2);
+                game.sendMessage(sendMessage);
+            }
+        }
         }
     }
 
@@ -260,61 +251,72 @@ public class PlayScreen implements Screen {
 
     public void receiveMessage(GameMessage gameMessage) {
         if (gameMessage != null && gameMessage.getType() != null) {
-            if (gameMessage.getType().equals("Movement")) {
-                if (gameMessage.getStringList() != null) {
-                    ArrayList<String> position = gameMessage.getStringList();
-                    player2.setPosition(Float.parseFloat(position.get(0)), Float.parseFloat(position.get(1)));
-                    player2.b2body.setLinearVelocity(Float.parseFloat(position.get(2)), Float.parseFloat(position.get(3)));
-                }
-                int status = gameMessage.getPayloadInteger();
-                switch (status) {
-                    case 0:
-                        player2.jump();
-                        break;
-                    case 1:
-                        if (!player2.tooFast()) {
+            switch (gameMessage.getType()) {
+                case "Movement":
+                    if (gameMessage.getStringList() != null) {
+                        ArrayList<String> position = gameMessage.getStringList();
+                        player2.setPosition(Float.parseFloat(position.get(0)), Float.parseFloat(position.get(1)));
+                        player2.b2body.setLinearVelocity(Float.parseFloat(position.get(2)), Float.parseFloat(position.get(3)));
+                    }
+                    int status = gameMessage.getPayloadInteger();
+                    switch (status) {
+                        case 0:
+                            player2.jump();
+                            break;
+                        case 1:
                             player2.getB2body().applyLinearImpulse(new Vector2(0.1f, 0), player2.getB2body().getWorldCenter(), true);
-                        }
-                        break;
-                    case 2:
-                        player2.getB2body().applyLinearImpulse(new Vector2(-0.1f, 0), player2.getB2body().getWorldCenter(), true);
-                        break;
+                            break;
+                        case 2:
+                            player2.getB2body().applyLinearImpulse(new Vector2(-0.1f, 0), player2.getB2body().getWorldCenter(), true);
+                            break;
+                    }
+                    break;
+                case "scoreRequest":
+                    GameMessage scoreReport = new GameMessage("scoreReport", game.getAuth(), GameMessage.Status.OK, game.getGameID(), null);
+                    scoreReport.setPayloadInteger(hud.getScore());
+                    game.sendMessage(scoreReport);
+                    break;
+                case "WinnerEvaluation": {
+                    int won = gameMessage.getPayloadInteger();
+                    String player1score = gameMessage.getStringList().get(0);
+                    String player2score = gameMessage.getStringList().get(1);
+                    int p1score = Integer.parseInt(player1score), p2score = Integer.parseInt(player2score);
+                    EndScreen endScreen = new EndScreen(game);
+                    switch (won) {
+                        case -1:
+                            ownScore = (p1score > p2score) ? p2score : p1score;
+                            enemyScore = (p1score > p2score) ? p1score : p2score;
+                            endScreen.setPoints("" + ownScore);
+                            endScreen.setEnemyPoints("" + enemyScore);
+                            endScreen.setText("DEFEAT");
+                            game.setScreen(endScreen);
+                            break;
+                        case 0:
+                            ownScore = p1score;
+                            enemyScore = p1score;
+                            endScreen.setPoints("" + ownScore);
+                            endScreen.setEnemyPoints("" + enemyScore);
+                            endScreen.setText("DRAW");
+                            game.setScreen(endScreen);
+                            break;
+                        case 1:
+                            ownScore = (p1score < p2score) ? p2score : p1score;
+                            enemyScore = (p1score < p2score) ? p1score : p2score;
+                            endScreen.setPoints("" + ownScore);
+                            endScreen.setEnemyPoints("" + enemyScore);
+                            endScreen.setText("VICTORY");
+                            game.setScreen(endScreen);
+                            break;
+                    }
+                    break;
                 }
-            } else if (gameMessage.getType().equals("scoreRequest")) {
-                GameMessage scoreReport = new GameMessage("scoreReport", game.getAuth(), GameMessage.Status.OK, game.getGameID(), null);
-                scoreReport.setPayloadInteger(hud.getScore());
-                game.sendMessage(scoreReport);
-            } else if (gameMessage.getType().equals("WinnerEvaluation")) {
-                int won = gameMessage.getPayloadInteger().intValue();
-                String player1score = gameMessage.getStringList().get(0);
-                String player2score = gameMessage.getStringList().get(1);
-                int p1score = Integer.parseInt(player1score), p2score = Integer.parseInt(player2score);
-                EndScreen endScreen = new EndScreen(game);
-                switch (won) {
-                    case -1:
-                        ownScore = (p1score > p2score) ? p2score : p1score;
-                        enemyScore = (p1score > p2score) ? p1score : p2score;
-                        endScreen.setPoints("" + ownScore);
-                        endScreen.setEnemyPoints("" + enemyScore);
-                        endScreen.setText("DEFEAT");
-                        game.setScreen(endScreen);
-                        break;
-                    case 0:
-                        ownScore = p1score;
-                        enemyScore = p1score;
-                        endScreen.setPoints("" + ownScore);
-                        endScreen.setEnemyPoints("" + enemyScore);
-                        endScreen.setText("DRAW");
-                        game.setScreen(endScreen);
-                        break;
-                    case 1:
-                        ownScore = (p1score < p2score) ? p2score : p1score;
-                        enemyScore = (p1score < p2score) ? p1score : p2score;
-                        endScreen.setPoints("" + ownScore);
-                        endScreen.setEnemyPoints("" + enemyScore);
-                        endScreen.setText("VICTORY");
-                        game.setScreen(endScreen);
-                        break;
+                case "WinBecauseLeave": {
+                    EndScreen endScreen = new EndScreen(game);
+                    endScreen.setPoints("" + hud.getScore());
+                    endScreen.setEnemyPoints("quitting coward");
+                    endScreen.setText("VICTORY");
+                    game.setScreen(endScreen);
+                    break;
                 }
             }
         }

@@ -14,6 +14,8 @@ import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
+import java.util.Objects;
+
 import server.BackendCommunicator;
 import server.MessageListener;
 import server.WebSocketService;
@@ -53,7 +55,7 @@ public class AndroidLauncher extends AndroidApplication implements MessageListen
         config.useGLSurfaceView20API18 = true;
         config.useGyroscope = true;
         config.useCompass = true;
-        username = getIntent().getExtras().getString("username");
+        username = Objects.requireNonNull(getIntent().getExtras()).getString("username");
         password = getIntent().getExtras().getString("password");
         auth = getIntent().getExtras().getString("auth");
         gameID = getIntent().getExtras().getString("gameID");

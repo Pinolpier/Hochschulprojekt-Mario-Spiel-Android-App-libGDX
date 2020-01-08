@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import server.MessageListener;
 import server.WebSocketService;
@@ -57,7 +58,7 @@ public class GamelobbyscreenActivity extends Activity implements MessageListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gamelobbyscreen);
 
-        soundboolean = getIntent().getExtras().getBoolean("soundonoff");
+        soundboolean = Objects.requireNonNull(getIntent().getExtras()).getBoolean("soundonoff");
         allGames = new ArrayList<>();
         gson = new Gson();
 
@@ -97,13 +98,13 @@ public class GamelobbyscreenActivity extends Activity implements MessageListener
 
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(GamelobbyscreenActivity.this, HomeActivity.class).putExtras(getIntent().getExtras()));
+        startActivity(new Intent(GamelobbyscreenActivity.this, HomeActivity.class).putExtras(Objects.requireNonNull(getIntent().getExtras())));
         finish();
     }
 
     private void requestAllGames() {
         if (serviceBound) {
-            GameMessage gameMessage = new GameMessage("GetGames", getIntent().getExtras().getString("auth"), GameMessage.Status.OK, null, null);
+            GameMessage gameMessage = new GameMessage("GetGames", Objects.requireNonNull(getIntent().getExtras()).getString("auth"), GameMessage.Status.OK, null, null);
             webSocketService.sendMessage(gson.toJson(gameMessage));
         }
     }
@@ -124,7 +125,7 @@ public class GamelobbyscreenActivity extends Activity implements MessageListener
                             @Override
                             public void joinGame(String gameID) {
                                 Log.i(GamelobbyscreenActivity.this.getClass().getSimpleName(), "User clicked " + gameID + " trying to join now!");
-                                username = getIntent().getExtras().getString("username");
+                                username = Objects.requireNonNull(getIntent().getExtras()).getString("username");
                                 password = getIntent().getExtras().getString("password");
                                 auth = getIntent().getExtras().getString("auth");
                                 GamelobbyscreenActivity.this.gameID = gameID;
@@ -143,6 +144,7 @@ public class GamelobbyscreenActivity extends Activity implements MessageListener
                 if (gameMessage.getStatus() == GameMessage.Status.OK) {
                     Intent gameIntent = new Intent(this, AndroidLauncher.class);
                     Bundle extras = getIntent().getExtras();
+                    assert extras != null;
                     extras.putString("gameID", gameID);
                     extras.putBoolean("soundonoff",soundboolean);
                     gameIntent.putExtras(extras);

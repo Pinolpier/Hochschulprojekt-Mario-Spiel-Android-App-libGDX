@@ -76,6 +76,7 @@ public class WebSocketService extends Service implements MessageListener {
             Request request = new Request.Builder().url(URL).build();
             webSocket = client.newWebSocket(request, new SocketListener());
             Bundle extras = intent.getExtras();
+            assert extras != null;
             this.auth = extras.getString("auth");
             this.username = extras.getString("username");
             this.password = extras.getString("password");
@@ -171,12 +172,12 @@ public class WebSocketService extends Service implements MessageListener {
 
     private final class SocketListener extends WebSocketListener { //Listener der bei verschiedenen Websocket Ereignissen aufgerufen wird
         @Override
-        public void onOpen(WebSocket socket, Response response) { //Aufgerufen, wenn neue Websocket Verbindung erzeugt wurde
+        public void onOpen(@NotNull WebSocket socket, @NotNull Response response) { //Aufgerufen, wenn neue Websocket Verbindung erzeugt wurde
             Log.d(WebSocketService.this.getClass().getSimpleName(), "Socket opened");
         }
 
         @Override
-        public void onMessage(WebSocket socket, String text) {//Aufgerufen, wenn neue Textnachricht ueber Websocket Verbindung eintrifft
+        public void onMessage(@NotNull WebSocket socket, @NotNull String text) {//Aufgerufen, wenn neue Textnachricht ueber Websocket Verbindung eintrifft
             Log.i(WebSocketService.this.getClass().getSimpleName(), "Received message: " + text);
             for (MessageListener listener : listeners) {
                 listener.onMessageReceived(text);
