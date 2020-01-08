@@ -13,7 +13,6 @@ import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.MarioBros;
 import com.mygdx.game.Player.Player;
 import com.mygdx.game.Screens.PlayScreen;
-import com.mygdx.game.Player.Mario;
 
 public class Goomba extends com.mygdx.game.Sprites.Enemies.Enemy
 {

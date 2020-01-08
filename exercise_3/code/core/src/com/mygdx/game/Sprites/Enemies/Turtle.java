@@ -11,7 +11,6 @@ import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.MarioBros;
 import com.mygdx.game.Player.Player;
 import com.mygdx.game.Screens.PlayScreen;
-import com.mygdx.game.Player.Mario;
 
 public class Turtle extends Enemy {
     public static final int KICK_LEFT = -2;

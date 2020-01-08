@@ -8,7 +8,6 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game.MarioBros;
 import com.mygdx.game.Player.Player;
 import com.mygdx.game.Screens.PlayScreen;
-import com.mygdx.game.Player.Mario;
 
 public abstract class Item extends Sprite {
     protected PlayScreen screen;

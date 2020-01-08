@@ -7,7 +7,6 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.mygdx.game.MarioBros;
 import com.mygdx.game.Player.Player;
 import com.mygdx.game.Screens.PlayScreen;
-import com.mygdx.game.Player.Mario;
 
 /**
  * This class represents the Mushroom Item in SuperMario Games.
