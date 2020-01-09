@@ -55,6 +55,7 @@ public class PlayScreen implements Screen {
     private int enemyScore = 0;
     private int positionTicks = 0;
     private boolean endMessageSent = true;
+    private Thread inputHandler;
 
     /**
      * This class represents the main playscreen
@@ -93,6 +94,19 @@ public class PlayScreen implements Screen {
 
         items = new Array<>();
         itemsToSpawn = new LinkedBlockingQueue<>();
+        inputHandler = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    handleInput();
+                    try {
+                        Thread.sleep(3);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
     }
 
     /**
@@ -121,11 +135,6 @@ public class PlayScreen implements Screen {
         return atlas;
     }
 
-    @Override
-    public void show() {
-
-    }
-
     /**
      * handles every input to controll de player
      */
@@ -133,7 +142,7 @@ public class PlayScreen implements Screen {
         if (endMessageSent) {
             if (player.getCurrentState() != Mario.State.DEAD) {
                 GameMessage sendMessage = new GameMessage("Movement", game.getAuth(), GameMessage.Status.OK, game.getGameID(), null);
-                if (positionTicks % 20 == 0) {
+                if (positionTicks % 10 == 0) {
                     ArrayList<String> position = new ArrayList<>();
                     position.add(player.getXPosition());
                     position.add(player.getYPosition());
@@ -162,8 +171,6 @@ public class PlayScreen implements Screen {
     }
 
     public void update(float dt) {
-
-        handleInput();
         handleSpawningItems();
         world.step(1 / 60f, 6, 2);
         player.update(dt);
@@ -171,7 +178,6 @@ public class PlayScreen implements Screen {
         for (Enemy enemy : creator.getEnemies()) {
             enemy.update(dt);
             enemy.b2body.setActive(true);
-
         }
 
         for (Item item : items)
@@ -183,7 +189,6 @@ public class PlayScreen implements Screen {
         }
         gamecam.update();
         renderer.setView(gamecam);
-
     }
 
 
@@ -247,7 +252,13 @@ public class PlayScreen implements Screen {
     }
 
     @Override
+    public void show() {
+        inputHandler.start();
+    }
+
+    @Override
     public void hide() {
+        inputHandler.interrupt();
     }
 
     @Override
