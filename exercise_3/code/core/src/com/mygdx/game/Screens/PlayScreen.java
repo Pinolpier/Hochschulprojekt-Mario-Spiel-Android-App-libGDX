@@ -267,6 +267,10 @@ public class PlayScreen implements Screen {
         inputHandler.interrupt();
     }
 
+    public void killInputThread() {
+        inputHandler.stop();
+    }
+
     @Override
     public void dispose() {
         map.dispose();
