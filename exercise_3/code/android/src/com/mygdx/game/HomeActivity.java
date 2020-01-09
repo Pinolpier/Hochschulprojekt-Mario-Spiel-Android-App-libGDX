@@ -18,6 +18,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import java.util.Objects;
+import java.util.Random;
 
 import server.MessageListener;
 import server.WebSocketService;
@@ -99,7 +100,8 @@ public class HomeActivity extends Activity implements MessageListener {
         gameID = username;
         Log.d(HomeActivity.this.getClass().getSimpleName(), "Start Game has been pressed. Will now send join request for game with gameID as own username that is: " + username);
         if (serviceBound) {
-            int level = ((int) Math.round(Math.random())) + 1;
+            Random random = new Random();
+            int level = random.nextInt(3);
             GameMessage msg = new GameMessage("JOIN_GAME", auth, GameMessage.Status.OK, gameID, null);
             msg.setPayloadInteger(level);
             webSocketService.sendMessage(gson.toJson(msg));
