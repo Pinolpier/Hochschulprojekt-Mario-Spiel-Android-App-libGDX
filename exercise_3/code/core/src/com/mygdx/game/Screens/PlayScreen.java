@@ -58,10 +58,11 @@ public class PlayScreen implements Screen {
 
     /**
      * This class represents the main playscreen
-     * @param game the main game
+     *
+     * @param game         the main game
      * @param soundboolean if the music should be muted
      */
-    public PlayScreen(MarioBros game, Boolean soundboolean,int level) {
+    public PlayScreen(MarioBros game, Boolean soundboolean, int level) {
         atlas = new TextureAtlas("Mario_and_Enemies.pack");
         this.game = game;
         gamecam = new OrthographicCamera();
@@ -96,6 +97,7 @@ public class PlayScreen implements Screen {
 
     /**
      * spawn a item on the screen
+     *
      * @param idef
      */
     public void spawnItem(ItemDef idef) {
@@ -127,35 +129,35 @@ public class PlayScreen implements Screen {
     /**
      * handles every input to controll de player
      */
-    public void handleInput(){
-        if(endMessageSent){
-        if(player.getCurrentState() != Mario.State.DEAD) {
-            GameMessage sendMessage = new GameMessage("Movement", game.getAuth(), GameMessage.Status.OK, game.getGameID(), null);
-            if (positionTicks % 20 == 0) {
-                ArrayList<String> position = new ArrayList<>();
-                position.add(player.getXPosition());
-                position.add(player.getYPosition());
-                position.add(player.getXVelocity());
-                position.add(player.getYVelocity());
-                sendMessage.setStringList(position);
+    public void handleInput() {
+        if (endMessageSent) {
+            if (player.getCurrentState() != Mario.State.DEAD) {
+                GameMessage sendMessage = new GameMessage("Movement", game.getAuth(), GameMessage.Status.OK, game.getGameID(), null);
+                if (positionTicks % 20 == 0) {
+                    ArrayList<String> position = new ArrayList<>();
+                    position.add(player.getXPosition());
+                    position.add(player.getYPosition());
+                    position.add(player.getXVelocity());
+                    position.add(player.getYVelocity());
+                    sendMessage.setStringList(position);
+                }
+                positionTicks++;
+                if (Gdx.input.justTouched()) {
+                    player.jump();
+                    sendMessage.setPayloadInteger(0);
+                    game.sendMessage(sendMessage);
+                }
+                if (Gdx.input.getPitch() < -10) {
+                    player.getB2body().applyLinearImpulse(new Vector2(0.1f, 0), player.getB2body().getWorldCenter(), true);
+                    sendMessage.setPayloadInteger(1);
+                    game.sendMessage(sendMessage);
+                }
+                if (Gdx.input.getPitch() > 20) {
+                    player.getB2body().applyLinearImpulse(new Vector2(-0.1f, 0), player.getB2body().getWorldCenter(), true);
+                    sendMessage.setPayloadInteger(2);
+                    game.sendMessage(sendMessage);
+                }
             }
-            positionTicks++;
-            if (Gdx.input.justTouched()) {
-                player.jump();
-                sendMessage.setPayloadInteger(0);
-                game.sendMessage(sendMessage);
-            }
-            if (Gdx.input.getPitch() < -10) {
-                player.getB2body().applyLinearImpulse(new Vector2(0.1f, 0), player.getB2body().getWorldCenter(), true);
-                sendMessage.setPayloadInteger(1);
-                game.sendMessage(sendMessage);
-            }
-            if (Gdx.input.getPitch() > 20) {
-                player.getB2body().applyLinearImpulse(new Vector2(-0.1f, 0), player.getB2body().getWorldCenter(), true);
-                sendMessage.setPayloadInteger(2);
-                game.sendMessage(sendMessage);
-            }
-        }
         }
     }
 
@@ -263,6 +265,7 @@ public class PlayScreen implements Screen {
 
     /**
      * handles messages from the server
+     *
      * @param gameMessage
      */
     public void receiveMessage(GameMessage gameMessage) {
