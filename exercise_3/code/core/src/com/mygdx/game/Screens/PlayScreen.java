@@ -25,7 +25,6 @@ import com.mygdx.game.Sprites.Items.ItemDef;
 import com.mygdx.game.Sprites.Items.Mushroom;
 import com.mygdx.game.Tools.B2WorldCreator;
 import com.mygdx.game.Tools.WorldContactListener;
-
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 

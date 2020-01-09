@@ -123,7 +123,6 @@ public class Turtle extends Enemy {
             else
                 velocity.x = 2;
             currentState = State.MOVING_SHELL;
-            System.out.println("Set to moving shell");
         }
         else {
             currentState = State.STANDING_SHELL;

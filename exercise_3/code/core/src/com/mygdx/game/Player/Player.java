@@ -144,20 +144,21 @@ public class Player extends Sprite {
 
     public void die() {
         if (isDead()) {
-            if(id==1) {
+            if (id == 1) {
                 MarioBros.manager.get("audio/music/mario_music.ogg", Music.class).stop();
                 MarioBros.manager.get("audio/sounds/mariodie.wav", Sound.class).play();
                 PlayerIsDead = true;
                 addScore(-500);
-            }
-            Filter filter = new Filter();
-            filter.maskBits = MarioBros.NOTHING_BIT;
 
-            for (Fixture fixture : b2body.getFixtureList()) {
-                fixture.setFilterData(filter);
-            }
+                Filter filter = new Filter();
+                filter.maskBits = MarioBros.NOTHING_BIT;
 
-            b2body.applyLinearImpulse(new Vector2(0, 4f), b2body.getWorldCenter(), true);
+                for (Fixture fixture : b2body.getFixtureList()) {
+                    fixture.setFilterData(filter);
+                }
+
+                b2body.applyLinearImpulse(new Vector2(0, 4f), b2body.getWorldCenter(), true);
+            }
         }
     }
 
@@ -168,7 +169,7 @@ public class Player extends Sprite {
 
     public void win() {
         if(isDead()) {
-            marioReachedGoal = true;
+            if(id==1) marioReachedGoal = true;
         }
     }
 
