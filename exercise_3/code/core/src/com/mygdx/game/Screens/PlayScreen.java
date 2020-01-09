@@ -25,6 +25,7 @@ import com.mygdx.game.Sprites.Items.ItemDef;
 import com.mygdx.game.Sprites.Items.Mushroom;
 import com.mygdx.game.Tools.B2WorldCreator;
 import com.mygdx.game.Tools.WorldContactListener;
+
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -156,12 +157,16 @@ public class PlayScreen implements Screen {
                     game.sendMessage(sendMessage);
                 }
                 if (Gdx.input.getPitch() < -10) {
-                    player.getB2body().applyLinearImpulse(new Vector2(0.1f, 0), player.getB2body().getWorldCenter(), true);
+                    if (!player.tooFast()) {
+                        player.getB2body().applyLinearImpulse(new Vector2(0.1f, 0), player.getB2body().getWorldCenter(), true);
+                    }
                     sendMessage.setPayloadInteger(1);
                     game.sendMessage(sendMessage);
                 }
                 if (Gdx.input.getPitch() > 20) {
-                    player.getB2body().applyLinearImpulse(new Vector2(-0.1f, 0), player.getB2body().getWorldCenter(), true);
+                    if (!player.tooFast()) {
+                        player.getB2body().applyLinearImpulse(new Vector2(-0.1f, 0), player.getB2body().getWorldCenter(), true);
+                    }
                     sendMessage.setPayloadInteger(2);
                     game.sendMessage(sendMessage);
                 }
@@ -293,10 +298,14 @@ public class PlayScreen implements Screen {
                             player2.jump();
                             break;
                         case 1:
-                            player2.getB2body().applyLinearImpulse(new Vector2(0.1f, 0), player2.getB2body().getWorldCenter(), true);
+                            if (!player2.tooFast()) {
+                                player2.getB2body().applyLinearImpulse(new Vector2(0.1f, 0), player2.getB2body().getWorldCenter(), true);
+                            }
                             break;
                         case 2:
-                            player2.getB2body().applyLinearImpulse(new Vector2(-0.1f, 0), player2.getB2body().getWorldCenter(), true);
+                            if (!player2.tooFast()) {
+                                player2.getB2body().applyLinearImpulse(new Vector2(-0.1f, 0), player2.getB2body().getWorldCenter(), true);
+                            }
                             break;
                     }
                     break;
