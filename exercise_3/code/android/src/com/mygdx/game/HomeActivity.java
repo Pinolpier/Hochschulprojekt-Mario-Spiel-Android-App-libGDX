@@ -31,6 +31,8 @@ public class HomeActivity extends Activity implements MessageListener {
     private Gson gson;
     private Boolean soundboolean = true;
 
+    private final int AMOUNT_OF_LEVEL = 3;
+
     private ServiceConnection connection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -100,7 +102,7 @@ public class HomeActivity extends Activity implements MessageListener {
         gameID = username;
         Log.d(HomeActivity.this.getClass().getSimpleName(), "Start Game has been pressed. Will now send join request for game with gameID as own username that is: " + username);
         if (serviceBound) {
-            int level = new Random().nextInt(3);
+            int level = new Random().nextInt(AMOUNT_OF_LEVEL);
             GameMessage msg = new GameMessage("JOIN_GAME", auth, GameMessage.Status.OK, gameID, null);
             msg.setPayloadInteger(level);
             webSocketService.sendMessage(gson.toJson(msg));
