@@ -94,10 +94,9 @@ public class PlayScreen implements Screen {
 
         items = new Array<>();
         itemsToSpawn = new LinkedBlockingQueue<>();
-        inputHandler = new Thread(new Runnable() {
-            @Override
+        inputHandler = new Thread() {
             public void run() {
-                while (true) {
+                while (!isInterrupted()) {
                     handleInput();
                     try {
                         Thread.sleep(3);
@@ -106,7 +105,7 @@ public class PlayScreen implements Screen {
                     }
                 }
             }
-        });
+        };
     }
 
     /**
