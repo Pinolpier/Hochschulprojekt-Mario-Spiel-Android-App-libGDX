@@ -250,10 +250,12 @@ public class PlayScreen implements Screen {
 
     @Override
     public void pause() {
+        inputHandler.interrupt();
     }
 
     @Override
     public void resume() {
+        inputHandler.start();
     }
 
     @Override
@@ -273,6 +275,7 @@ public class PlayScreen implements Screen {
         world.dispose();
         b2dr.dispose();
         hud.dispose();
+        inputHandler.interrupt();
     }
 
     public Hud getHud() {
