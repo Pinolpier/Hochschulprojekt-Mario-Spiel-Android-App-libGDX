@@ -148,6 +148,7 @@ public class PlayScreen implements Screen {
                     position.add(player.getYPosition());
                     position.add(player.getXVelocity());
                     position.add(player.getYVelocity());
+                    System.out.println("Positions- und Geschwindigkeits Array Liste: " + position);
                     sendMessage.setStringList(position);
                 }
                 positionTicks++;
