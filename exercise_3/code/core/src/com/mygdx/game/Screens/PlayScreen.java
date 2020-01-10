@@ -56,6 +56,7 @@ public class PlayScreen implements Screen {
     private int positionTicks = 0;
     private boolean endMessageSent = true;
     private Thread inputHandler;
+    private HandleInputRunnable handleInputRunnable;
 
     /**
      * This class represents the main playscreen
@@ -94,18 +95,8 @@ public class PlayScreen implements Screen {
 
         items = new Array<>();
         itemsToSpawn = new LinkedBlockingQueue<>();
-        inputHandler = new Thread() {
-            public void run() {
-                while (!isInterrupted()) {
-                    handleInput();
-                    try {
-                        Thread.sleep(3);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        };
+        handleInputRunnable = new HandleInputRunnable();
+        inputHandler = new Thread(handleInputRunnable);
     }
 
     /**
@@ -249,7 +240,7 @@ public class PlayScreen implements Screen {
 
     @Override
     public void pause() {
-        inputHandler.interrupt();
+        handleInputRunnable.kill();
     }
 
     @Override
@@ -264,11 +255,11 @@ public class PlayScreen implements Screen {
 
     @Override
     public void hide() {
-        inputHandler.interrupt();
+        handleInputRunnable.kill();
     }
 
     public void killInputThread() {
-        inputHandler.stop();
+        handleInputRunnable.kill();
     }
 
     @Override
@@ -371,5 +362,25 @@ public class PlayScreen implements Screen {
         GameMessage endMessage = new GameMessage("endGame", game.getAuth(), GameMessage.Status.OK, game.getGameID(), null);
         endMessage.setPayloadInteger(hud.getScore());
         game.sendMessage(endMessage);
+    }
+
+    private class HandleInputRunnable implements Runnable {
+        private volatile boolean isRunning = true;
+
+        @Override
+        public void run() {
+            while (isRunning) {
+                handleInput();
+                try {
+                    Thread.sleep(3);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        public void kill() {
+            isRunning = false;
+        }
     }
 }
