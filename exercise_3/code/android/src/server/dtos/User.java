@@ -1,5 +1,8 @@
 package server.dtos;
 
+/**
+ * A representation of a user who plays our game. Not the same as a player in the backend. Consists of only a username and a password!
+ */
 public class User {
     private String username, password;
 

@@ -67,6 +67,15 @@ public class WebSocketService extends Service implements MessageListener {
         return super.onUnbind(intent);
     }
 
+    /**
+     * called by the Android System when the service has been started by startService(Intent)
+     * used to start up the service and connect to the websocket. Service will run until stopService(Intent) has been called.
+     *
+     * @param intent
+     * @param flags
+     * @param startId
+     * @return
+     */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i(WebSocketService.this.getClass().getSimpleName(), ":onStartCommand()  has been called");
@@ -124,6 +133,11 @@ public class WebSocketService extends Service implements MessageListener {
         sendMessage(gson.toJson(loginMessage));
     }
 
+    /**
+     * An implementation of {@link MessageListener} to react on LoginAnswers at the websocket
+     *
+     * @param message
+     */
     @Override
     public void onMessageReceived(String message) {
         try {
@@ -143,6 +157,14 @@ public class WebSocketService extends Service implements MessageListener {
         }
     }
 
+    /**
+     * Call this to close down the websocket session
+     *
+     * @param i Reason to close - if none is provided 1000 will be sent, refer to:
+     *          Status code as defined by
+     *          *     [Section 7.4 of RFC 6455](http://tools.ietf.org/html/rfc6455#section-7.4).
+     * @param r Reason for shutting down or null.
+     */
     public void close(Integer i, String r) {
         if (webSocket != null) {
             if (i == null) {
@@ -168,12 +190,21 @@ public class WebSocketService extends Service implements MessageListener {
         }
     }
 
+    /**
+     * Handles the SocketConnection and provides methods that have to be overwritten in order to react on events
+     */
     private final class SocketListener extends WebSocketListener { //Listener der bei verschiedenen Websocket Ereignissen aufgerufen wird
         @Override
         public void onOpen(@NotNull WebSocket socket, @NotNull Response response) { //Aufgerufen, wenn neue Websocket Verbindung erzeugt wurde
             Log.d(WebSocketService.this.getClass().getSimpleName(), "Socket opened");
         }
 
+        /**
+         * Will send the message to all registered listeners
+         *
+         * @param socket
+         * @param text
+         */
         @Override
         public void onMessage(@NotNull WebSocket socket, @NotNull String text) {//Aufgerufen, wenn neue Textnachricht ueber Websocket Verbindung eintrifft
             Log.i(WebSocketService.this.getClass().getSimpleName(), "Received message: " + text);

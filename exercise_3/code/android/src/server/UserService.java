@@ -29,6 +29,11 @@ public class UserService {
         api = retrofit.create(UserAPI.class);
     }
 
+    /**
+     * @param username                       the username that will be sent to the Authentication server, must not be {code null}
+     * @param password                       the password that will be sent to the Authentication server, must not be {code null}
+     * @param registrationProcessedInterface must be an implementation of the class, the corresponding methods will be called depending on success or failure of registration
+     */
     public void register(final String username, final String password, final RegistrationProcessedInterface registrationProcessedInterface) {
         user = new User(username, password);
         Call<ResponseBody> call = api.register(user);
@@ -62,6 +67,11 @@ public class UserService {
         });
     }
 
+    /**
+     * @param username the username that will be sent to the Authentication server, must not be {code null}
+     * @param password the password that will be sent to the Authentication server, must not be {code null}
+     * @param loginProcessedInterface must be an implementation of the class, the corresponding methods will be called depending on success or failure of login
+     */
     public void login(final String username, String password, final LoginProcessedInterface loginProcessedInterface) {
         user = null;
         user = new User(username, password);

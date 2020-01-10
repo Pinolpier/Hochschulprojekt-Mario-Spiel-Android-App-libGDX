@@ -2,6 +2,9 @@ package server.dtos;
 
 import java.util.ArrayList;
 
+/**
+ * Representation of a game event that has to be sent to the server. Used to synchronize games
+ */
 public class GameMessage {
     private String authentication, gameId, payloadString;
     private Integer payloadInteger;
