@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LoginActivity"
+    android:background="@drawable/mariologinbackground"
+    android:orientation="horizontal">
+
+    <Button
+        android:id="@+id/button_login"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="2dp"
+        android:background="@drawable/mariopipe_settings"
+        android:textStyle="italic"
+        android:text="@string/login_button"
+        app:layout_constraintBottom_toTopOf="@+id/button_register"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/button_register"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="110dp"
+        android:background="@drawable/mariopipe_settings"
+        android:textStyle="italic"
+        android:text="@string/register_button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/textViewUsername"
+        android:layout_width="275dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="32dp"
+        android:background="@android:color/white"
+        android:hint="@string/textview_username"
+        android:textSize="15sp"
+        android:textStyle="italic"
+        app:layout_constraintBottom_toTopOf="@+id/textViewPassword"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/textViewPassword"
+        android:layout_width="275dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="32dp"
+        android:background="@android:color/white"
+        android:hint="@string/textview_password"
+        android:textSize="15sp"
+        android:textStyle="italic"
+        android:inputType="textPassword"
+        app:layout_constraintBottom_toTopOf="@+id/button_login"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

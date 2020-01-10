@@ -1,0 +1,49 @@
+package com.mygdx.game.Sprites.Enemies;
+
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.World;
+import com.mygdx.game.Player.Player;
+import com.mygdx.game.Screens.PlayScreen;
+
+/**
+ * This class represents the enemys
+ */
+public abstract class Enemy extends Sprite {
+    protected World world;
+    protected PlayScreen screen;
+    public Body b2body;
+    public Vector2 velocity;
+
+    public Enemy(PlayScreen screen, float x, float y){
+        this.world = screen.getWorld();
+        this.screen = screen;
+        setPosition(x, y);
+        defineEnemy();
+        velocity = new Vector2(-1, -2);
+        b2body.setActive(false);
+    }
+
+    protected abstract void defineEnemy();
+    public abstract void update(float dt);
+
+    /**
+     * defines what should happen if the player hits the enemy on head
+     * @param player who hit the enemy
+     */
+    public abstract void hitOnHead(Player player);
+
+    /**
+     * defines what happens when enemy gets hit by another enemy
+     * @param enemy
+     */
+    public abstract void hitByEnemy(Enemy enemy);
+
+    public void reverseVelocity(boolean x, boolean y){
+        if(x)
+            velocity.x = -velocity.x;
+        if(y)
+            velocity.y = -velocity.y;
+    }
+}

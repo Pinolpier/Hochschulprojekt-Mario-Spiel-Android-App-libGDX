@@ -22,3 +22,4 @@ debugTests:
   script:
     - cd exercise_1/code
     - ./gradlew -Pci --console=plain :app:testDebug
+

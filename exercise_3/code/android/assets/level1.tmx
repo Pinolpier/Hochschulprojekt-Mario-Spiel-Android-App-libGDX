@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.2" tiledversion="1.3.1" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="240" height="13" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="267">
+ <tileset firstgid="1" name="tileset_gutter" tilewidth="16" tileheight="16" spacing="2" margin="1" tilecount="924" columns="33">
+  <image source="tileset_gutter.png" width="594" height="504"/>
+  <tile id="0">
+   <properties>
+    <property name="blocked" value=""/>
+   </properties>
+  </tile>
+  <tile id="1">
+   <properties>
+    <property name="blocked" value=""/>
+    <property name="smashable" value=""/>
+   </properties>
+  </tile>
+  <tile id="2">
+   <properties>
+    <property name="blocked" value=""/>
+    <property name="smashable" value=""/>
+   </properties>
+  </tile>
+  <tile id="24">
+   <properties>
+    <property name="blocked" value=""/>
+    <property name="coinblock" value=""/>
+   </properties>
+  </tile>
+  <tile id="25">
+   <properties>
+    <property name="blocked" value=""/>
+   </properties>
+  </tile>
+  <tile id="26">
+   <properties>
+    <property name="blocked" value=""/>
+   </properties>
+  </tile>
+  <tile id="33">
+   <properties>
+    <property name="blocked" value=""/>
+   </properties>
+  </tile>
+  <tile id="264">
+   <properties>
+    <property name="blocked" value=""/>
+   </properties>
+  </tile>
+  <tile id="265">
+   <properties>
+    <property name="blocked" value=""/>
+   </properties>
+  </tile>
+  <tile id="266">
+   <properties>
+    <property name="blocked" value=""/>
+   </properties>
+  </tile>
+  <tile id="267">
+   <properties>
+    <property name="blocked" value=""/>
+   </properties>
+  </tile>
+  <tile id="268">
+   <properties>
+    <property name="blocked" value=""/>
+   </properties>
+  </tile>
+  <tile id="297">
+   <properties>
+    <property name="blocked" value=""/>
+   </properties>
+  </tile>
+  <tile id="298">
+   <properties>
+    <property name="blocked" value=""/>
+   </properties>
+  </tile>
+  <tile id="299">
+   <properties>
+    <property name="blocked" value=""/>
+   </properties>
+  </tile>
+  <tile id="300">
+   <properties>
+    <property name="blocked" value=""/>
+   </properties>
+  </tile>
+  <tile id="301">
+   <properties>
+    <property name="blocked" value=""/>
+   </properties>
+  </tile>
+  <tile id="330">
+   <properties>
+    <property name="blocked" value=""/>
+   </properties>
+  </tile>
+  <tile id="331">
+   <properties>
+    <property name="blocked" value=""/>
+   </properties>
+  </tile>
+  <tile id="363">
+   <properties>
+    <property name="blocked" value=""/>
+   </properties>
+  </tile>
+  <tile id="364">
+   <properties>
+    <property name="blocked" value=""/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer id="1" name="Background Color" width="240" height="13">
+  <data encoding="base64" compression="zlib">
+   eAHt0jENAAAMw7Bq/AmVXVHs8xECkXtJ5QEDDDDAAAMMMMAAAwwwwAADDDDAAAMMMMAAAwwwwAADDDDAAAMMMMAAAwwwwAADDDDAAAMMMMAAAww8GhjFQueJ
+  </data>
+ </layer>
+ <layer id="2" name="Graphic Layer" width="240" height="13">
+  <data encoding="base64" compression="zlib">
+   eAHtmkuOHEUQhpuHLLa88d4SZsvrCC2BxCkAYS5iWCEQwiPZsGDDFgGSbRi4BbBF8gJOACzYEL/oD/8KIrO6sqrH7cElxURkZLwyM/6uqp4+eXiz+Tbo0kN3KY99rpJlfz/RZ5vNpkUj62jFQj8S84HPve+pXwITx3wOX0Qf395h73rwG0Gf7sYVTitdhPj3+iR8rwWd7GKMrJ0YS+MsyT2nft+3ljxSy6gP+zdnDTkXMe6XMzhU/ZsFfZxrOsRY+OWcT6PW74N+CBJOla/Cq+sE3L/CTqTrZvBbQXwm5Jq9L1q9QYxenBy3NyYn6+zZkrtVv3yJR/2+by25l5N4qs/x7z5u4/pKnloDsVQ/a8hxiHGMZ3CW9YNfcu7TQ3kvDzn2+y8YBJ8aS9bl9fv8P7N3/1KrfJGde1/M6Y0XLJ7XotitnicvOXuYxLbiOR/xqP/yI/Vaq1iVjniqz/Hvtm7j+hGZWKqfNYzEmeNDztEz8FzEOov6wS8516jf17JU5v4LJuGKq4ux1y+d8CnSBVbh8pV8MeaW1of/6xEP2WuR7jSI5wZsprjeS6/uKMvZN+fL8xpfi1g9ch+3W7JHc32fj88ZyOuRrL1QPJHkPH/exup70dS6wO+U3b2a1xr0meL3mFD959KZ0ufiwqcoX6xDc8gt/mN8Dvw0g34O21asNfS+B2vEexDjsOc1ur9g97zg9ySwVt1jwCBYhWvfkIXfnt3oHq/hNxeP1R6sUcdIjLm1j+T4P/o4ds8Lfpc80wu/o33Q6tGWvsrTs814vBDPj1AVq9L14lf2a+ly7WvFPZY42xnfGXwX9wtI9SOLz1lPxu4S/H4YfQ/NqWFtW61B99/RuMKv3oflz37yzuycOc/T6tGW3n3BYWXLnOyRnf8e9f6xB/0ZNlV86rgaa6/eF9+YsZ9XGn0sfTWnfO/tKMvU5Vzvuz7uyVqPqGWjXmHOZXSZbyO3k+bzOPv4mJ65EueQye32kVVvRVO+rfffjyKezuFj25OpWNX847EnT8zolxxDa9rn/vtM5Hg20XMx1kXMygYf2WI3xfU8/nkQmKvsmWtx98k2PidZ81m3ZPxb9Bv+vT1hb8TZn3ejFhH+h+AjPUPvU08eo98mzGrs+Xwen4qD3Wqu0vXsqbXiHqv6bq/Cr+67Xxlp7HHmyC/G2b8UNMfHbbWmk44//af+ulPQ9dDdCNJvPqp515FXeBFdDh90FceOOew9JzY9Ln+fJx6cOcYV/2DPM5LdY5HvtYm1KcfNoFtBt3e2YBde1dHT4TeF/7k9432vsxa5jpq2hl3pGOd86FtcWGSOsyZv5vzWSPnk53kle52VLBsR2IWjr/DL88/XcdbI78TaneTf65knY/6poKeDluJX/fN+5IdamL0UNplOw5f/3eQ5x67LFyKOaOT7Z/l5zrlx9B02+TMX5px0Boy/NPz+avdXl2UvO/CbMez46smK2cNgz9fnVA+xXL/vvmuvcs/rrEVZv2/M/P8G5djGmUKOXek4a/Jmrt8aaZ2Q++caq7H8wGzmmpMPseFg9psJ/HrP4At/OWK/EvRq0FL86v7bwqzjbg0ZjGfsHMMYrFY8vzPL5tHor+o9Wu/NxOC8xB1DPXkUCxkbGgsfvVxnOcdegNVDcp5t9HzTI927Mm59/Gac8VtHTG9HbX8DUyTYxg==
+  </data>
+ </layer>
+ <objectgroup id="3" name="Ground">
+  <object id="26" x="2208" y="128" width="16" height="64"/>
+  <object id="27" x="2192" y="144" width="16" height="48"/>
+  <object id="28" x="2176" y="160" width="16" height="32"/>
+  <object id="29" x="2160" y="176" width="16" height="16"/>
+  <object id="30" x="2256" y="128" width="16" height="64"/>
+  <object id="31" x="2272" y="144" width="16" height="48"/>
+  <object id="32" x="2288" y="160" width="16" height="32"/>
+  <object id="33" x="2304" y="176" width="16" height="16"/>
+  <object id="45" x="3024" y="64" width="32" height="128"/>
+  <object id="46" x="3024" y="80" height="96"/>
+  <object id="47" x="3008" y="80" width="16" height="112"/>
+  <object id="48" x="2992" y="96" width="16" height="96"/>
+  <object id="49" x="2976" y="112" width="16" height="80"/>
+  <object id="50" x="2960" y="128" width="16" height="64"/>
+  <object id="51" x="2944" y="144" width="16" height="48"/>
+  <object id="52" x="2928" y="160" width="16" height="32"/>
+  <object id="53" x="2912" y="176" width="16" height="16"/>
+  <object id="54" x="3184" y="176" width="16" height="16"/>
+  <object id="183" x="3824.25" y="0.25" width="15.5" height="191.625"/>
+  <object id="184" x="3184.01" y="192.022" width="655.917" height="16.0083"/>
+  <object id="185" x="64" y="176" width="48" height="15.9688"/>
+  <object id="186" x="144.114" y="143.996" width="95.9014" height="15.9688"/>
+  <object id="187" x="111.912" y="160.016" width="47.9943" height="15.9688"/>
+  <object id="189" x="288.02" y="144.025" width="128" height="16"/>
+  <object id="190" x="400.093" y="128.022" width="16" height="16"/>
+  <object id="192" x="288.125" y="127.875" width="16" height="16"/>
+  <object id="193" x="480.063" y="160" width="16" height="16"/>
+  <object id="194" x="672" y="159.974" width="16" height="16"/>
+  <object id="195" x="479.962" y="176.041" width="208" height="16"/>
+  <object id="196" x="479.986" y="80.0795" width="208" height="16"/>
+  <object id="197" x="655.938" y="48.0313" width="16" height="32"/>
+  <object id="198" x="768" y="176" width="192" height="16"/>
+  <object id="199" x="960" y="128" width="176" height="16"/>
+  <object id="200" x="1168.06" y="192.125" width="64" height="16"/>
+  <object id="201" x="1216" y="176.125" width="16" height="16"/>
+  <object id="202" x="1168" y="160.063" width="16" height="32"/>
+  <object id="203" x="1263.96" y="175.978" width="16" height="16"/>
+  <object id="204" x="1328" y="160.063" width="16" height="32"/>
+  <object id="205" x="1344" y="144" width="16" height="48"/>
+  <object id="206" x="1264" y="191.938" width="95.8125" height="16"/>
+  <object id="207" x="1392" y="144" width="176" height="16"/>
+  <object id="209" x="1600.07" y="176.054" width="16" height="16"/>
+  <object id="210" x="1903.96" y="176.087" width="16" height="16"/>
+  <object id="211" x="1599.91" y="192" width="320" height="16"/>
+  <object id="212" x="1984.02" y="176.059" width="175.913" height="16"/>
+  <object id="213" x="2320.1" y="176.051" width="239.91" height="16"/>
+  <object id="214" x="2608" y="176" width="16" height="16"/>
+  <object id="215" x="2624" y="160" width="16" height="16"/>
+  <object id="216" x="2640" y="144" width="16" height="16"/>
+  <object id="217" x="2656" y="128" width="16" height="16"/>
+  <object id="218" x="2688" y="112" width="48" height="16"/>
+  <object id="219" x="2752" y="112" width="48" height="16"/>
+  <object id="220" x="2832" y="144" width="16" height="16"/>
+  <object id="221" x="2848" y="160" width="16" height="16"/>
+  <object id="222" x="2864" y="176" width="16" height="16"/>
+  <object id="264" x="16" y="192" width="48" height="15.9688"/>
+ </objectgroup>
+ <objectgroup id="4" name="Pipes">
+  <object id="61" x="3568" y="128" width="32" height="64"/>
+  <object id="62" x="3536" y="160" width="32" height="32"/>
+  <object id="265" x="1984" y="144" width="32" height="32"/>
+  <object id="266" x="2432" y="144" width="32" height="32"/>
+ </objectgroup>
+ <objectgroup id="5" name="Coins">
+  <object id="71" x="159.818" y="80.1477" width="16" height="16">
+   <properties>
+    <property name="mushroom" value=""/>
+   </properties>
+  </object>
+  <object id="72" x="352" y="64" width="16" height="16"/>
+  <object id="73" x="191.818" y="80.1477" width="16" height="16"/>
+  <object id="74" x="1264" y="128" width="16" height="16"/>
+  <object id="75" x="1520" y="64" width="16" height="16"/>
+  <object id="76" x="1712" y="128" width="16" height="16"/>
+  <object id="77" x="1760" y="128" width="16" height="16"/>
+  <object id="78" x="1760" y="64" width="16" height="16">
+   <properties>
+    <property name="mushroom" value=""/>
+   </properties>
+  </object>
+  <object id="79" x="1808" y="128" width="16" height="16"/>
+  <object id="80" x="2080" y="64" width="16" height="16"/>
+  <object id="81" x="2096" y="64" width="16"/>
+  <object id="83" x="2096" y="64" width="16" height="16"/>
+  <object id="242" x="1296" y="0" width="16" height="16">
+   <properties>
+    <property name="mushroom" value=""/>
+   </properties>
+  </object>
+  <object id="243" x="1312" y="0.03125" width="16" height="16">
+   <properties>
+    <property name="mushroom" value=""/>
+   </properties>
+  </object>
+  <object id="244" x="1328" y="0" width="16" height="16">
+   <properties>
+    <property name="mushroom" value=""/>
+   </properties>
+  </object>
+  <object id="245" x="1344" y="0" width="16" height="16">
+   <properties>
+    <property name="mushroom" value=""/>
+   </properties>
+  </object>
+  <object id="246" x="1360" y="0" width="16" height="16">
+   <properties>
+    <property name="mushroom" value=""/>
+   </properties>
+  </object>
+  <object id="247" x="1376" y="0" width="16" height="16">
+   <properties>
+    <property name="mushroom" value=""/>
+   </properties>
+  </object>
+  <object id="248" x="1392" y="0" width="16" height="16">
+   <properties>
+    <property name="mushroom" value=""/>
+   </properties>
+  </object>
+  <object id="249" x="1408" y="0" width="16" height="16">
+   <properties>
+    <property name="mushroom" value=""/>
+   </properties>
+  </object>
+  <object id="262" x="1728" y="128" width="32" height="16"/>
+  <object id="263" x="1776" y="128" width="32" height="16"/>
+ </objectgroup>
+ <objectgroup id="6" name="Bricks">
+  <object id="88" x="2096" y="128" width="16" height="16"/>
+  <object id="89" x="2080" y="128" width="16" height="16"/>
+  <object id="90" x="2064" y="64" width="16" height="16"/>
+  <object id="91" x="2112" y="64" width="16" height="16"/>
+  <object id="99" x="1504" y="64" width="16" height="16"/>
+  <object id="100" x="1488" y="64" width="16" height="16"/>
+  <object id="101" x="1472" y="64" width="16" height="16"/>
+  <object id="103" x="1408" y="64" width="16"/>
+  <object id="104" x="1408" y="64" width="16" height="16"/>
+  <object id="105" x="1392" y="64" width="16" height="16"/>
+  <object id="106" x="1376" y="64" width="16" height="16"/>
+  <object id="107" x="1360" y="64" width="16" height="16"/>
+  <object id="108" x="1344" y="64" width="16" height="16"/>
+  <object id="109" x="1328" y="64" width="16" height="16"/>
+  <object id="110" x="1312" y="64" width="16" height="16"/>
+  <object id="111" x="1296" y="64" width="16" height="16"/>
+  <object id="112" x="1280" y="128" width="16" height="16"/>
+  <object id="113" x="1248" y="128" width="16" height="16"/>
+  <object id="115" x="175.818" y="80.1477" width="16" height="16"/>
+  <object id="116" x="143.818" y="80.1477" width="16" height="16"/>
+  <object id="250" x="1024" y="64" width="16" height="16">
+   <properties>
+    <property name="mushroom" value=""/>
+   </properties>
+  </object>
+  <object id="251" x="976" y="64" width="16" height="16">
+   <properties>
+    <property name="mushroom" value=""/>
+   </properties>
+  </object>
+  <object id="252" x="1072" y="64" width="16" height="16">
+   <properties>
+    <property name="mushroom" value=""/>
+   </properties>
+  </object>
+  <object id="253" x="976" y="0" width="16" height="16">
+   <properties>
+    <property name="mushroom" value=""/>
+   </properties>
+  </object>
+  <object id="254" x="992" y="0" width="16" height="16">
+   <properties>
+    <property name="mushroom" value=""/>
+   </properties>
+  </object>
+  <object id="255" x="1008" y="0" width="16" height="16">
+   <properties>
+    <property name="mushroom" value=""/>
+   </properties>
+  </object>
+  <object id="256" x="1024" y="0" width="16" height="16">
+   <properties>
+    <property name="mushroom" value=""/>
+   </properties>
+  </object>
+  <object id="257" x="1040" y="0" width="16" height="16">
+   <properties>
+    <property name="mushroom" value=""/>
+   </properties>
+  </object>
+  <object id="258" x="1056" y="0" width="16" height="16">
+   <properties>
+    <property name="mushroom" value=""/>
+   </properties>
+  </object>
+  <object id="259" x="1072" y="0" width="16" height="16">
+   <properties>
+    <property name="mushroom" value=""/>
+   </properties>
+  </object>
+  <object id="260" x="992" y="64" width="32" height="16"/>
+  <object id="261" x="1040" y="64" width="32" height="16"/>
+ </objectgroup>
+ <objectgroup id="7" name="Goombas">
+  <object id="228" x="192" y="127.875" width="16" height="16"/>
+  <object id="229" x="127.938" y="143.938" width="16" height="16"/>
+  <object id="235" x="1199.63" y="176.063" width="16" height="16"/>
+  <object id="236" x="1311.91" y="175.909" width="16" height="16"/>
+  <object id="237" x="1712.09" y="176" width="16" height="16"/>
+  <object id="238" x="1791.82" y="176" width="16" height="16"/>
+  <object id="239" x="1759.91" y="176" width="16" height="16"/>
+  <object id="240" x="1632.18" y="176" width="16" height="16"/>
+ </objectgroup>
+ <objectgroup id="8" name="Turtles">
+  <object id="230" x="336" y="127.875" width="16" height="16"/>
+  <object id="232" x="576.063" y="159.969" width="16" height="16"/>
+  <object id="233" x="639.875" y="63.875" width="16" height="16"/>
+  <object id="234" x="1264.08" y="112.023" width="16" height="16"/>
+  <object id="241" x="2159.88" y="160.125" width="16" height="16"/>
+ </objectgroup>
+ <objectgroup id="9" name="Goal">
+  <object id="167" x="3191" y="-116.5" width="2" height="300"/>
+ </objectgroup>
+ <objectgroup id="10" name="Pit">
+  <object id="223" x="1920.03" y="206.628" width="1263.97" height="1.09943"/>
+  <object id="224" x="1359.86" y="207.559" width="239.894" height="0.49697"/>
+  <object id="225" x="1232.09" y="207.656" width="31.875" height="0.40625"/>
+  <object id="226" x="0.20084" y="207.5" width="1167.84" height="0.446528"/>
+  <object id="227" x="0.181818" y="0.181818" width="0.44664" height="207.364"/>
+ </objectgroup>
+</map>
