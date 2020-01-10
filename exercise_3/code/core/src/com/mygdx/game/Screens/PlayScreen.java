@@ -127,7 +127,7 @@ public class PlayScreen implements Screen {
     public void handleInput() {
         if (endMessageSent) {
             if (player.getCurrentState() != Mario.State.DEAD) {
-                GameMessage sendMessage = new GameMessage("Movement", game.getAuth(), GameMessage.Status.OK, game.getGameID(), null);
+                GameMessage sendMessage = new GameMessage(GameMessage.Type.MOVE, game.getAuth(), GameMessage.Status.OK, game.getGameID(), null);
                     ArrayList<String> position = new ArrayList<>();
                     position.add(player.getXPosition());
                     position.add(player.getYPosition());
@@ -272,7 +272,7 @@ public class PlayScreen implements Screen {
     public void receiveMessage(GameMessage gameMessage) {
         if (gameMessage != null && gameMessage.getType() != null) {
             switch (gameMessage.getType()) {
-                case "Movement":
+                case MOVE:
                     if (gameMessage.getStringList() != null) {
                         ArrayList<String> position = gameMessage.getStringList();
                         player2.setTransform(Float.parseFloat(position.get(0)), Float.parseFloat(position.get(1)));
@@ -295,12 +295,12 @@ public class PlayScreen implements Screen {
                             break;
                     }
                     break;
-                case "scoreRequest":
-                    GameMessage scoreReport = new GameMessage("scoreReport", game.getAuth(), GameMessage.Status.OK, game.getGameID(), null);
+                case SCORE_REQUEST:
+                    GameMessage scoreReport = new GameMessage(GameMessage.Type.SCORE_REPORT, game.getAuth(), GameMessage.Status.OK, game.getGameID(), null);
                     scoreReport.setPayloadInteger(hud.getScore());
                     game.sendMessage(scoreReport);
                     break;
-                case "WinnerEvaluation": {
+                case WINNER_EVALUATION: {
                     int won = gameMessage.getPayloadInteger();
                     String player1score = gameMessage.getStringList().get(0);
                     String player2score = gameMessage.getStringList().get(1);
@@ -334,10 +334,10 @@ public class PlayScreen implements Screen {
                     }
                     break;
                 }
-                case "WinBecauseLeave": {
+                case WIN_BECAUSE_LEAVE: {
                     EndScreen endScreen = new EndScreen(game);
                     endScreen.setPoints("" + hud.getScore());
-                    endScreen.setEnemyPoints("quitting coward");
+                    endScreen.setEnemyPoints("Quited");
                     endScreen.setText("VICTORY");
                     game.setScreen(endScreen);
                     break;
@@ -347,7 +347,7 @@ public class PlayScreen implements Screen {
     }
 
     private void sendEndGameMessage() {
-        GameMessage endMessage = new GameMessage("endGame", game.getAuth(), GameMessage.Status.OK, game.getGameID(), null);
+        GameMessage endMessage = new GameMessage(GameMessage.Type.END_GAME, game.getAuth(), GameMessage.Status.OK, game.getGameID(), null);
         endMessage.setPayloadInteger(hud.getScore());
         game.sendMessage(endMessage);
     }

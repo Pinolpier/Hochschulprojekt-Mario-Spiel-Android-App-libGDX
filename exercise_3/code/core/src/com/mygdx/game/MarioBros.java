@@ -96,7 +96,7 @@ public class MarioBros extends Game {
                 playScreen.receiveMessage(gameMessage);
             }
         } else {
-            if (gameMessage.getType().equals("Countdown") && !quited) {
+            if (gameMessage.getType() == GameMessage.Type.COUNTDOWN && !quited) {
                 int secondsLeft = gameMessage.getPayloadInteger();
                 switch (secondsLeft) {
                     case 3:
@@ -115,7 +115,7 @@ public class MarioBros extends Game {
                         setScreen(playScreen);
                         break;
                 }
-            } else if (gameMessage.getType().equals("WinBecauseLeave")) {
+            } else if (gameMessage.getType() == GameMessage.Type.WIN_BECAUSE_LEAVE) {
                 quited = true;
                 EndScreen endScreen = new EndScreen(this);
                 endScreen.setEnemyPoints("quitting coward");

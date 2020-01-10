@@ -103,7 +103,7 @@ public class HomeActivity extends Activity implements MessageListener {
         Log.d(HomeActivity.this.getClass().getSimpleName(), "Start Game has been pressed. Will now send join request for game with gameID as own username that is: " + username);
         if (serviceBound) {
             int level = new Random().nextInt(AMOUNT_OF_LEVEL);
-            GameMessage msg = new GameMessage("JOIN_GAME", auth, GameMessage.Status.OK, gameID, null);
+            GameMessage msg = new GameMessage(GameMessage.Type.JOIN_GAME, auth, GameMessage.Status.OK, gameID, null);
             msg.setPayloadInteger(level);
             webSocketService.sendMessage(gson.toJson(msg));
         } else {
@@ -133,7 +133,7 @@ public class HomeActivity extends Activity implements MessageListener {
     public void onMessageReceived(String message) {
         try {
             GameMessage msg = gson.fromJson(message, GameMessage.class);
-            if (msg.getType() != null && msg.getType().equals("JoinAnswer")) {
+            if (msg.getType() != null && msg.getType() == GameMessage.Type.JOIN_ANSWER) {
                 if (msg.getStatus() == GameMessage.Status.OK) {
                     Intent gameIntent = new Intent(this, AndroidLauncher.class);
                     Bundle extras = getIntent().getExtras();

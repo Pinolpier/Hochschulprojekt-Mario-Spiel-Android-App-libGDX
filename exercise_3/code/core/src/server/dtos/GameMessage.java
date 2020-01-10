@@ -3,12 +3,13 @@ package server.dtos;
 import java.util.ArrayList;
 
 public class GameMessage {
-    private String type, authentication, gameId, payloadString;
+    private String authentication, gameId, payloadString;
     private Integer payloadInteger;
     private Status status;
+    private Type type;
     private ArrayList<String> stringList;
 
-    public GameMessage(String type, String authentication, Status status, String gameId, ArrayList<String> stringList) {
+    public GameMessage(Type type, String authentication, Status status, String gameId, ArrayList<String> stringList) {
         this.type = type;
         this.authentication = authentication;
         this.gameId = gameId;
@@ -16,11 +17,11 @@ public class GameMessage {
         this.stringList = stringList;
     }
 
-    public String getType() {
+    public Type getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(Type type) {
         this.type = type;
     }
 
@@ -74,5 +75,9 @@ public class GameMessage {
 
     public enum Status {
         OK, FAILED
+    }
+
+    public enum Type {
+        GET_GAMES, JOIN_GAME, JOIN_ANSWER, LOGIN, MOVE, SCORE_REPORT, END_GAME, GAME_LIST, LOGIN_ANSWER, COUNTDOWN, WIN_BECAUSE_LEAVE, SCORE_REQUEST, WINNER_EVALUATION
     }
 }
