@@ -6,6 +6,10 @@ import com.mygdx.game.Scenes.Hud;
 import com.mygdx.game.Screens.PlayScreen;
 import com.mygdx.game.Player.Player;
 
+/**
+ * This class represents the Goal of the game.
+ * If the player hit the goal, the game ends
+ */
 public class Goal extends InteractiveTileObject{
 
     public Goal(PlayScreen screen, MapObject object) {
@@ -15,10 +19,10 @@ public class Goal extends InteractiveTileObject{
     }
 
     @Override
-    public void onHeadHit(Player mario) {
-        if(mario.getId()==1) {
+    public void onHeadHit(Player player) {
+        if(player.getId()==1) {
             Hud.addScore(500);
-            mario.win();
+            player.win();
         }
     }
 }

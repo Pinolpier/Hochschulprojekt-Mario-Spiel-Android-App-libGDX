@@ -13,6 +13,9 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.MarioBros;
 
+/**
+ * This class represents screen shown when something ends the game
+ */
 public class EndScreen implements Screen {
     private Viewport viewport;
     private Stage stage;
@@ -20,6 +23,7 @@ public class EndScreen implements Screen {
     private Label points;
     private Label enemy;
     private Label textLabel;
+
 
     public EndScreen(MarioBros MarioGame){
         this.game = MarioGame;

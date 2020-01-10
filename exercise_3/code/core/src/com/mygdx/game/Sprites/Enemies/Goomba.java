@@ -15,7 +15,7 @@ import com.mygdx.game.Player.Player;
 import com.mygdx.game.Screens.PlayScreen;
 
 /**
- * the class represents the Goomba enemy
+ * the class represents the Goomba enemy known from Super Mario Bros games.
  */
 public class Goomba extends Enemy
 {
@@ -111,7 +111,7 @@ public class Goomba extends Enemy
 
     @Override
     public void hitByEnemy(Enemy enemy) {
-        if(enemy instanceof Turtle && ((Turtle) enemy).currentState == Turtle.State.MOVING_SHELL)
+        if(enemy instanceof Koopa && ((Koopa) enemy).currentState == Koopa.State.MOVING_SHELL)
             setToDestroy = true;
         else
             reverseVelocity(true, false);

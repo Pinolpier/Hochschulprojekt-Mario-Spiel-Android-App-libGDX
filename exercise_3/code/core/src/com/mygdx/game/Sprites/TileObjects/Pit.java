@@ -7,6 +7,7 @@ import com.mygdx.game.Screens.PlayScreen;
 
 /**
  * defines the pits/holes in de Map
+ * If the player hit them, he dies
  */
 public class Pit extends InteractiveTileObject {
     public Pit(PlayScreen screen, MapObject object){

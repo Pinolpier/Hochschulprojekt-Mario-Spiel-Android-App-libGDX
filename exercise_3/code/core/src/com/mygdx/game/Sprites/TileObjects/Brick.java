@@ -7,6 +7,10 @@ import com.mygdx.game.Player.Player;
 import com.mygdx.game.Scenes.Hud;
 import com.mygdx.game.Screens.PlayScreen;
 
+/**
+ * this class represents a Brick in the game
+ *
+ */
 public class Brick extends InteractiveTileObject {
     public Brick(PlayScreen screen, MapObject object){
         super(screen, object);
@@ -15,8 +19,8 @@ public class Brick extends InteractiveTileObject {
     }
 
     @Override
-    public void onHeadHit(Player mario) {
-        if(mario.isBig()) {
+    public void onHeadHit(Player player) {
+        if(player.isBig()) {
             setCategoryFilter(MarioBros.DESTROYED_BIT);
             getCell().setTile(null);
             Hud.addScore(200);

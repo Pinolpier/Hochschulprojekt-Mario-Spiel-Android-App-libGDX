@@ -7,6 +7,9 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game.Player.Player;
 import com.mygdx.game.Screens.PlayScreen;
 
+/**
+ * This class represents the enemys
+ */
 public abstract class Enemy extends Sprite {
     protected World world;
     protected PlayScreen screen;
@@ -24,7 +27,17 @@ public abstract class Enemy extends Sprite {
 
     protected abstract void defineEnemy();
     public abstract void update(float dt);
-    public abstract void hitOnHead(Player mario);
+
+    /**
+     * defines what should happen if the player hits the enemy on head
+     * @param player who hit the enemy
+     */
+    public abstract void hitOnHead(Player player);
+
+    /**
+     * defines what happens when enemy gets hit by another enemy
+     * @param enemy
+     */
     public abstract void hitByEnemy(Enemy enemy);
 
     public void reverseVelocity(boolean x, boolean y){

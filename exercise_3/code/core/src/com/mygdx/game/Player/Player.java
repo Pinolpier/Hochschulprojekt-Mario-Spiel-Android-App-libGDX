@@ -20,15 +20,10 @@ import com.mygdx.game.MarioBros;
 import com.mygdx.game.Scenes.Hud;
 import com.mygdx.game.Screens.PlayScreen;
 import com.mygdx.game.Sprites.Enemies.Enemy;
-import com.mygdx.game.Sprites.Enemies.Turtle;
+import com.mygdx.game.Sprites.Enemies.Koopa;
 
-public class Player extends Sprite {
-
-
-    public String getXVelocity() {
-        return "" + b2body.getLinearVelocity().x;
-    }
-
+public abstract class Player extends Sprite {
+    public enum State {FALLING, JUMPING, STANDING, RUNNING, GROWING, DEAD, WIN}
     public Body b2body;
     public World world;
     public State currentState;
@@ -49,16 +44,19 @@ public class Player extends Sprite {
     private boolean timeToDefineBigPlayer;
     private boolean timeToRedefinePlayer;
     private boolean PlayerIsDead;
-    private boolean marioReachedGoal;
-    private int id=0;
+    private boolean playerReachedGoal;
+    private int id = 0;
     Array<TextureRegion> frames;
 
-    public Player(){
+
+    public Player() {
         frames = new Array<>();
     }
 
-
-    public void defineMario(){
+    /**
+     * Defines the players shape and body
+     */
+    public void definePlayer() {
         BodyDef bdef = new BodyDef();
         bdef.position.set(32 / MarioBros.PPM, 32 / MarioBros.PPM);
         bdef.type = BodyDef.BodyType.DynamicBody;
@@ -84,33 +82,17 @@ public class Player extends Sprite {
         fdef.filter.categoryBits = MarioBros.MARIO_HEAD_BIT;
         fdef.shape = head;
         fdef.isSensor = true;
-
         b2body.createFixture(fdef).setUserData(this);
     }
 
-    public String getXPosition(){
-        return ""+b2body.getPosition().x;
-    }
-    public String getYPosition(){
-        return ""+b2body.getPosition().y;
-    }
-
-    public String getYVelocity() {
-        return "" + b2body.getLinearVelocity().y;
-    }
-
-    public boolean tooFast() {
-        return b2body.getLinearVelocity().len() >= 2;
-    }
-
-    public void setTransform(float x, float y) {
-        b2body.setTransform(x, y, b2body.getAngle());
-    }
-
-    public enum State {FALLING, JUMPING, STANDING, RUNNING, GROWING, DEAD, WIN}
 
 
-    public void defineBigPlayer(){
+
+
+    /**
+     * Method to defines the player when he collects a mushroom
+     */
+    public void defineBigPlayer() {
         Vector2 currentPosition = b2body.getPosition();
         world.destroyBody(b2body);
 
@@ -146,6 +128,10 @@ public class Player extends Sprite {
         timeToDefineBigPlayer = false;
     }
 
+    /**
+     * Method gets called when a Player dies.
+     * This works only for the main player on the screen
+     */
     public void die() {
         if (isDead()) {
             if (id == 1) {
@@ -166,28 +152,34 @@ public class Player extends Sprite {
         }
     }
 
-    public void addScore(int value){
-        if(id==1)
-        Hud.addScore(value);
+    public void addScore(int value) {
+        if (id == 1)
+            Hud.addScore(value);
     }
 
+    /**
+     * Method to set the State to Win when the player reached the goal
+     */
     public void win() {
-        if(isDead()) {
-            if(id==1) marioReachedGoal = true;
+        if (isDead()) {
+            if (id == 1) playerReachedGoal = true;
         }
     }
 
-    public boolean isDead(){
+    public boolean isDead() {
         return !PlayerIsDead;
     }
-    public float getStateTimer(){
+
+    public float getStateTimer() {
         return stateTimer;
     }
-    public boolean isBig(){
+
+    public boolean isBig() {
         return PlayerIsBig;
     }
-    public void jump(){
-        if ( currentState != State.JUMPING ) {
+
+    public void jump() {
+        if (currentState != State.JUMPING) {
             b2body.applyLinearImpulse(new Vector2(0, 4f), b2body.getWorldCenter(), true);
             currentState = State.JUMPING;
         }
@@ -195,11 +187,12 @@ public class Player extends Sprite {
 
     /**
      * defines what happens when player touches a enemy
+     *
      * @param enemy which gets hit
      */
-    public void hit(Enemy enemy){
-        if(enemy instanceof Turtle && ((Turtle) enemy).currentState == Turtle.State.STANDING_SHELL)
-            ((Turtle) enemy).kick(enemy.b2body.getPosition().x > b2body.getPosition().x ? Turtle.KICK_RIGHT : Turtle.KICK_LEFT);
+    public void hit(Enemy enemy) {
+        if (enemy instanceof Koopa && ((Koopa) enemy).currentState == Koopa.State.STANDING_SHELL)
+            ((Koopa) enemy).kick(enemy.b2body.getPosition().x > b2body.getPosition().x ? Koopa.KICK_RIGHT : Koopa.KICK_LEFT);
         else {
             if (PlayerIsBig) {
                 PlayerIsBig = false;
@@ -212,7 +205,10 @@ public class Player extends Sprite {
         }
     }
 
-    public void redefinePlayer(){
+    /**
+     * redefines the players shape and body after something happens
+     */
+    public void redefinePlayer() {
         Vector2 position = b2body.getPosition();
         world.destroyBody(b2body);
 
@@ -248,37 +244,36 @@ public class Player extends Sprite {
 
     /**
      * Updates the Player position and size
+     *
      * @param dt deltaTime
      */
-    public void update(float dt){
+    public void update(float dt) {
         if (screen.getHud().isTimeUp() && isDead()) {
             die();
         }
-
-        if(PlayerIsBig)
+        if (PlayerIsBig)
             setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2 - 6 / MarioBros.PPM);
         else
             setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2);
 
         setRegion(getFrame(dt));
-        if(timeToDefineBigPlayer)
+        if (timeToDefineBigPlayer)
             defineBigPlayer();
-        if(timeToRedefinePlayer)
+        if (timeToRedefinePlayer)
             redefinePlayer();
-
     }
 
-    public TextureRegion getFrame(float dt){
+    public TextureRegion getFrame(float dt) {
         currentState = getState();
         TextureRegion region;
 
-        switch(currentState){
+        switch (currentState) {
             case DEAD:
                 region = PlayerDead;
                 break;
             case GROWING:
                 region = (TextureRegion) growMario.getKeyFrame(stateTimer);
-                if(growMario.isAnimationFinished(stateTimer)) {
+                if (growMario.isAnimationFinished(stateTimer)) {
                     runGrowAnimation = false;
                 }
                 break;
@@ -294,42 +289,24 @@ public class Player extends Sprite {
                 region = PlayerIsBig ? bigPlayerStand : PlayerStand;
                 break;
         }
-
-        if((b2body.getLinearVelocity().x < 0 || !runningRight) && !region.isFlipX()){
+        if ((b2body.getLinearVelocity().x < 0 || !runningRight) && !region.isFlipX()) {
             region.flip(true, false);
             runningRight = false;
-        }
-
-        else if((b2body.getLinearVelocity().x > 0 || runningRight) && region.isFlipX()){
+        } else if ((b2body.getLinearVelocity().x > 0 || runningRight) && region.isFlipX()) {
             region.flip(true, false);
             runningRight = true;
         }
-
         stateTimer = currentState == previousState ? stateTimer + dt : 0;
         previousState = currentState;
         return region;
-
     }
 
-    public State getState(){
-        if(PlayerIsDead)
-            return State.DEAD;
-        else if(runGrowAnimation)
-            return State.GROWING;
-        else if((b2body.getLinearVelocity().y > 0 && currentState == State.JUMPING) || (b2body.getLinearVelocity().y < 0 && previousState == State.JUMPING))
-            return State.JUMPING;
-        else if(b2body.getLinearVelocity().y < 0)
-            return State.FALLING;
-        else if(b2body.getLinearVelocity().x != 0)
-            return State.RUNNING;
-        else if(marioReachedGoal)
-            return State.WIN;
-        else
-            return State.STANDING;
-    }
-
-    public void grow(){
-        if( !isBig() ) {
+    /**
+     * Sets the states and Bounds for the Player to grow up after collect a mushroom.
+     * Also plays the typical sound for collecting a powerup.
+     */
+    public void grow() {
+        if (!isBig()) {
             runGrowAnimation = true;
             PlayerIsBig = true;
             timeToDefineBigPlayer = true;
@@ -341,126 +318,184 @@ public class Player extends Sprite {
     public void draw(Batch batch) {
         super.draw(batch);
     }
+
+    public State getState() {
+        if (PlayerIsDead)
+            return State.DEAD;
+        else if (runGrowAnimation)
+            return State.GROWING;
+        else if ((b2body.getLinearVelocity().y > 0 && currentState == State.JUMPING) || (b2body.getLinearVelocity().y < 0 && previousState == State.JUMPING))
+            return State.JUMPING;
+        else if (b2body.getLinearVelocity().y < 0)
+            return State.FALLING;
+        else if (b2body.getLinearVelocity().x != 0)
+            return State.RUNNING;
+        else if (playerReachedGoal)
+            return State.WIN;
+        else
+            return State.STANDING;
+    }
+
     public Body getB2body() {
         return b2body;
     }
+
     public void setB2body(Body b2body) {
         this.b2body = b2body;
     }
+
     public World getWorld() {
         return world;
     }
+
     public void setWorld(World world) {
         this.world = world;
     }
+
     public State getCurrentState() {
         return currentState;
     }
+
     public void setCurrentState(State currentState) {
         this.currentState = currentState;
     }
+
     public State getPreviousState() {
         return previousState;
     }
+
     public void setPreviousState(State previousState) {
         this.previousState = previousState;
     }
+
     public Animation getPlayerRun() {
         return PlayerRun;
     }
+
     public void setPlayerRun(Animation playerRun) {
         this.PlayerRun = playerRun;
     }
+
     public TextureRegion getPlayerJump() {
         return PlayerJump;
     }
+
     public void setPlayerJump(TextureRegion playerJump) {
         this.PlayerJump = playerJump;
     }
+
     public TextureRegion getPlayerDead() {
         return PlayerDead;
     }
+
     public void setPlayerDead(TextureRegion playerDead) {
         this.PlayerDead = playerDead;
     }
+
     public TextureRegion getBigPlayerStand() {
         return bigPlayerStand;
     }
+
     public void setBigPlayerStand(TextureRegion bigPlayerStand) {
         this.bigPlayerStand = bigPlayerStand;
     }
+
     public TextureRegion getBigPlayerJump() {
         return bigPlayerJump;
     }
+
     public void setBigPlayerJump(TextureRegion bigPlayerJump) {
         this.bigPlayerJump = bigPlayerJump;
     }
+
     public Animation getBigPlayerRun() {
         return bigPlayerRun;
     }
+
     public void setBigPlayerRun(Animation bigPlayerRun) {
         this.bigPlayerRun = bigPlayerRun;
     }
+
     public Animation getGrowMario() {
         return growMario;
     }
+
     public void setGrowMario(Animation growMario) {
         this.growMario = growMario;
     }
+
     public void setStateTimer(float stateTimer) {
         this.stateTimer = stateTimer;
     }
+
     public boolean isRunningRight() {
         return runningRight;
     }
+
     public void setRunningRight(boolean runningRight) {
         this.runningRight = runningRight;
     }
+
     public boolean isPlayerIsBig() {
         return PlayerIsBig;
     }
+
     public void setPlayerIsBig(boolean playerIsBig) {
         this.PlayerIsBig = playerIsBig;
     }
+
     public boolean isRunGrowAnimation() {
         return runGrowAnimation;
     }
+
     public void setRunGrowAnimation(boolean runGrowAnimation) {
         this.runGrowAnimation = runGrowAnimation;
     }
+
     public boolean isTimeToDefineBigPlayer() {
         return timeToDefineBigPlayer;
     }
+
     public void setTimeToDefineBigPlayer(boolean timeToDefineBigPlayer) {
         this.timeToDefineBigPlayer = timeToDefineBigPlayer;
     }
+
     public boolean isTimeToRedefinePlayer() {
         return timeToRedefinePlayer;
     }
+
     public void setTimeToRedefinePlayer(boolean timeToRedefinePlayer) {
         this.timeToRedefinePlayer = timeToRedefinePlayer;
     }
+
     public boolean isPlayerIsDead() {
         return PlayerIsDead;
     }
+
     public void setPlayerIsDead(boolean playerIsDead) {
         this.PlayerIsDead = playerIsDead;
     }
+
     public PlayScreen getScreen() {
         return screen;
     }
+
     public void setScreen(PlayScreen screen) {
         this.screen = screen;
     }
+
     public TextureRegion getPlayerStand() {
         return PlayerStand;
     }
+
     public void setPlayerStand(TextureRegion playerStand) {
         this.PlayerStand = playerStand;
     }
+
     public Array<TextureRegion> getFrames() {
         return frames;
     }
+
     public void setFrames(Array<TextureRegion> frames) {
         this.frames = frames;
     }
@@ -471,5 +506,27 @@ public class Player extends Sprite {
 
     public void setId(int id) {
         this.id = id;
+    }
+    public String getXPosition() {
+        return "" + b2body.getPosition().x;
+    }
+
+    public String getYPosition() {
+        return "" + b2body.getPosition().y;
+    }
+
+    public String getXVelocity() {
+        return "" + b2body.getLinearVelocity().x;
+    }
+
+    public String getYVelocity() {
+        return "" + b2body.getLinearVelocity().y;
+    }
+
+    public boolean tooFast() {
+        return b2body.getLinearVelocity().len() >= 2;
+    }
+    public void setTransform(float x, float y) {
+        b2body.setTransform(x, y, b2body.getAngle());
     }
 }

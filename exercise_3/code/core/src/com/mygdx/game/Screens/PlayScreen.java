@@ -25,27 +25,25 @@ import com.mygdx.game.Sprites.Items.ItemDef;
 import com.mygdx.game.Sprites.Items.Mushroom;
 import com.mygdx.game.Tools.B2WorldCreator;
 import com.mygdx.game.Tools.WorldContactListener;
-
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
-
 import server.dtos.GameMessage;
 
+/**
+ * This class represents the main Playscreen for the Game
+ */
 public class PlayScreen implements Screen {
     private MarioBros game;
     private TextureAtlas atlas;
     private OrthographicCamera gamecam;
     private Viewport gamePort;
     private Hud hud;
-
     private TmxMapLoader maploader;
     private TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
-
     private World world;
     private Box2DDebugRenderer b2dr;
     private B2WorldCreator creator;
-
     private Player player;
     private Player player2;
     private Music music;
@@ -57,10 +55,9 @@ public class PlayScreen implements Screen {
     private boolean endMessageSent = true;
 
     /**
-     * This class represents the main playscreen
-     *
      * @param game         the main game
      * @param soundboolean if the music should be muted
+     * @param level which level should be choosen to play
      */
     public PlayScreen(MarioBros game, Boolean soundboolean, int level) {
         atlas = new TextureAtlas("Mario_and_Enemies.pack");
@@ -75,22 +72,17 @@ public class PlayScreen implements Screen {
         world = new World(new Vector2(0, -10), true);
         b2dr = new Box2DDebugRenderer();
         creator = new B2WorldCreator(this);
-
-
         player = new Mario(this);
         player.setId(1);
         player2 = new Mario(this);
         player2.setId(2);
-
         world.setContactListener(new WorldContactListener());
-
         music = MarioBros.manager.get("audio/music/mario_music.ogg", Music.class);
         music.setLooping(true);
         music.setVolume(0.3f);
         if (soundboolean) {
             music.play();
         }
-
         items = new Array<>();
         itemsToSpawn = new LinkedBlockingQueue<>();
     }
@@ -116,13 +108,8 @@ public class PlayScreen implements Screen {
         }
     }
 
-
-    public TextureAtlas getAtlas() {
-        return atlas;
-    }
-
     /**
-     * handles every input to controll de player
+     * handles every input to control the player
      */
     public void handleInput() {
         if (endMessageSent) {
@@ -159,6 +146,10 @@ public class PlayScreen implements Screen {
         }
     }
 
+    /**
+     * update method to handle every position and score/time
+     * @param dt
+     */
     public void update(float dt) {
         handleInput();
         handleSpawningItems();
@@ -169,10 +160,8 @@ public class PlayScreen implements Screen {
             enemy.update(dt);
             enemy.b2body.setActive(true);
         }
-
         for (Item item : items)
             item.update(dt);
-
         hud.update(dt);
         if (player.getCurrentState() != Mario.State.DEAD) {
             gamecam.position.x = player.getB2body().getPosition().x;
@@ -181,17 +170,13 @@ public class PlayScreen implements Screen {
         renderer.setView(gamecam);
     }
 
-
     @Override
     public void render(float delta) {
         update(delta);
-
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
         renderer.render();
         b2dr.render(world, gamecam.combined);
-
         game.batch.setProjectionMatrix(gamecam.combined);
         game.batch.begin();
         player.draw(game.batch);
@@ -203,7 +188,6 @@ public class PlayScreen implements Screen {
         game.batch.end();
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();
-
         if (gameOver() | gameWin()) {
             if (endMessageSent) {
                 sendEndGameMessage();
@@ -225,21 +209,12 @@ public class PlayScreen implements Screen {
         gamePort.update(width, height);
     }
 
-    public TiledMap getMap() {
-        return map;
-    }
-
-    public World getWorld() {
-        return world;
-    }
-
     @Override
     public void pause() {
     }
 
     @Override
     public void resume() {
-
     }
 
     @Override
@@ -250,7 +225,6 @@ public class PlayScreen implements Screen {
     public void hide() {
     }
 
-
     @Override
     public void dispose() {
         map.dispose();
@@ -258,10 +232,6 @@ public class PlayScreen implements Screen {
         world.dispose();
         b2dr.dispose();
         hud.dispose();
-    }
-
-    public Hud getHud() {
-        return hud;
     }
 
     /**
@@ -350,5 +320,18 @@ public class PlayScreen implements Screen {
         GameMessage endMessage = new GameMessage(GameMessage.Type.END_GAME, game.getAuth(), GameMessage.Status.OK, game.getGameID(), null);
         endMessage.setPayloadInteger(hud.getScore());
         game.sendMessage(endMessage);
+    }
+
+    public TextureAtlas getAtlas() {
+        return atlas;
+    }
+    public Hud getHud() {
+        return hud;
+    }
+    public TiledMap getMap() {
+        return map;
+    }
+    public World getWorld() {
+        return world;
     }
 }
