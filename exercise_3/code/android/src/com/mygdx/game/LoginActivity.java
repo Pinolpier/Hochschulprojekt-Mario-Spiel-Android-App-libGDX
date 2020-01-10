@@ -62,7 +62,12 @@ public class LoginActivity extends Activity {
 
                     @Override
                     public void onFailure() {
-                        Toast.makeText(context, R.string.registrationFailedToastMessage, Toast.LENGTH_LONG).show();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(context, R.string.registrationFailedToastMessage, Toast.LENGTH_LONG).show();
+                            }
+                        });
                         Log.wtf(LoginActivity.this.getClass().getSimpleName(), "Registration failed. RegistrationProcessedInterface.onFailure() has been called.");
                     }
                 });
@@ -73,7 +78,12 @@ public class LoginActivity extends Activity {
     private void login(final String username, final String password) {
         Log.d(LoginActivity.this.getClass().getSimpleName(), "Login method started!");
         if (username == null || password == null || username.equals("") || password.equals("")) {
-            Toast.makeText(this, R.string.emptyCredentialsToastMessage, Toast.LENGTH_LONG).show();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(LoginActivity.this, R.string.emptyCredentialsToastMessage, Toast.LENGTH_LONG).show();
+                }
+            });
             return;
         }
         userService.login(username, password, new LoginProcessedInterface() {
