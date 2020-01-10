@@ -14,6 +14,9 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.MarioBros;
 
+/**
+ * This class represents the screen when a player have to wait for other players
+ */
 public class CountdownScreen implements Screen {
     private Viewport viewport;
     private Stage stage;

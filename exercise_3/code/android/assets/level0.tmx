@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.3.1" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="240" height="13" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="184">
+<map version="1.2" tiledversion="1.3.1" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="240" height="13" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="200">
  <tileset firstgid="1" name="tileset_gutter" tilewidth="16" tileheight="16" spacing="2" margin="1" tilecount="924" columns="33">
   <image source="tileset_gutter.png" width="594" height="504"/>
   <tile id="0">
@@ -122,7 +122,7 @@
   </data>
  </layer>
  <objectgroup id="3" name="Ground">
-  <object id="5" x="0" y="192" width="1104" height="18"/>
+  <object id="5" x="0" y="192" width="1104" height="16"/>
   <object id="11" x="1136" y="192" width="256" height="16"/>
   <object id="25" x="1440" y="192" width="1024" height="16"/>
   <object id="26" x="2208" y="128" width="16" height="64"/>
@@ -152,7 +152,7 @@
   <object id="52" x="2928" y="160" width="16" height="32"/>
   <object id="53" x="2912" y="176" width="16" height="16"/>
   <object id="54" x="3184" y="176" width="16" height="16"/>
-  <object id="153" x="0.666667" y="0.666667" width="15.6667" height="207"/>
+  <object id="153" x="0" y="0" width="16" height="208"/>
   <object id="179" x="1088.17" y="176.176" width="15.5341" height="15.6591"/>
   <object id="180" x="1136.17" y="176.114" width="15.7011" height="15.8152"/>
   <object id="181" x="1376.06" y="176.156" width="15.8438" height="15.7188"/>
@@ -230,6 +230,22 @@
   <object id="166" x="79.9778" y="0.0444444">
    <polygon points="0,0 0.0444444,15.9333 -31.97,15.9556 -31.9856,31.9477 0.0111111,31.9611 0.0222222,79.9399 -47.9622,79.9399 -47.9343,63.9556 -16.1082,64.0425 -16.0213,47.9556 -47.8908,48.0425 -47.97,-0.0288194"/>
   </object>
+  <object id="184" x="112" y="0" width="16" height="16"/>
+  <object id="185" x="112" y="16" width="16" height="16"/>
+  <object id="186" x="112" y="32" width="16" height="16"/>
+  <object id="187" x="112" y="48" width="16" height="16"/>
+  <object id="188" x="128" y="64" width="16" height="16"/>
+  <object id="189" x="144" y="64" width="16" height="16"/>
+  <object id="190" x="160" y="48" width="16" height="16"/>
+  <object id="191" x="160" y="32" width="16" height="16"/>
+  <object id="192" x="160" y="16" width="16" height="16"/>
+  <object id="193" x="160" y="0" width="16" height="16"/>
+  <object id="194" x="176" y="64" width="16" height="16"/>
+  <object id="195" x="192" y="64" width="16" height="16"/>
+  <object id="196" x="208" y="48" width="16" height="16"/>
+  <object id="197" x="208" y="32" width="16" height="16"/>
+  <object id="198" x="208" y="16" width="16" height="16"/>
+  <object id="199" x="208" y="0" width="16" height="16"/>
  </objectgroup>
  <objectgroup id="7" name="Goombas">
   <object id="141" x="832" y="176" width="16" height="16"/>

@@ -58,7 +58,6 @@ public class WebSocketService extends Service implements MessageListener {
             registerListener(this);
             login();
         }
-        Log.e("Ist der Binder null? ", Boolean.toString(binder == null));
         return binder;
     }
 
@@ -83,7 +82,6 @@ public class WebSocketService extends Service implements MessageListener {
             registerListener(this);
             login();
         }
-        Log.d(WebSocketService.this.getClass().getSimpleName(), "Ist der Binder null? " + (binder == null));
         super.onStartCommand(intent, flags, startId);
         return START_REDELIVER_INTENT;
     }
@@ -122,7 +120,7 @@ public class WebSocketService extends Service implements MessageListener {
 
     private void login() {
         Log.d(WebSocketService.this.getClass().getSimpleName() + ":login() ", "Login with auth key from userservice at Websocket has been started.");
-        GameMessage loginMessage = new GameMessage("LOGIN", auth, GameMessage.Status.OK, null, null);
+        GameMessage loginMessage = new GameMessage(GameMessage.Type.LOGIN, auth, GameMessage.Status.OK, null, null);
         sendMessage(gson.toJson(loginMessage));
     }
 
@@ -130,7 +128,7 @@ public class WebSocketService extends Service implements MessageListener {
     public void onMessageReceived(String message) {
         try {
             GameMessage gameMessage = gson.fromJson(message, GameMessage.class);
-            if ("LoginAnswer".equals(gameMessage.getType())) {
+            if (gameMessage.getType() == GameMessage.Type.LOGIN_ANSWER) {
                 if (gameMessage.getStatus() == GameMessage.Status.OK) {
                     //Login succeeded
                     Log.i(this.getClass().getSimpleName(), "Login succeeded");

@@ -104,7 +104,7 @@ public class GamelobbyscreenActivity extends Activity implements MessageListener
 
     private void requestAllGames() {
         if (serviceBound) {
-            GameMessage gameMessage = new GameMessage("GetGames", Objects.requireNonNull(getIntent().getExtras()).getString("auth"), GameMessage.Status.OK, null, null);
+            GameMessage gameMessage = new GameMessage(GameMessage.Type.GET_GAMES, Objects.requireNonNull(getIntent().getExtras()).getString("auth"), GameMessage.Status.OK, null, null);
             webSocketService.sendMessage(gson.toJson(gameMessage));
         }
     }
@@ -113,7 +113,7 @@ public class GamelobbyscreenActivity extends Activity implements MessageListener
     public void onMessageReceived(String message) {
         try {
             GameMessage gameMessage = gson.fromJson(message, GameMessage.class);
-            if (gameMessage != null && "GameList".equals(gameMessage.getType()) && gameMessage.getStatus() == GameMessage.Status.OK) {
+            if (gameMessage != null && gameMessage.getType() == GameMessage.Type.GAME_LIST && gameMessage.getStatus() == GameMessage.Status.OK) {
                 allGames.clear();
                 allGames = gameMessage.getStringList(); //Eine Liste aller Spiele, die auf dem Server existieren und denen der Spieler beitreten kann!
                 Log.d(GamelobbyscreenActivity.this.getClass().getSimpleName(), "Updaten auf dem UI Thread der empfangenen Ergebnisse als nächstes...");
@@ -130,7 +130,7 @@ public class GamelobbyscreenActivity extends Activity implements MessageListener
                                 auth = getIntent().getExtras().getString("auth");
                                 GamelobbyscreenActivity.this.gameID = gameID;
                                 if (serviceBound) {
-                                    webSocketService.sendMessage(gson.toJson(new GameMessage("JOIN_GAME", auth, GameMessage.Status.OK, gameID, null)));
+                                    webSocketService.sendMessage(gson.toJson(new GameMessage(GameMessage.Type.JOIN_GAME, auth, GameMessage.Status.OK, gameID, null)));
                                 } else {
                                     Log.e(GamelobbyscreenActivity.this.getClass().getSimpleName(), "Couldn't send Join request because service is not bound. Will show error toast, retry should work soon!");
                                     runOnUiThread(new Runnable() {
@@ -145,7 +145,7 @@ public class GamelobbyscreenActivity extends Activity implements MessageListener
                         recyclerView.setAdapter(adapter);
                     }
                 });
-            } else if (gameMessage != null && "JoinAnswer".equals(gameMessage.getType())) {
+            } else if (gameMessage != null && gameMessage.getType() == GameMessage.Type.JOIN_ANSWER) {
                 if (gameMessage.getStatus() == GameMessage.Status.OK) {
                     Intent gameIntent = new Intent(this, AndroidLauncher.class);
                     Bundle extras = getIntent().getExtras();
@@ -158,6 +158,8 @@ public class GamelobbyscreenActivity extends Activity implements MessageListener
                     startActivity(gameIntent);
                 } else {
                     Log.wtf(GamelobbyscreenActivity.this.getClass().getSimpleName(), "Can't join game with gameID " + gameID);
+                    requestAllGames();
+                    Toast.makeText(GamelobbyscreenActivity.this, R.string.cantJoinGame, Toast.LENGTH_LONG).show();
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {

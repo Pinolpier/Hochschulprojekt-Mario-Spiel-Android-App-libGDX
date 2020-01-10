@@ -10,6 +10,10 @@ import com.mygdx.game.Screens.PlayScreen;
 import com.mygdx.game.Sprites.Items.ItemDef;
 import com.mygdx.game.Sprites.Items.Mushroom;
 
+/**
+ * The class represents a coin to collect Score
+ * one coins gives the player 100points
+ */
 public class Coin extends InteractiveTileObject {
     private static TiledMapTileSet tileSet;
     private final int BLANK_COIN = 28;
@@ -22,7 +26,7 @@ public class Coin extends InteractiveTileObject {
     }
 
     @Override
-    public void onHeadHit(Player mario) {
+    public void onHeadHit(Player player) {
         if(getCell().getTile().getId() == BLANK_COIN)
             MarioBros.manager.get("audio/sounds/bump.wav", Sound.class).play();
         else {
@@ -34,7 +38,7 @@ public class Coin extends InteractiveTileObject {
             else
                 MarioBros.manager.get("audio/sounds/coin.wav", Sound.class).play();
             getCell().setTile(tileSet.getTile(BLANK_COIN));
-            mario.addScore(100);
+            player.addScore(100);
         }
     }
 }
