@@ -287,7 +287,7 @@ public class PlayScreen implements Screen {
                 case "Movement":
                     if (gameMessage.getStringList() != null) {
                         ArrayList<String> position = gameMessage.getStringList();
-                        player2.setPosition(Float.parseFloat(position.get(0)), Float.parseFloat(position.get(1)));
+                        player2.setTransform(Float.parseFloat(position.get(0)), Float.parseFloat(position.get(1)));
                         player2.b2body.setLinearVelocity(Float.parseFloat(position.get(2)), Float.parseFloat(position.get(3)));
                     }
                     int status = gameMessage.getPayloadInteger();

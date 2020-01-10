@@ -103,6 +103,10 @@ public class Player extends Sprite {
         return b2body.getLinearVelocity().len() >= 2;
     }
 
+    public void setTransform(float x, float y) {
+        b2body.setTransform(x, y, b2body.getAngle());
+    }
+
     public enum State {FALLING, JUMPING, STANDING, RUNNING, GROWING, DEAD, WIN}
 
 
