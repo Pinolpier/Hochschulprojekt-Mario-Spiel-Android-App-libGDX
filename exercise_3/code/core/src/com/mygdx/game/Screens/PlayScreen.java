@@ -25,8 +25,10 @@ import com.mygdx.game.Sprites.Items.ItemDef;
 import com.mygdx.game.Sprites.Items.Mushroom;
 import com.mygdx.game.Tools.B2WorldCreator;
 import com.mygdx.game.Tools.WorldContactListener;
+
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
+
 import server.dtos.GameMessage;
 
 /**
@@ -309,6 +311,22 @@ public class PlayScreen implements Screen {
                     endScreen.setPoints("" + hud.getScore());
                     endScreen.setEnemyPoints("Quited");
                     endScreen.setText("VICTORY");
+                    game.setScreen(endScreen);
+                    break;
+                }
+                case WIN_CHEAT: {
+                    EndScreen endScreen = new EndScreen(game);
+                    endScreen.setPoints("" + hud.getScore());
+                    endScreen.setEnemyPoints("Cheated");
+                    endScreen.setText("VICTORY");
+                    game.setScreen(endScreen);
+                    break;
+                }
+                case LOOSE_CHEAT: {
+                    EndScreen endScreen = new EndScreen(game);
+                    endScreen.setPoints("Cheated");
+                    endScreen.setEnemyPoints("unknown"); //Cheater would use original app so there is probably no need of requesting the enemy's score
+                    endScreen.setText("DEFEATED");
                     game.setScreen(endScreen);
                     break;
                 }
