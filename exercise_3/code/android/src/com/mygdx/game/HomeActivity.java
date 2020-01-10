@@ -108,12 +108,7 @@ public class HomeActivity extends Activity implements MessageListener {
             webSocketService.sendMessage(gson.toJson(msg));
         } else {
             Log.e(HomeActivity.this.getClass().getSimpleName(), "Couldn't send Join request because service is not bound. Will show error toast, retry should work soon!");
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(HomeActivity.this, R.string.cantSendJoinRequestToastMessage, Toast.LENGTH_LONG).show();
-                }
-            });
+            Toast.makeText(HomeActivity.this, R.string.cantSendJoinRequestToastMessage, Toast.LENGTH_LONG).show();
         }
         //finish();
     }
@@ -151,12 +146,6 @@ public class HomeActivity extends Activity implements MessageListener {
                     startActivity(gameIntent);
                 } else {
                     Log.wtf(HomeActivity.this.getClass().getSimpleName(), "Can't join game with gameID own username! Game should be created! Potentially error occurs because two users are logged in using same username?");
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(HomeActivity.this, R.string.cantJoinOwnGame, Toast.LENGTH_LONG).show();
-                        }
-                    });
                 }
             }
         } catch (JsonSyntaxException ex) {

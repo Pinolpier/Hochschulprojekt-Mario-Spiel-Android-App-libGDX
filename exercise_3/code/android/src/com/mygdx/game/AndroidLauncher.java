@@ -120,12 +120,7 @@ public class AndroidLauncher extends AndroidApplication implements MessageListen
 
     @Override
     public void onBackPressed() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(AndroidLauncher.this, R.string.cowardForbiddenToast, Toast.LENGTH_SHORT).show();
-            }
-        });
+        Toast.makeText(AndroidLauncher.this, R.string.cowardForbiddenToast, Toast.LENGTH_SHORT).show();
         Log.d(AndroidLauncher.this.getClass().getSimpleName() + ":back", "Back has been pressed. Ignoring in game and showing toast.");
     }
 

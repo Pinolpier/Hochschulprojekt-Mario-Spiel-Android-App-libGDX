@@ -133,12 +133,7 @@ public class GamelobbyscreenActivity extends Activity implements MessageListener
                                     webSocketService.sendMessage(gson.toJson(new GameMessage(GameMessage.Type.JOIN_GAME, auth, GameMessage.Status.OK, gameID, null)));
                                 } else {
                                     Log.e(GamelobbyscreenActivity.this.getClass().getSimpleName(), "Couldn't send Join request because service is not bound. Will show error toast, retry should work soon!");
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            Toast.makeText(GamelobbyscreenActivity.this, R.string.cantSendJoinRequestToastMessage, Toast.LENGTH_LONG).show();
-                                        }
-                                    });
+                                    Toast.makeText(GamelobbyscreenActivity.this, R.string.cantSendJoinRequestToastMessage, Toast.LENGTH_LONG).show();
                                 }
                             }
                         });
@@ -159,13 +154,6 @@ public class GamelobbyscreenActivity extends Activity implements MessageListener
                 } else {
                     Log.wtf(GamelobbyscreenActivity.this.getClass().getSimpleName(), "Can't join game with gameID " + gameID);
                     requestAllGames();
-                    Toast.makeText(GamelobbyscreenActivity.this, R.string.cantJoinGame, Toast.LENGTH_LONG).show();
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(GamelobbyscreenActivity.this, R.string.cantJoinGame, Toast.LENGTH_LONG).show();
-                        }
-                    });
                 }
             }
         } catch (JsonSyntaxException ex) {
