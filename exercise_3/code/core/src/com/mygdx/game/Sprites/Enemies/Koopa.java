@@ -12,7 +12,10 @@ import com.mygdx.game.MarioBros;
 import com.mygdx.game.Player.Player;
 import com.mygdx.game.Screens.PlayScreen;
 
-public class Turtle extends Enemy {
+/**
+ * The class represents the typical Koopa Turtle from Super Mario Bros.
+ */
+public class Koopa extends Enemy {
     public static final int KICK_LEFT = -2;
     public static final int KICK_RIGHT = 2;
     public enum State {WALKING, MOVING_SHELL, STANDING_SHELL}
@@ -26,7 +29,7 @@ public class Turtle extends Enemy {
     private boolean destroyed;
 
 
-    public Turtle(PlayScreen screen, float x, float y) {
+    public Koopa(PlayScreen screen, float x, float y) {
         super(screen, x, y);
         frames = new Array<>();
         frames.add(new TextureRegion(screen.getAtlas().findRegion("turtle"), 0, 0, 16, 24));

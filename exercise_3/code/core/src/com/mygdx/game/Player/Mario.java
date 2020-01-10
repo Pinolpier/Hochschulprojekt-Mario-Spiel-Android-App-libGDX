@@ -12,10 +12,10 @@ import com.mygdx.game.Screens.PlayScreen;
  * the class defines a Player with "Super Mario" Textures
  */
 public class Mario extends Player {
-    public State currentState;
-    public State previousState;
+    private State currentState;
+    private State previousState;
     public World world;
-    public Body b2body;
+    private Body b2body;
     private TextureRegion marioStand;
     private Animation marioRun;
     private TextureRegion marioJump;
@@ -70,10 +70,7 @@ public class Mario extends Player {
         marioDead = new TextureRegion(screen.getAtlas().findRegion("little_mario"), 96, 0, 16, 16);
         setPlayerDead(marioDead);
         setB2body(b2body);
-
-        defineMario();
-
-
+        definePlayer();
         setBounds(0, 0, 16 / MarioBros.PPM, 16 / MarioBros.PPM);
         setRegion(marioStand);
     }

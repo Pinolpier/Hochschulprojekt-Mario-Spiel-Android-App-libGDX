@@ -14,7 +14,7 @@ import com.mygdx.game.MarioBros;
 import com.mygdx.game.Screens.PlayScreen;
 import com.mygdx.game.Sprites.Enemies.Enemy;
 import com.mygdx.game.Sprites.Enemies.Goomba;
-import com.mygdx.game.Sprites.Enemies.Turtle;
+import com.mygdx.game.Sprites.Enemies.Koopa;
 import com.mygdx.game.Sprites.TileObjects.Brick;
 import com.mygdx.game.Sprites.TileObjects.Coin;
 import com.mygdx.game.Sprites.TileObjects.Goal;
@@ -25,7 +25,7 @@ import com.mygdx.game.Sprites.TileObjects.Pit;
  */
 public class B2WorldCreator {
     private Array<Goomba> goombas;
-    private Array<Turtle> turtles;
+    private Array<Koopa> turtles;
 
     /**
      * create the map with all enemys and blocks etc.
@@ -88,7 +88,7 @@ public class B2WorldCreator {
         turtles = new Array<>();
         for(MapObject object : map.getLayers().get(7).getObjects().getByType(RectangleMapObject.class)){
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
-            turtles.add(new Turtle(screen, rect.getX() / MarioBros.PPM, rect.getY() / MarioBros.PPM));
+            turtles.add(new Koopa(screen, rect.getX() / MarioBros.PPM, rect.getY() / MarioBros.PPM));
         }
 
         for(MapObject object : map.getLayers().get(9).getObjects().getByType(RectangleMapObject.class)){
