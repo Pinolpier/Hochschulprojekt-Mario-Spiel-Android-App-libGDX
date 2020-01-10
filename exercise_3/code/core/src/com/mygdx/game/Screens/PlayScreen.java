@@ -55,8 +55,6 @@ public class PlayScreen implements Screen {
     private int enemyScore = 0;
     private int positionTicks = 0;
     private boolean endMessageSent = true;
-    private Thread inputHandler;
-    private HandleInputRunnable handleInputRunnable;
 
     /**
      * This class represents the main playscreen
@@ -95,8 +93,6 @@ public class PlayScreen implements Screen {
 
         items = new Array<>();
         itemsToSpawn = new LinkedBlockingQueue<>();
-        handleInputRunnable = new HandleInputRunnable();
-        inputHandler = new Thread(handleInputRunnable);
     }
 
     /**
@@ -132,7 +128,6 @@ public class PlayScreen implements Screen {
         if (endMessageSent) {
             if (player.getCurrentState() != Mario.State.DEAD) {
                 GameMessage sendMessage = new GameMessage("Movement", game.getAuth(), GameMessage.Status.OK, game.getGameID(), null);
-                if (positionTicks % 10 == 0) {
                     ArrayList<String> position = new ArrayList<>();
                     position.add(player.getXPosition());
                     position.add(player.getYPosition());
@@ -140,8 +135,7 @@ public class PlayScreen implements Screen {
                     position.add(player.getYVelocity());
                     System.out.println("Positions- und Geschwindigkeits Array Liste: " + position);
                     sendMessage.setStringList(position);
-                }
-                positionTicks++;
+
                 if (Gdx.input.justTouched()) {
                     player.jump();
                     sendMessage.setPayloadInteger(0);
@@ -166,6 +160,7 @@ public class PlayScreen implements Screen {
     }
 
     public void update(float dt) {
+        handleInput();
         handleSpawningItems();
         world.step(1 / 60f, 6, 2);
         player.update(dt);
@@ -240,27 +235,21 @@ public class PlayScreen implements Screen {
 
     @Override
     public void pause() {
-        handleInputRunnable.kill();
     }
 
     @Override
     public void resume() {
-        inputHandler.start();
+
     }
 
     @Override
     public void show() {
-        inputHandler.start();
     }
 
     @Override
     public void hide() {
-        handleInputRunnable.kill();
     }
 
-    public void killInputThread() {
-        handleInputRunnable.kill();
-    }
 
     @Override
     public void dispose() {
@@ -269,7 +258,6 @@ public class PlayScreen implements Screen {
         world.dispose();
         b2dr.dispose();
         hud.dispose();
-        inputHandler.interrupt();
     }
 
     public Hud getHud() {
@@ -362,25 +350,5 @@ public class PlayScreen implements Screen {
         GameMessage endMessage = new GameMessage("endGame", game.getAuth(), GameMessage.Status.OK, game.getGameID(), null);
         endMessage.setPayloadInteger(hud.getScore());
         game.sendMessage(endMessage);
-    }
-
-    private class HandleInputRunnable implements Runnable {
-        private volatile boolean isRunning = true;
-
-        @Override
-        public void run() {
-            while (isRunning) {
-                handleInput();
-                try {
-                    Thread.sleep(3);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        public void kill() {
-            isRunning = false;
-        }
     }
 }

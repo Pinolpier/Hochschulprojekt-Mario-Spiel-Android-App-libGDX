@@ -126,7 +126,6 @@ public class MarioBros extends Game {
     }
 
     public void back2HomeActivty() {
-        playScreen.killInputThread();
         backendCommunicator.stopGame(soundboolean);
     }
 
